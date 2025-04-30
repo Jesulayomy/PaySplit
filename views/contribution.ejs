@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<%- include('chunks/head.ejs') %>
+<body>
+  <%- include('chunks/navbar.ejs') %>
+
+	<div class="px-4 py-2"><a class="btn" href="/home"><span class="fa fa-backward"></span> Back to Contributions</a></div>
+
+  <div class="p-5 py-2 text-center">
+    <%- include('chunks/cont.ejs') %>
+    <div id="pay-button-container" class="p-2 input-group">
+    <% if (invite) { %>
+     <button id="accept" class="btn btn-success btn-md">Join</button>
+    <% } else { %>
+      <% if (item.varied) { %>
+        <label class="input-group-text" id="payAmount">Amount</label>
+        <input type="number" class="form-control" placehomder="0" aria-label="Pay" aria-describedby="payAmount" name="payAmount" required>
+      <% } else { %>
+        <label class="input-group-text" id="payAmount">Amount</label>
+        <input type="number" class="form-control" value="<%= item.equalSplit() %>" aria-label="Pay" aria-describedby="payAmount" name="payAmount" disabled>
+      <% } %>
+      <button id="pay" class="btn btn-primary btn-lg"><i class="fa fa-credit-card"></i> Pay</button>
+    <% } %>
+    </div>
+  </div>
+
+  <%- include('chunks/group.ejs') %>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
+  <script>
+    document.getElementById('accept').addEventListener('click', function() {
+      const id = '<%= item._id %>';
+      fetch(`/contributions/${id}/accept`, { method: 'POST' })
+        .then(response => {
+          if (response.ok) {
+            location.reload();
+          } else {
+            console.error('Failed to process payment');
+          }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+
+    document.getElementById('pay').addEventListener('click', function() {
+      const id = '<%= item._id %>';
+      fetch(`/contributions/${id}/pay`, { method: 'POST' })
+        .then(response => {
+          if (response.ok) {
+            location.reload();
+          } else {
+            console.error('Failed to process payment');
+          }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+  </script>
+</body>
+</html>

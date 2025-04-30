@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<%- include('chunks/head.ejs') %>
+<body>
+  <%- include('chunks/navbar.ejs') %>
+
+  <div class="container-fluid">
+    <div class="row justify-content-center">
+      <div class="col-sm-6">
+        <h1><span class="fa fa-sign-in"></span> Login</h1>
+
+        <% if (message.length > 0) { %>
+        <div class="alert alert-danger"><%= message %></div>
+        <% } %>
+
+        <form action="/login" method="post">
+          <div class="input-group mb-3">
+            <label class="input-group-text" id="email">Email</label>
+            <input type="email" class="form-control" placeholder="Enter your email" name="email" aria-label="Email" aria-describedby="email" required>
+          </div>
+          <div class="input-group mb-3">
+            <label class="input-group-text" id="password">Password</label>
+            <input type="password" class="form-control" placeholder="Enter your password" name="password" aria-label="Password" aria-describedby="password" required>
+          </div>
+          <button type="submit" class="btn btn-primary btn-lg">Login</button>
+        </form>
+
+        <hr />
+
+        <p>Need an account? <a href="/signup">Signup</a></p>
+        <button class="sampleUser btn btn-md btn-warning" role="button">Test Credentials</button>
+        <!-- <a tabindex="0" class="btn btn-md btn-warning" role="button" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-title="Test Credentials" data-bs-content="Email: kakyoin28071971@gmail.com\n Pasword: 1234">Test Credentials</a> -->
+        <p>Or go <a href="/">home</a>.</p>
+      </div>
+    </div>
+  </div>
+  <script>
+    document.querySelector('.sampleUser').addEventListener('click', function() {
+      document.querySelector('input[name="email"]').value = 'kakyoin28071971@gmail.com';
+      document.querySelector('input[name="password"]').value = '1234';
+    });
+  </script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
+</body>
+</html>

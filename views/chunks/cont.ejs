@@ -1,0 +1,15 @@
+<div class="progress progress-stacked">
+  <% const colors = ['bg-primary', 'bg-success', 'bg-info', 'bg-warning', 'bg-danger']; %>
+  <% item.contributors.forEach((contribution, index) => { %>
+    <% const progressPercentage = (contribution.payment.amount / item.total) * 100; %>
+    <div 
+      class="progress-bar progress-bar-striped progress-bar-animated <%= colors[index % colors.length] %>" 
+      role="progressbar" 
+      style="width: <%= progressPercentage %>%;"
+      aria-valuenow="<%= progressPercentage %>" 
+      aria-valuemin="0" 
+      aria-valuemax="100">
+      <%= contribution.payment.user.firstName %>
+    </div>
+  <% }); %>
+</div>

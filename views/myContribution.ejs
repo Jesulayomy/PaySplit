@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<%- include('chunks/head.ejs') %>
+<body>
+  <%- include('chunks/navbar.ejs') %>
+	<div class="px-4 py-2"><a class="btn" href="/home"><span class="fa fa-backward"></span> Back to Contributions</a></div>
+
+  <div class="p-5 py-2 text-center">
+    <%- include('chunks/cont.ejs') %>
+    <div id="pay-button-container" class="p-2 input-group">
+      <% if (invite) { %>
+       <button id="accept" class="btn btn-success btn-md">Join</button>
+      <% } else { %>
+        <% if (item.varied) { %>
+          <label class="input-group-text" id="payAmount">Amount</label>
+          <input type="number" class="form-control" placehomder="0" aria-label="Pay" aria-describedby="payAmount" name="payAmount" required>
+        <% } else { %>
+          <label class="input-group-text" id="payAmount">Amount</label>
+          <input type="number" class="form-control" value="<%= item.equalSplit() %>" aria-label="Pay" aria-describedby="payAmount" name="payAmount" disabled>
+        <% } %>
+        <button id="pay" class="btn btn-primary btn-lg"><i class="fa fa-credit-card"></i> Pay</button>
+      <% } %>
+    </div>
+  </div>
+
+  <div class="p-5 py-2 text-center">
+    <div class="input-group mb-3">
+      <label class="input-group-text" id="invite">Email</label>
+      <input type="text" class="form-control" value="hespy@gmail.com" aria-label="Email" aria-describedby="invite" name="invite" required>
+      <button id="inviteUser" type="submit" class="btn btn-success">Invite</button>
+    </div>
+  </div>
+
+  <div class="container-fluid p-5">
+    <div class="d-flex justify-content-between">
+      <h2>Editing: <%= item.name %></h2>
+      <div class="">
+        <button class="btn <%= item.completed ? 'btn-success' : 'btn-outline-success' %>" id="completeItem" style="margin-left: 10px;">
+          <span class="fa fa-check"></span> <%= item.completed ? 'Completed' : 'Complete' %>
+        </button>
+        <button class="btn btn-outline-danger" id="deleteItem" style="margin-left: 10px;">
+          <span class="fa fa-trash"></span> Delete
+        </button>
+      </div>
+    </div>
+
+    <div>
+      <div class="input-group mb-3">
+        <label class="input-group-text" id="name">Name</label>
+        <input type="text" class="form-control" value="<%= item.name %>" aria-label="Name" aria-describedby="name" name="name" required>
+      </div>
+
+      <div class="input-group mb-3">
+        <label class="input-group-text" id="description">Description</label>
+        <textarea class="form-control" aria-label="Description" aria-describedby="description" name="description"><%= item.description %></textarea>
+      </div>
+
+      <div class="input-group mb-3">
+        <label class="input-group-text" id="amount">Amount</label>
+        <input type="number" class="form-control" value="<%= item.amount %>" aria-label="Amount" aria-describedby="amount" name="amount" required>
+      </div>
+
+      <div class="input-group mb-3">
+        <label class="input-group-text" id="tax">Tax</label>
+        <input type="number" class="form-control" value="<%= item.tax %>" aria-label="Tax" aria-describedby="tax" name="tax">
+        <input type="radio" class="btn-check" id="taxDollar" name="taxType" value="dollar" checked>
+        <label class="btn btn-outline-info px-3" for="taxDollar">$</label>
+        <input type="radio" class="btn-check" id="taxPercent" name="taxType" value="percent">
+        <label class="btn btn-outline-primary px-3" for="taxPercent">%</label>
+      </div>
+
+      <div class="input-group mb-3">
+        <label class="input-group-text" id="tip">Tip</label>
+        <input type="number" class="form-control" value="<%= item.tip %>" aria-label="Tip" aria-describedby="tip" name="tip">
+        <input type="radio" class="btn-check" id="tipDollar" name="tipType" value="dollar" checked>
+        <label class="btn btn-outline-info px-3" for="tipDollar">$</label>
+        <input type="radio" class="btn-check" id="tipPercent" name="tipType" value="percent">
+        <label class="btn btn-outline-primary px-3" for="tipPercent">%</label>
+      </div>
+
+      <div class="form-check text-center mb-3">
+        <% if (item.varied) { %>
+          <input class="btn-check" type="checkbox" id="varied" name="varied">
+        <% } else { %>
+          <input class="btn-check" type="checkbox" id="varied" name="varied" checked>
+        <% } %>
+        <label class="btn btn-outline-warning" for="varied">Equal Payments</label>
+      </div>
+
+      <button id="save" type="submit" class="btn btn-success">Save</button>
+    </div>
+  </div>
+
+  <%- include('chunks/group.ejs') %>
+
+  <script>
+    document.getElementById('pay').addEventListener('click', function() {
+      const id = '<%= item._id %>';
+      fetch(`/contributions/${id}/pay`, { method: 'POST' })
+        .then(response => {
+          if (response.ok) {
+            location.reload();
+          } else {
+            console.error('Failed to process payment');
+          }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+
+    document.getElementById('inviteUser').addEventListener('click', function() {
+      const id = '<%= item._id %>';
+      const email = document.querySelector('input[name="invite"]').value;
+      fetch(`/contributions/${id}/invite`, {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email })
+      })
+        .then(response => {
+          if (response.ok) {
+            location.reload();
+          } else {
+            console.error('Failed to process payment');
+          }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+
+    document.getElementById('save').addEventListener('click', async (event) => {
+      event.preventDefault();
+
+      const contributionID = '<%= item._id %>';
+      const url = `/contributions/${contributionID}`;
+
+      const name = document.querySelector('input[name="name"]').value;
+      const description = document.querySelector('textarea[name="description"]').value;
+      const amount = parseFloat(document.querySelector('input[name="amount"]').value);
+      const tax = parseFloat(document.querySelector('input[name="tax"]').value);
+      const taxType = document.querySelector('input[name="taxType"]:checked').value;
+      const tip = parseFloat(document.querySelector('input[name="tip"]').value);
+      const tipType = document.querySelector('input[name="tipType"]:checked').value;
+      const varied = document.querySelector('input[name="varied"]').checked;
+
+      const data = {
+        name,
+        description,
+        amount,
+        tax,
+        taxType,
+        tip,
+        tipType,
+        varied
+      };
+
+      fetch(url, {
+        method: 'PUT',
+        headers: {
+        'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => {
+        if (!response.ok) {
+          console.log('Failed to update item.');
+        } else {
+          window.location.href = '/home';
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      })
+    });
+
+    document.getElementById('completeItem').addEventListener('click', async (event) => {
+      event.preventDefault();
+
+      const contributionID = '<%= item._id %>';
+      const url = `/contributions/${contributionID}/complete`;
+
+      fetch(url, {
+        method: 'PUT',
+        headers: {
+        'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          completed: !item.completed
+        })
+      })
+      .then(response => {
+        if (!response.ok) {
+          console.log('Failed to complete contribution');
+        } else {
+          window.location.href = '/home';
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      })
+    });
+
+    document.getElementById('deleteItem').addEventListener('click', async () => {
+      const itemID = '<%= item._id %>';
+      const url = `/contributions/${itemID}`;
+
+      try {
+        const response = await fetch(url, {
+          method: 'DELETE',
+          headers: {
+          'Content-Type': 'application/json'
+          }
+        });
+
+        if (response.ok) {
+          window.location.href = '/home';
+        } else {
+          console.log('Failed to delete item.');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    });
+  </script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
+</body>
+</html>

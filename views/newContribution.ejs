@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<%- include('chunks/head.ejs') %>
+<body>
+  <%- include('chunks/navbar.ejs') %>
+
+	<div class="px-4 py-2"><a class="btn" href="/home"><span class="fa fa-backward"></span> Back to Inventory</a></div>
+  <div class="container mt-4">
+    <h1>Start a new Pool</h1>
+
+    <div>
+      <div class="input-group mb-3">
+        <label class="input-group-text" id="name">Name</label>
+        <input type="text" class="form-control" placeholder="Thai restaurant visit" aria-label="Name" aria-describedby="name" name="name" required>
+      </div>
+
+      <div class="input-group mb-3">
+        <label class="input-group-text" id="description">Description</label>
+        <textarea class="form-control" placeholder="Additional details..." aria-label="Description" aria-describedby="description" name="description"></textarea>
+      </div>
+
+      <div class="input-group mb-3">
+        <label class="input-group-text" id="amount">Amount</label>
+        <input type="number" class="form-control" placeholder="100" aria-label="Amount" aria-describedby="amount" name="amount" required>
+      </div>
+
+      <div class="input-group mb-3">
+        <label class="input-group-text" id="tax">Tax</label>
+        <input type="number" class="form-control" value="0" placeholder="0" aria-label="Tax" aria-describedby="tax" name="tax">
+        <input type="radio" class="btn-check" id="taxDollar" name="taxType" value="dollar">
+        <label class="btn btn-outline-info px-3" for="taxDollar">$</label>
+        <input type="radio" class="btn-check" id="taxPercent" name="taxType" value="percent" checked>
+        <label class="btn btn-outline-primary px-3" for="taxPercent">%</label>
+      </div>
+
+      <div class="input-group mb-3">
+        <label class="input-group-text" id="tip">Tip</label>
+        <input type="number" class="form-control" value="15" aria-label="Tip" aria-describedby="tip" name="tip">
+        <input type="radio" class="btn-check" id="tipDollar" name="tipType" value="dollar">
+        <label class="btn btn-outline-info px-3" for="tipDollar">$</label>
+        <input type="radio" class="btn-check" id="tipPercent" name="tipType" value="percent" checked>
+        <label class="btn btn-outline-primary px-3" for="tipPercent">%</label>
+      </div>
+
+      <div class="form-check text-center mb-3">
+        <input class="btn-check" type="checkbox" id="varied" name="varied">
+        <label class="btn btn-outline-warning" for="varied">Equal Payments</label>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Add Item</button>
+    </div>
+  </div>
+
+  <script>
+    document.querySelector('button[type="submit"]').addEventListener('click', async (event) => {
+      event.preventDefault();
+
+      const name = document.querySelector('input[name="name"]').value;
+      const description = document.querySelector('textarea[name="description"]').value;
+      const amount = parseFloat(document.querySelector('input[name="amount"]').value);
+      const tax = parseFloat(document.querySelector('input[name="tax"]').value);
+      const taxType = document.querySelector('input[name="taxType"]:checked').value;
+      const tip = parseFloat(document.querySelector('input[name="tip"]').value);
+      const tipType = document.querySelector('input[name="tipType"]:checked').value;
+      const varied = document.querySelector('input[name="varied"]').checked;
+
+      const data = {
+        name,
+        description,
+        amount,
+        tax,
+        taxType,
+        tip,
+        tipType,
+        varied
+      };
+
+      try {
+        const response = await fetch('/contributions/new', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          window.location.href = `/contributions/${result._id}`;
+        } else {
+          console.error('Failed to create contribution:', response.statusText);
+          alert('Failed to create contribution. Please try again.');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+      }
+    });
+  </script>
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
+</body>
+</html>
