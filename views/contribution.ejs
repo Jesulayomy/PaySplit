@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
-<%- include('chunks/head.ejs') %>
+<%- include('chunks/head') -%>
 <body>
-  <%- include('chunks/navbar.ejs') %>
+  <%- include('chunks/navbar') -%>
 
 	<div class="px-4 py-2"><a class="btn" href="/home"><span class="fa fa-backward"></span> Back to Contributions</a></div>
 
   <div class="p-5 py-2 text-center">
-    <%- include('chunks/cont.ejs') %>
+    <%- include('chunks/cont.ejs') -%>
     <div id="pay-button-container" class="p-2 input-group">
     <% if (invite) { %>
      <button id="accept" class="btn btn-success btn-md">Join</button>
@@ -24,9 +24,8 @@
     </div>
   </div>
 
-  <%- include('chunks/group.ejs') %>
+  <%- include('chunks/group') -%>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
   <script>
     document.getElementById('accept').addEventListener('click', function() {
       const id = '<%= item._id %>';
@@ -54,5 +53,4 @@
         .catch(error => console.error('Error:', error));
     });
   </script>
-</body>
-</html>
+<%- include('chunks/footer') -%>
