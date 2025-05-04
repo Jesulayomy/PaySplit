@@ -20,8 +20,8 @@ module.exports = function(app, passport, io) {
     });
   });
 
-  app.get('/users', isLoggedIn, (req, res) => {
-    User.find({ _id: { $ne: req.user._id }})
+  app.get('/users', (req, res) => {
+    User.find()
     .then(users => {
       res.status(200).json({ users });
     })
@@ -36,7 +36,7 @@ module.exports = function(app, passport, io) {
   });
 
   app.post('/contributions/new', isLoggedIn, (req, res) => {
-    let { name, description, amount, tax, tip, varied, taxType, tipType } = req.body;
+    let { name, description, amount, tax, tip, equal, taxType, tipType } = req.body;
     amount = Number(amount);
     tax = Number(tax);
     tip = Number(tip);
@@ -57,7 +57,7 @@ module.exports = function(app, passport, io) {
         amount,
         tax: taxAmount,
         tip: tipAmount,
-        varied,
+        equal,
         completed: false,
         total: amount + taxAmount + tipAmount,
         date: new Date(),
@@ -98,7 +98,7 @@ module.exports = function(app, passport, io) {
   });
 
   app.put('/contributions/:contributionID', isLoggedIn, (req, res) => {
-    let { name, description, amount, tax, tip, varied, taxType, tipType } = req.body;
+    let { name, description, amount, tax, tip, equal, taxType, tipType } = req.body;
     amount = Number(amount);
     tax = Number(tax);
     tip = Number(tip);
@@ -116,7 +116,7 @@ module.exports = function(app, passport, io) {
           amount,
           tax: taxAmount,
           tip: tipAmount,
-          varied,
+          equal,
           total: amount + taxAmount + tipAmount,
         }
       },

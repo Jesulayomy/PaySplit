@@ -24,7 +24,7 @@ const contributionSchema = new Schema({
   tax: Number,
   tip: Number,
   total: Number,
-  varied: Boolean,
+  equal: Boolean,
   date: Date,
   completed: Boolean,
   owner: userSchema,

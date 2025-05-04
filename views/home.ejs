@@ -18,7 +18,7 @@
 					<div class="card-body pt-1 p-2">
 						<h5 class="card-title"><%= contribution.name %></h5>
 						<p class="card-text">Total: $<%= contribution.total %></p>
-						<p class="card-text">Type: <%= contribution.varied ? 'Custom Split' : 'Equal Split' %></p>
+						<p class="card-text">Type: <%= contribution.equal ? 'Custom Split' : 'Equal Split' %></p>
 						<p class="card-text">Contributors: <%= contribution.contributors.length %></p>
 						<% 
 							const isInvitePending = contribution.invites.some(invite => invite.user._id.toString() === user._id.toString());

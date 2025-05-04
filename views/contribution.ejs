@@ -12,12 +12,12 @@
     <% if (invite) { %>
      <button id="accept" class="btn btn-success btn-md">Join</button>
     <% } else { %>
-      <% if (item.varied) { %>
-        <label class="input-group-text" id="payAmount">Amount</label>
-        <input type="number" class="form-control" placehomder="0" aria-label="Pay" aria-describedby="payAmount" name="payAmount" required>
-      <% } else { %>
+      <% if (item.equal) { %>
         <label class="input-group-text" id="payAmount">Amount</label>
         <input type="number" class="form-control" value="<%= item.equalSplit() %>" aria-label="Pay" aria-describedby="payAmount" name="payAmount" disabled>
+      <% } else { %>
+        <label class="input-group-text" id="payAmount">Amount</label>
+        <input type="number" class="form-control" placehomder="0" aria-label="Pay" aria-describedby="payAmount" name="payAmount" required>
       <% } %>
       <button id="pay" class="btn btn-primary btn-lg"><i class="fa fa-credit-card"></i> Pay</button>
     <% } %>

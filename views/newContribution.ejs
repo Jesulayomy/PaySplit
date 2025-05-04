@@ -43,8 +43,8 @@
       </div>
 
       <div class="form-check text-center mb-3">
-        <input class="btn-check" type="checkbox" id="varied" name="varied">
-        <label class="btn btn-outline-warning" for="varied">Equal Payments</label>
+        <input class="btn-check" type="checkbox" id="equal" name="equal">
+        <label class="btn btn-outline-warning" for="equal">Equal Payments</label>
       </div>
 
       <button type="submit" class="btn btn-primary">Add Item</button>
@@ -62,7 +62,7 @@
       const taxType = document.querySelector('input[name="taxType"]:checked').value;
       const tip = parseFloat(document.querySelector('input[name="tip"]').value);
       const tipType = document.querySelector('input[name="tipType"]:checked').value;
-      const varied = document.querySelector('input[name="varied"]').checked;
+      const equal = document.querySelector('input[name="equal"]').checked;
 
       const data = {
         name,
@@ -72,7 +72,7 @@
         taxType,
         tip,
         tipType,
-        varied
+        equal
       };
 
       try {

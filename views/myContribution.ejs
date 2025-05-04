@@ -11,12 +11,12 @@
       <% if (invite) { %>
        <button id="accept" class="btn btn-success btn-md">Join</button>
       <% } else { %>
-        <% if (item.varied) { %>
-          <label class="input-group-text" id="payAmount">Amount</label>
-          <input type="number" class="form-control" placehomder="0" aria-label="Pay" aria-describedby="payAmount" name="payAmount" required>
-        <% } else { %>
+        <% if (item.equal) { %>
           <label class="input-group-text" id="payAmount">Amount</label>
           <input type="number" class="form-control" value="<%= item.equalSplit() %>" aria-label="Pay" aria-describedby="payAmount" name="payAmount" disabled>
+        <% } else { %>
+          <label class="input-group-text" id="payAmount">Amount</label>
+          <input type="number" class="form-control" placehomder="0" aria-label="Pay" aria-describedby="payAmount" name="payAmount" required>
         <% } %>
         <button id="pay" class="btn btn-primary btn-lg"><i class="fa fa-credit-card"></i> Pay</button>
       <% } %>
@@ -79,12 +79,12 @@
       </div>
 
       <div class="form-check text-center mb-3">
-        <% if (item.varied) { %>
-          <input class="btn-check" type="checkbox" id="varied" name="varied">
+        <% if (item.equal) { %>
+          <input class="btn-check" type="checkbox" id="equal" name="equal" checked>
         <% } else { %>
-          <input class="btn-check" type="checkbox" id="varied" name="varied" checked>
+          <input class="btn-check" type="checkbox" id="equal" name="equal">
         <% } %>
-        <label class="btn btn-outline-warning" for="varied">Equal Payments</label>
+        <label class="btn btn-outline-warning" for="equal">Equal Payments</label>
       </div>
 
       <button id="save" type="submit" class="btn btn-success">Save</button>
@@ -140,7 +140,7 @@
       const taxType = document.querySelector('input[name="taxType"]:checked').value;
       const tip = parseFloat(document.querySelector('input[name="tip"]').value);
       const tipType = document.querySelector('input[name="tipType"]:checked').value;
-      const varied = document.querySelector('input[name="varied"]').checked;
+      const equal = document.querySelector('input[name="equal"]').checked;
 
       const data = {
         name,
@@ -150,7 +150,7 @@
         taxType,
         tip,
         tipType,
-        varied
+        equal
       };
 
       fetch(url, {
