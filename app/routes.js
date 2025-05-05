@@ -31,6 +31,28 @@ module.exports = function(app, passport, io) {
     });
   });
 
+  app.get('/spend', isLoggedIn, (req, res) => {
+    Payment.find({
+      'user._id': req.user._id
+    }).then(payments => {
+      const paymentIds = {};
+      payments.forEach(payment => { paymentIds[payment._id] = true});
+      Contribution.find({
+        'contributors.payment._id': { $in: Object.keys(paymentIds) }
+      }).then(contributions => {
+        const contributionPayments = {};
+        contributions.forEach(contribution => {
+          contribution.contributors.forEach(contributor => {
+            if (paymentIds[contributor.payment._id]) {
+              contributionPayments[contribution.name] = contributor.payment.amount;
+            }
+          });
+        });
+        res.render('spend.ejs', { payments: contributionPayments, user: req.user, title: 'Spending' });
+      })
+    });
+  });
+
   app.get('/contributions/new', isLoggedIn, (req, res) => {
     res.render('newContribution.ejs', { user: req.user, title: 'New Contribution' });
   });
@@ -60,6 +82,7 @@ module.exports = function(app, passport, io) {
         equal,
         completed: false,
         total: amount + taxAmount + tipAmount,
+        remainder: amount + taxAmount + tipAmount,
         date: new Date(),
         owner: req.user,
         contributors: [{ payment }]
@@ -107,29 +130,47 @@ module.exports = function(app, passport, io) {
     tipAmount += tipType === "dollar" ? tip : amount * tip / 100;
     taxAmount += taxType === "dollar" ? tax : amount * tax / 100;
 
-    Contribution.findOneAndUpdate(
-      { _id: req.params.contributionID },
-      {
-        $set: {
-          name,
-          description,
-          amount,
-          tax: taxAmount,
-          tip: tipAmount,
-          equal,
-          total: amount + taxAmount + tipAmount,
-        }
-      },
-      { new: true }
-    ).then(updatedItem => {
-      if (updatedItem) {
-        res.status(200).send('Contribution updated successfully');
-      } else {
-        res.status(404).send('Contribution not found');
+    Contribution.findOne(
+      { _id: req.params.contributionID }
+    ).then(contribution => {
+      if (!contribution) {
+        return res.status(404).send('Contribution not found');
       }
+
+      const paidAmount = contribution.contributors
+        .filter(contributor => contributor.payment.paid)
+        .reduce((sum, contributor) => sum + contributor.payment.amount, 0);
+
+      const remainder = amount + taxAmount + tipAmount - paidAmount;
+
+      Contribution.findOneAndUpdate(
+        { _id: req.params.contributionID },
+        {
+          $set: {
+            name,
+            description,
+            amount,
+            tax: taxAmount,
+            tip: tipAmount,
+            equal,
+            total: amount + taxAmount + tipAmount,
+            remainder,
+          }
+        },
+        { new: true }
+      ).then(updatedItem => {
+        if (updatedItem) {
+          res.status(200).send('Contribution updated successfully');
+        } else {
+          res.status(404).send('Contribution not found');
+        }
+      }).catch(err => {
+        console.log(err);
+        res.status(500).send('Error updating contribution');
+      });
     }).catch(err => {
       console.log(err);
-      res.status(500).send('Error updating contribution');
+      res.status(500).send('Error finding contribution');
     });
   });
 
@@ -179,81 +220,75 @@ module.exports = function(app, passport, io) {
 
   app.post('/contributions/:contributionID/pay', isLoggedIn, (req, res) => {
     const id = req.params.contributionID;
-    const newPayment = new Payment({
-      amount: 100,
-      paid: true,
-      user: req.user,
-    });
-    newPayment.save().then((payment) => {
-      Contribution.findOneAndUpdate(
-        { _id: id },
-        { $push: {
-          contributors: { $each: [{payment}], $position: 0 }
-        }},
-        { new: true}
-      ).then(contribution => {
-        if (contribution) {
-          if (contribution.owner.equals(req.user._id)) {
-            res.render('myContribution.ejs', { item: contribution, user: req.user, title: contribution.name });
-          } else {
-            res.render('contribution.ejs', { item: contribution, user: req.user, title: contribution.name });
-          }
+    const amount = req.body.amount;
+    Contribution.findOneAndUpdate(
+      { _id: id, 'contributors.payment.user._id': req.user._id },
+      {
+        $set: { 'contributors.$.payment.paid': true },
+        $inc: { 'contributors.$.payment.amount': amount, 'remainder': -amount },
+      },
+      { new: true }
+    ).then(contribution => {
+      if (contribution) {
+        if (contribution.owner.equals(req.user._id)) {
+          res.render('myContribution.ejs', { item: contribution, user: req.user, title: contribution.name, invite: false });
         } else {
-          res.status(404).send('Contribution not found');
+          res.render('contribution.ejs', { item: contribution, user: req.user, title: contribution.name, invite: false });
         }
-      }).catch(err => {
-        console.log(err);
-        res.status(500).send(err);
-      });
+      } else {
+      res.status(404).send('Contribution not found');
+      }
     }).catch(err => {
       console.log(err);
-      res.status(500).json({error: 'Internal Server Error'})
+      res.status(500).send(err);
     });
   });
 
   app.post('/contributions/:contributionID/invite', isLoggedIn, (req, res) => {
     const id = req.params.contributionID;
     const { email } = req.body;
-
-    User.findOne({ email }).then(user => {
-      if (!user) {
-        return res.status(404).json({ error: `User with email '${email}' not found` });
-      }
-
-      const newPayment = new Payment({
-        amount: 0,
-        paid: false,
-        user: user,
-      });
-
-      newPayment.save().then(payment => {
-      Contribution.findOneAndUpdate(
-        { _id: id },
-        {
-        $push: {
-          invites: { user },
-          contributors: { payment }
+    if (email === req.user.email) {
+      res.status(409).json({error: 'Cannot invite self'});
+    } else {
+      User.findOne({ email }).then(user => {
+        if (!user) {
+          return res.status(404).json({ error: `User with email '${email}' not found` });
         }
-        },
-        { new: true }
-      ).then(updatedContribution => {
-        if (updatedContribution) {
-          res.status(200).json({ success: 'User invited and payment added', item: updatedContribution });
-        } else {
-          res.status(404).json({ error: 'Contribution not found' });
-        }
+        const newPayment = new Payment({
+          amount: 0,
+          paid: false,
+          user: user,
+        });
+  
+        newPayment.save().then(payment => {
+          Contribution.findOneAndUpdate(
+            { _id: id },
+            {
+            $push: {
+              invites: { user },
+              contributors: { payment }
+            }
+            },
+            { new: true }
+          ).then(updatedContribution => {
+            if (updatedContribution) {
+              res.status(200).json({ success: 'User invited and payment added', item: updatedContribution });
+            } else {
+              res.status(404).json({ error: 'Contribution not found' });
+            }
+          }).catch(err => {
+          console.log(err);
+            res.status(500).json({ error: `Error updating contribution: ${err}` });
+          });
+        }).catch(err => {
+          console.log(err);
+          res.status(500).json({ error: `Error creating payment: ${err}` });
+        });
       }).catch(err => {
-      console.log(err);
-        res.status(500).json({ error: `Error updating contribution: ${err}` });
+        console.log(err);
+        res.status(500).json({ error: `Error finding user: ${err}` });
       });
-      }).catch(err => {
-      console.log(err);
-      res.status(500).json({ error: `Error creating payment: ${err}` });
-      });
-    }).catch(err => {
-      console.log(err);
-      res.status(500).json({ error: `Error finding user: ${err}` });
-    });
+    }
   });
 
   app.post('/contributions/:contributionID/accept', isLoggedIn, (req, res) => {

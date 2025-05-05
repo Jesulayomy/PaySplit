@@ -24,6 +24,7 @@ const contributionSchema = new Schema({
   tax: Number,
   tip: Number,
   total: Number,
+  remainder: Number,
   equal: Boolean,
   date: Date,
   completed: Boolean,
@@ -45,7 +46,10 @@ userSchema.methods.fullName = function() {
 };
 
 contributionSchema.methods.equalSplit = function() {
-  return (this.amount + this.tax + this.tip) / this.contributors.length
+  const unpaidContributors = this.contributors.filter(contributor => !contributor.payment.paid);
+  return unpaidContributors.length > 0 
+    ? this.remainder / unpaidContributors.length 
+    : this.remainder;
 };
 
 module.exports = {
