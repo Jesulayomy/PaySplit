@@ -1,15 +1,49 @@
-<div class="progress progress-stacked">
-  <% const colors = ['bg-primary', 'bg-success', 'bg-info', 'bg-warning', 'bg-danger']; %>
-  <% item.contributors.forEach((contribution, index) => { %>
-    <% const progressPercentage = (contribution.payment.amount / item.total) * 100; %>
-    <div 
-      class="progress-bar progress-bar-striped progress-bar-animated <%= colors[index % colors.length] %>" 
-      role="progressbar" 
-      style="width: <%= progressPercentage %>%;"
-      aria-valuenow="<%= progressPercentage %>" 
-      aria-valuemin="0" 
-      aria-valuemax="100">
-      <%= contribution.payment.user.firstName %>
+<div class="p-5 py-2">
+  <div class="card mb-3 rounded-5 border border-0 shadow-sm">
+    <img src="/img/puzzle.png" class="card-img-top rounded-top-5 shadow-sm" alt="<%= item.name %>" style="height: 200px; object-fit: cover;">
+    <div class="card-body">
+      <h5 class="card-title"><%= item.name %></h5>
+      <p class="card-text"><%= item.description %></p>
+
+      <div class="progress progress-stacked">
+        <% const colors = ['bg-primary', 'bg-success', 'bg-info', 'bg-warning', 'bg-danger']; %>
+        <% item.contributors.forEach((contribution, index) => { %>
+          <% const progressPercentage = (contribution.payment.amount / item.total) * 100; %>
+          <div 
+            class="progress-bar progress-bar-striped progress-bar-animated <%= colors[index % colors.length] %>" 
+            role="progressbar" 
+            aria-valuenow="<%= progressPercentage %>" 
+            aria-valuemin="0" 
+            aria-valuemax="100"
+            style="width: <%= progressPercentage %>%"
+          >
+            <%= contribution.payment.user.firstName %>
+          </div>
+        <% }); %>
+      </div>
+      <p class="card-text text-center">
+        <small class="text-body-secondary">
+          <% const contrib = item.contributors.reduce((acc, contribution) => acc + contribution.payment.amount, 0); %>
+          $<%= contrib %> / $<%= item.total %>
+        </small>
+      </p>
+
+      <% if (!item.complete) { %>
+      <div id="pay-button-container" class="p-2 input-group">
+        <% if (invite) { %>
+        <button id="accept" class="btn btn-success btn-md">Join</button>
+        <% } else { %>
+          <% if (item.equal) { %>
+            <label class="input-group-text" id="payAmount">Amount</label>
+            <input type="number" class="form-control" value="<%= item.equalSplit() %>" aria-label="Pay" aria-describedby="payAmount" name="payAmount" required>
+          <% } else { %>
+            <label class="input-group-text" id="payAmount">Amount</label>
+            <input type="number" class="form-control" placehomder="0" aria-label="Pay" aria-describedby="payAmount" name="payAmount" required>
+          <% } %>
+          <button id="pay" class="btn btn-primary btn-lg"><i class="fa fa-credit-card"></i> Pay</button>
+        <% } %>
+      </div>
+      <% } %>
     </div>
-  <% }); %>
+  </div>
 </div>

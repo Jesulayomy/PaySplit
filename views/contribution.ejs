@@ -3,54 +3,53 @@
 <%- include('chunks/head') -%>
 <body>
   <%- include('chunks/navbar') -%>
-
-	<div class="px-4 py-2"><a class="btn" href="/home"><span class="fa fa-backward"></span> Back to Contributions</a></div>
-
-  <div class="p-5 py-2 text-center">
+  <div class="px-5">
+    <div class="px-4 py-2"><a class="btn" href="/home"><span class="fa fa-backward"></span> Back to Contributions</a></div>
     <%- include('chunks/cont.ejs') -%>
-    <div id="pay-button-container" class="p-2 input-group">
-    <% if (invite) { %>
-     <button id="accept" class="btn btn-success btn-md">Join</button>
-    <% } else { %>
-      <% if (item.equal) { %>
-        <label class="input-group-text" id="payAmount">Amount</label>
-        <input type="number" class="form-control" value="<%= item.equalSplit() %>" aria-label="Pay" aria-describedby="payAmount" name="payAmount" disabled>
-      <% } else { %>
-        <label class="input-group-text" id="payAmount">Amount</label>
-        <input type="number" class="form-control" placehomder="0" aria-label="Pay" aria-describedby="payAmount" name="payAmount" required>
-      <% } %>
-      <button id="pay" class="btn btn-primary btn-lg"><i class="fa fa-credit-card"></i> Pay</button>
-    <% } %>
-    </div>
+    <%- include('chunks/group') -%>
   </div>
 
-  <%- include('chunks/group') -%>
-
-  <script>
-    document.getElementById('accept').addEventListener('click', function() {
-      const id = '<%= item._id %>';
-      fetch(`/contributions/${id}/accept`, { method: 'POST' })
-        .then(response => {
-          if (response.ok) {
-            location.reload();
-          } else {
-            console.error('Failed to process payment');
-          }
-        })
-        .catch(error => console.error('Error:', error));
-    });
-
-    document.getElementById('pay').addEventListener('click', function() {
-      const id = '<%= item._id %>';
-      fetch(`/contributions/${id}/pay`, { method: 'POST' })
-        .then(response => {
-          if (response.ok) {
-            location.reload();
-          } else {
-            console.error('Failed to process payment');
-          }
-        })
-        .catch(error => console.error('Error:', error));
-    });
-  </script>
+  <% if (invite) { %>
+    <script>
+      document.getElementById('accept').addEventListener('click', function() {
+        const id = '<%= item._id %>';
+        fetch(`/contributions/${id}/accept`, { method: 'POST' })
+          .then(response => {
+            if (response.ok) {
+              location.reload();
+            } else {
+              console.error('Failed to process payment');
+            }
+          })
+          .catch(error => console.error('Error:', error));
+      });
+    </script>
+  <% } else { %>
+    <script>
+      document.getElementById('pay').addEventListener('click', async (event) => {
+        event.preventDefault();
+        const id = '<%= item._id %>';
+        const amount = parseFloat(document.querySelector('input[name="payAmount"]').value);
+        if (!Number.isNaN(amount)) {
+          fetch(`/contributions/${id}/pay`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ amount }) 
+          })
+          .then(response => {
+            if (response.ok) {
+              location.reload();
+            } else {
+              console.error('Failed to process payment');
+            }
+          })
+          .catch(error => console.error('Error', error));
+        } else {
+          document.querySelector('input[name="payAmount"]').style.border = '2px solid red';
+        }
+      });  
+    </script>
+  <% } %>
 <%- include('chunks/footer') -%>

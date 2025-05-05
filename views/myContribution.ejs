@@ -3,100 +3,100 @@
 <%- include('chunks/head') -%>
 <body>
   <%- include('chunks/navbar') -%>
-	<div class="px-4 py-2"><a class="btn" href="/home"><span class="fa fa-backward"></span> Back to Contributions</a></div>
 
-  <div class="p-5 py-2 text-center">
+	<div class="px-5">
+    <div class="px-4 py-2"><a class="btn" href="/home"><span class="fa fa-backward"></span> Back to Contributions</a></div>
+
     <%- include('chunks/cont.ejs') -%>
-    <div id="pay-button-container" class="p-2 input-group">
-      <% if (invite) { %>
-       <button id="accept" class="btn btn-success btn-md">Join</button>
-      <% } else { %>
-        <% if (item.equal) { %>
-          <label class="input-group-text" id="payAmount">Amount</label>
-          <input type="number" class="form-control" value="<%= item.equalSplit() %>" aria-label="Pay" aria-describedby="payAmount" name="payAmount" disabled>
-        <% } else { %>
-          <label class="input-group-text" id="payAmount">Amount</label>
-          <input type="number" class="form-control" placehomder="0" aria-label="Pay" aria-describedby="payAmount" name="payAmount" required>
-        <% } %>
-        <button id="pay" class="btn btn-primary btn-lg"><i class="fa fa-credit-card"></i> Pay</button>
-      <% } %>
+
+    <div class="p-5 py-3 text-center">
+      <div class="input-group mb-3">
+        <label class="input-group-text" id="invite">Email</label>
+        <input type="text" class="form-control" value="hespy@gmail.com" aria-label="Email" aria-describedby="invite" name="invite" required>
+        <button id="inviteUser" type="submit" class="btn btn-success">Invite</button>
+      </div>
     </div>
+
+    <div class="container-fluid p-5 py-3">
+      <hr class="border border-1 opacity-75">
+      <div class="pt-3 d-flex justify-content-between">
+        <h2>Editing: <%= item.name %></h2>
+        <div class="">
+          <button class="btn <%= item.completed ? 'btn-success' : 'btn-outline-success' %>" id="completeItem" style="margin-left: 10px;">
+            <span class="fa fa-check"></span> <%= item.completed ? 'Completed' : 'Complete' %>
+          </button>
+          <button class="btn btn-outline-danger" id="deleteItem" style="margin-left: 10px;">
+            <span class="fa fa-trash"></span> Delete
+          </button>
+        </div>
+      </div>
+
+      <div>
+        <div class="input-group mb-3">
+          <label class="input-group-text" id="name">Name</label>
+          <input type="text" class="form-control" value="<%= item.name %>" aria-label="Name" aria-describedby="name" name="name" required>
+        </div>
+
+        <div class="input-group mb-3">
+          <label class="input-group-text" id="description">Description</label>
+          <textarea class="form-control" aria-label="Description" aria-describedby="description" name="description"><%= item.description %></textarea>
+        </div>
+  
+        <div class="input-group mb-3">
+          <label class="input-group-text" id="amount">Amount</label>
+          <input type="number" class="form-control" value="<%= item.amount %>" aria-label="Amount" aria-describedby="amount" name="amount" required>
+        </div>
+  
+        <div class="input-group mb-3">
+          <label class="input-group-text" id="tax">Tax</label>
+          <input type="number" class="form-control" value="<%= item.tax %>" aria-label="Tax" aria-describedby="tax" name="tax">
+          <input type="radio" class="btn-check" id="taxDollar" name="taxType" value="dollar" checked>
+          <label class="btn btn-outline-info px-3" for="taxDollar">$</label>
+          <input type="radio" class="btn-check" id="taxPercent" name="taxType" value="percent">
+          <label class="btn btn-outline-primary px-3" for="taxPercent">%</label>
+        </div>
+  
+        <div class="input-group mb-3">
+          <label class="input-group-text" id="tip">Tip</label>
+          <input type="number" class="form-control" value="<%= item.tip %>" aria-label="Tip" aria-describedby="tip" name="tip">
+          <input type="radio" class="btn-check" id="tipDollar" name="tipType" value="dollar" checked>
+          <label class="btn btn-outline-info px-3" for="tipDollar">$</label>
+          <input type="radio" class="btn-check" id="tipPercent" name="tipType" value="percent">
+          <label class="btn btn-outline-primary px-3" for="tipPercent">%</label>
+        </div>
+      </div>
+  
+      <div class="pb-3 d-flex justify-content-end">
+        <div class="form-check text-center me-3">
+          <% if (item.equal) { %>
+            <input class="btn-check" type="checkbox" id="equal" name="equal" checked>
+          <% } else { %>
+            <input class="btn-check" type="checkbox" id="equal" name="equal">
+          <% } %>
+          <label class="btn btn-outline-warning" for="equal">Equal Payments</label>
+        </div>
+        <button id="save" type="submit" class="btn btn-success">Save</button>
+      </div>
+  
+      <hr class="border border-1 opacity-75">
+    </div>
+
+    <%- include('chunks/group.ejs') -%>
   </div>
-
-  <div class="p-5 py-2 text-center">
-    <div class="input-group mb-3">
-      <label class="input-group-text" id="invite">Email</label>
-      <input type="text" class="form-control" value="hespy@gmail.com" aria-label="Email" aria-describedby="invite" name="invite" required>
-      <button id="inviteUser" type="submit" class="btn btn-success">Invite</button>
-    </div>
-  </div>
-
-  <div class="container-fluid p-5">
-    <div class="d-flex justify-content-between">
-      <h2>Editing: <%= item.name %></h2>
-      <div class="">
-        <button class="btn <%= item.completed ? 'btn-success' : 'btn-outline-success' %>" id="completeItem" style="margin-left: 10px;">
-          <span class="fa fa-check"></span> <%= item.completed ? 'Completed' : 'Complete' %>
-        </button>
-        <button class="btn btn-outline-danger" id="deleteItem" style="margin-left: 10px;">
-          <span class="fa fa-trash"></span> Delete
-        </button>
-      </div>
-    </div>
-
-    <div>
-      <div class="input-group mb-3">
-        <label class="input-group-text" id="name">Name</label>
-        <input type="text" class="form-control" value="<%= item.name %>" aria-label="Name" aria-describedby="name" name="name" required>
-      </div>
-
-      <div class="input-group mb-3">
-        <label class="input-group-text" id="description">Description</label>
-        <textarea class="form-control" aria-label="Description" aria-describedby="description" name="description"><%= item.description %></textarea>
-      </div>
-
-      <div class="input-group mb-3">
-        <label class="input-group-text" id="amount">Amount</label>
-        <input type="number" class="form-control" value="<%= item.amount %>" aria-label="Amount" aria-describedby="amount" name="amount" required>
-      </div>
-
-      <div class="input-group mb-3">
-        <label class="input-group-text" id="tax">Tax</label>
-        <input type="number" class="form-control" value="<%= item.tax %>" aria-label="Tax" aria-describedby="tax" name="tax">
-        <input type="radio" class="btn-check" id="taxDollar" name="taxType" value="dollar" checked>
-        <label class="btn btn-outline-info px-3" for="taxDollar">$</label>
-        <input type="radio" class="btn-check" id="taxPercent" name="taxType" value="percent">
-        <label class="btn btn-outline-primary px-3" for="taxPercent">%</label>
-      </div>
-
-      <div class="input-group mb-3">
-        <label class="input-group-text" id="tip">Tip</label>
-        <input type="number" class="form-control" value="<%= item.tip %>" aria-label="Tip" aria-describedby="tip" name="tip">
-        <input type="radio" class="btn-check" id="tipDollar" name="tipType" value="dollar" checked>
-        <label class="btn btn-outline-info px-3" for="tipDollar">$</label>
-        <input type="radio" class="btn-check" id="tipPercent" name="tipType" value="percent">
-        <label class="btn btn-outline-primary px-3" for="tipPercent">%</label>
-      </div>
-
-      <div class="form-check text-center mb-3">
-        <% if (item.equal) { %>
-          <input class="btn-check" type="checkbox" id="equal" name="equal" checked>
-        <% } else { %>
-          <input class="btn-check" type="checkbox" id="equal" name="equal">
-        <% } %>
-        <label class="btn btn-outline-warning" for="equal">Equal Payments</label>
-      </div>
-
-      <button id="save" type="submit" class="btn btn-success">Save</button>
-    </div>
-  </div>
-
-  <%- include('chunks/group.ejs') -%>
 
   <script>
-    document.getElementById('pay').addEventListener('click', function() {
+    document.getElementById('pay').addEventListener('click', async (event) => {
+      event.preventDefault();
       const id = '<%= item._id %>';
-      fetch(`/contributions/${id}/pay`, { method: 'POST' })
+      const amount = parseFloat(document.querySelector('input[name="payAmount"]').value);
+      if (!Number.isNaN(amount)) {
+        fetch(`/contributions/${id}/pay`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ amount }) 
+        })
         .then(response => {
           if (response.ok) {
             location.reload();
@@ -105,6 +105,7 @@
           }
         })
         .catch(error => console.error('Error:', error));
+      }
     });
 
     document.getElementById('inviteUser').addEventListener('click', function() {
@@ -184,7 +185,7 @@
         'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          completed: !item.completed
+          completed: !Boolean('<%= item.completed %>')
         })
       })
       .then(response => {
