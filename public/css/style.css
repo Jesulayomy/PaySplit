@@ -10,9 +10,13 @@
 /******************************************
 /* LAYOUT
 /*******************************************/
+body {
+  background-color: azure;
+}
 
-
-
+.receipt {
+  background: linear-gradient(45deg,#5d00ff, #7a00ff, #ff00c8);
+}
 
 /******************************************
 /* ADDITIONAL STYLES

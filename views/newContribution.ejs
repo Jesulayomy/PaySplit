@@ -6,9 +6,17 @@
 
 	<div class="px-4 py-2"><a class="btn" href="/home"><span class="fa fa-backward"></span> Back to Inventory</a></div>
   <div class="container mt-4">
-    <h1>Create a Pool</h1>
+    <h1 class="text-center">Create a Pool</h1>
 
     <div>
+      <div>
+        <h4>Create from a receipt</h4>
+        <form class="input-group mb-3" id="imageForm" enctype="multipart/form-data" method="POST">
+          <input type="file" class="form-control" id="receiptImage" aria-describedby="addItems" aria-label="Upload" name="image">
+          <button class="btn text-white receipt" type="submit" id="addItems"><img width="20px" src="https://cdn.simpleicons.org/googlegemini/fff"></i> Upload</button>
+        </form>
+      </div>
+
       <div class="input-group mb-3">
         <label class="input-group-text" id="name">Title</label>
         <input type="text" class="form-control" placeholder="Thai restaurant visit" aria-label="Name" aria-describedby="name" name="name" required>
@@ -47,12 +55,71 @@
         <label class="btn btn-outline-warning" for="equal">Equal Payments</label>
       </div>
 
-      <button type="submit" class="btn btn-primary">Add Item</button>
+      <button id="createPool" type="submit" class="btn btn-primary">Add Item</button>
+    </div>
+    <div id="itemContainer" class="py-3">
     </div>
   </div>
 
   <script>
-    document.querySelector('button[type="submit"]').addEventListener('click', async (event) => {
+    const form = document.getElementById('imageForm');
+    let items = [];
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const addItemsButton = document.getElementById('addItems');
+      const originalButtonContent = addItemsButton.innerHTML;
+
+      addItemsButton.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Uploading...`;
+      addItemsButton.disabled = true;
+
+      const formData = new FormData(form);
+
+      try {
+        const response = await fetch('/receipt', {
+          method: 'POST',
+          body: formData,
+        });
+        if (!response.ok) {
+          addItemsButton.innerHTML = originalButtonContent;
+          addItemsButton.disabled = false;
+          response.json().then(data => {
+            alert(data.error);
+          });
+          return;
+        }
+
+        const data = await response.json();
+        const contribution = JSON.parse(data.response.candidates[0].content.parts[0].text);
+        document.querySelector('input[name="name"]').value = contribution.name;
+        document.querySelector('textarea[name="description"]').value = contribution.description;
+        document.querySelector('input[name="amount"]').value = contribution.amount;
+        document.querySelector('input[name="tax"]').value = contribution.tax;
+        document.querySelector('input[name="tip"]').value = contribution.tip
+        document.getElementById('taxDollar').checked = true;
+        document.getElementById('tipDollar').checked = true;
+        items = contribution.items;
+        let itemData = `
+          <h4>Items</h4>
+          <div class="container-fluid">
+            <ul class="list-group">
+        `
+        items.forEach(item => {
+          itemData += `
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                ${item.quantity} ${item.name}
+                <span class="badge text-bg-primary rounded-pill">$${item.price}</span>
+              </li>`
+        });
+        itemData += `</ul></div>`;
+        document.getElementById('itemContainer').innerHTML = itemData;
+        addItemsButton.innerHTML = originalButtonContent;
+        addItemsButton.disabled = false;
+      } catch (error) {
+        console.error(error)
+      }
+    });
+
+    document.getElementById('createPool').addEventListener('click', async (event) => {
       event.preventDefault();
 
       const name = document.querySelector('input[name="name"]').value;
@@ -72,7 +139,8 @@
         taxType,
         tip,
         tipType,
-        equal
+        equal,
+        items
       };
 
       try {
