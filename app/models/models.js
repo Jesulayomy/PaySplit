@@ -12,9 +12,16 @@ const userSchema = new Schema({
 });
 
 const paymentSchema = new Schema({
-  amount: Number,
+  amount: { type: Number, default: 0 },
   user: userSchema,
-  paid: Boolean,
+  paid: { type: Boolean, default: false },
+});
+
+const itemSchema = new Schema({
+  price: Number,
+  quantity: { type: Number, default: 1 },
+  name: String,
+  paid: { type: Boolean, default: false },
 });
 
 const contributionSchema = new Schema({
@@ -27,8 +34,9 @@ const contributionSchema = new Schema({
   remainder: Number,
   equal: Boolean,
   date: Date,
-  completed: Boolean,
+  completed: { type: Boolean, default: false },
   owner: userSchema,
+  items: [itemSchema],
   invites: [{user: userSchema}],
   contributors: [{payment: paymentSchema}],
 });
@@ -56,4 +64,5 @@ module.exports = {
   User: mongoose.model('User', userSchema),
   Contribution: mongoose.model('Contribution', contributionSchema),
   Payment: mongoose.model('Payment', paymentSchema),
+  Item: mongoose.model('Item', itemSchema),
 };

@@ -1,4 +1,8 @@
-const { User, Contribution, Payment } = require('./models/models');
+const { User, Contribution, Payment, Item } = require('./models/models');
+const { GoogleGenAI, Type } = require("@google/genai");
+const multer = require('multer');
+
+const upload = multer({storage: multer.memoryStorage()});
 
 module.exports = function(app, passport, io) {
   app.get('/', function(req, res) {
@@ -15,7 +19,7 @@ module.exports = function(app, passport, io) {
     }).then(contributions => {
       res.render('home.ejs', { contributions, user: req.user, title: 'My Contributions' });
     }).catch(err => {
-      console.log(err);
+      console.error(err);
       res.status(500).send('Error fetching contributions');
     });
   });
@@ -26,7 +30,7 @@ module.exports = function(app, passport, io) {
       res.status(200).json({ users });
     })
     .catch(err => {
-      console.log(err);
+      console.error(err);
       res.status(500).send('Error fetching contributions');
     });
   });
@@ -53,12 +57,110 @@ module.exports = function(app, passport, io) {
     });
   });
 
+  app.post('/receipt', upload.single('image'), async (req, res) => {
+    if (!req.file) {
+      res.status(400).json({'error': 'Please attach an image'});
+    } else {
+      const ai = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY });
+      
+      async function main() {
+        const base64ImageFile = req.file.buffer.toString('base64');
+        const contents = [
+          {
+            inlineData: {
+              mimeType: req.file.mimetype,
+              data: base64ImageFile,
+            },
+          },
+          { text: `
+            The image below contains a receipt, extract the data and return a JSON response, 
+            do not include any content in your response that is not the json text, all numbers must be to 2 decimal places
+            `
+          },
+        ];
+
+        const response = await ai.models.generateContent({
+          model: 'gemini-2.0-flash',
+          contents: contents,
+          config: {
+            responseMimeType: 'application/json',
+            responseSchema: {
+              type: Type.OBJECT,
+              properties: {
+                tip: {
+                  type: Type.NUMBER,
+                  description: 'Tip in usd to two decimal places, or 0 if not found',
+                  nullable: false,
+                  default: 0,
+                },
+                tax: {
+                  type: Type.NUMBER,
+                  description: 'Tax in usd to two decimal places, or 0 if not found',
+                  nullable: false,
+                  default: 0,
+                },
+                total: {
+                  type: Type.NUMBER,
+                  description: 'The total in usd to two decimal places',
+                  nullable: false,
+                },
+                amount: {
+                  type: Type.NUMBER,
+                  description: 'The subtotal in usd, or the cost of all items in the receipt to two decimal places',
+                  nullable: false,
+                },
+                name: {
+                  type: Type.STRING,
+                  description: 'The name of the receipt, store, or RECEIPT',
+                  nullable: false,
+                },
+                description: {
+                  type: Type.STRING,
+                  description: 'A short general description or summary of the items bought',
+                  nullable: false,
+                },
+                items: {
+                  type: Type.ARRAY,
+                  items: {
+                    type: Type.OBJECT,
+                    properties: {
+                      'quantity': {
+                        type: Type.NUMBER,
+                        description: 'The number of the items bought to two decimal places',
+                        nullable: false,
+                        default: 0,
+                      },
+                      'price': {
+                        type: Type.NUMBER,
+                        description: 'The price of the item in usd to two decimal places',
+                        nullable: false,
+                      },
+                      'name': {
+                        type: Type.STRING,
+                        description: 'The name or description of the item',
+                        nullable: false,
+                      },
+                    },
+                    required: ['quantity', 'price', 'name'],
+                  }
+                }
+              },
+              required: ['tip', 'tax', 'total', 'amount', 'name', 'description', 'items'],
+            },
+          },
+        });
+        res.status(200).json({response});
+      }
+      await main();
+    }
+  });
+
   app.get('/contributions/new', isLoggedIn, (req, res) => {
     res.render('newContribution.ejs', { user: req.user, title: 'New Contribution' });
   });
 
   app.post('/contributions/new', isLoggedIn, (req, res) => {
-    let { name, description, amount, tax, tip, equal, taxType, tipType } = req.body;
+    let { name, description, amount, tax, tip, equal, taxType, tipType, items } = req.body;
     amount = Number(amount);
     tax = Number(tax);
     tip = Number(tip);
@@ -85,16 +187,17 @@ module.exports = function(app, passport, io) {
         remainder: amount + taxAmount + tipAmount,
         date: new Date(),
         owner: req.user,
-        contributors: [{ payment }]
+        contributors: [{ payment }],
+        items: items
       });
       newContribution.save().then((contribution) => {
         res.json(contribution);
       }).catch(err => {
-        console.log(err);
+        console.error(err);
         res.status(500).send('Error saving contribution');
       });
     }).catch(err => {
-      console.log(err);
+      console.error(err);
       res.status(500).json({error: 'Internal Server Error'})
     });
   });
@@ -115,7 +218,7 @@ module.exports = function(app, passport, io) {
         res.status(404).send('Contribution not found');
       }
     }).catch(err => {
-      console.log(err);
+      console.error(err);
       res.status(500).send('Error fetching contribution');
     });
   });
@@ -165,11 +268,11 @@ module.exports = function(app, passport, io) {
           res.status(404).send('Contribution not found');
         }
       }).catch(err => {
-        console.log(err);
+        console.error(err);
         res.status(500).send('Error updating contribution');
       });
     }).catch(err => {
-      console.log(err);
+      console.error(err);
       res.status(500).send('Error finding contribution');
     });
   });
@@ -239,7 +342,7 @@ module.exports = function(app, passport, io) {
       res.status(404).send('Contribution not found');
       }
     }).catch(err => {
-      console.log(err);
+      console.error(err);
       res.status(500).send(err);
     });
   });
@@ -277,15 +380,15 @@ module.exports = function(app, passport, io) {
               res.status(404).json({ error: 'Contribution not found' });
             }
           }).catch(err => {
-          console.log(err);
+          console.error(err);
             res.status(500).json({ error: `Error updating contribution: ${err}` });
           });
         }).catch(err => {
-          console.log(err);
+          console.error(err);
           res.status(500).json({ error: `Error creating payment: ${err}` });
         });
       }).catch(err => {
-        console.log(err);
+        console.error(err);
         res.status(500).json({ error: `Error finding user: ${err}` });
       });
     }
@@ -302,7 +405,7 @@ module.exports = function(app, passport, io) {
     }).then(contribution => {
       res.status(200).json({ contribution })
     }).catch(err => {
-      console.log(err);
+      console.error(err);
       res.status(500).send('Error accepting invite');
     })
   });
@@ -324,13 +427,15 @@ module.exports = function(app, passport, io) {
         res.status(404).send('Contribution not found');
       }
     }).catch(err => {
-      console.log(err);
+      console.error(err);
       res.status(500).send('Error updating contribution');
     });
   });
 
   app.get('/logout', function(req, res) {
-    req.logout(() => {console.log(`User logged out`)});
+    req.logout(() => {
+      console.log(`User logged out`)
+    });
     res.redirect('/');
   });
 
