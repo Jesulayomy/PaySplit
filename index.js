@@ -89,7 +89,7 @@ mongoose.connect(DB_URL)
     require('./app/routes.js')(app, passport, io);
   })
   .catch(err => {
-    console.log(err);
+    console.error(err);
   })
 
 server.listen(PORT, () => {

@@ -1,5 +1,5 @@
 # PaySplit
-This project aims to help friends or people with common interest pool money for different purposes
+PaySplit is an app that simplifies splitting bills among friends by allowing easy money pooling and automatic calculation of shares, including complex scenarios like tax and tips, with real-time updates for transparent and fair settlements.
 
 **Link to project:** [Project Link](https://github.com/Jesulayomy/PaySplit)
 
