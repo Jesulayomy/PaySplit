@@ -9,8 +9,15 @@
     <div class="col-sm-6 col-sm-offset-3">
       <h1><span class="fa fa-user-plus"></span> Signup</h1>
 
-      <% if (message.length > 0) { %>
-      <div class="alert alert-danger"><%= message %></div>
+      <% if (locals.messages.errors) { %>
+        <% messages.errors.forEach( el => { %>
+          <div class="alert alert-danger"><%= el.msg %></div>
+        <% }) %>    
+      <% } %>
+      <% if (locals.messages.info) { %>
+        <% messages.info.forEach( el => { %>
+          <div class="alert alert-info"><%= el.msg %></div>
+        <% }) %>    
       <% } %>
 
       <form action="/signup" method="post">
@@ -28,9 +35,13 @@
         </div>
         <div class="input-group mb-3">
           <label class="input-group-text" id="password">Password</label>
-          <input type="password" class="form-control" placeholder="Enter your password" name="password" aria-label="Password" aria-describedby="password" required>
+          <input type="password" class="form-control" placeholder="At least 8 characters" name="password" aria-label="Password" aria-describedby="password" required>
         </div>
-        <button type="submit" class="btn btn-success btn-lg"><i class="fa fa-user-plus"></i> Signup</button>
+        <div class="input-group mb-3">
+          <label class="input-group-text" id="confirmPassword">Confirm Password</label>
+          <input type="password" class="form-control" placeholder="********" name="confirmPassword" aria-label="Confirm Password" aria-describedby="confirmPassword" required>
+        </div>
+        <button type="submit" class="btn btn-success btn-md"><i class="fa fa-user-plus"></i> Signup</button>
       </form>
 
       <hr />

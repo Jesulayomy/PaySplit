@@ -1,95 +1,81 @@
-const LocalStrategy = require('passport-local').Strategy;
-
-const { User } = require('../app/models/models');
+const LocalStrategy = require("passport-local").Strategy;
+const { User } = require('../models/models');
+// const cloudinary = require("../middleware/cloudinary");
 
 
 module.exports = function (passport) {
-  passport.serializeUser(function (user, done) {
+  passport.use(
+    'login',
+    new LocalStrategy({ usernameField: "email", passwordField: "password" }, (email, password, done) => {
+      User.findOne({ email: email.toLowerCase() })
+      .then(user => {
+        if (!user) {
+          return done(null, false, { msg: `Email ${email} not found.` });
+        }
+
+        if (!user.validPassword(password)) {
+          return done(
+            null,
+            false,
+            { msg: "Oops! Email or Password is incorrect." }
+          );
+        }
+
+        return done(null, user);
+      })
+      .catch(err => {
+        if (err) {
+          console.error(err)
+          return done(err);
+        }
+      });
+    })
+  );
+
+  passport.use(
+    'signup',
+    new LocalStrategy({ usernameField: "email", passwordField: "password", passReqToCallback: true }, (req, email, password, done) => {
+      User.findOne({ email })
+      .then(existingUser => {
+        if (existingUser) {
+          return done(null, false, { msg: `That email is already taken.` });
+        }
+        const user = new User({
+          firstName: req.body.firstName,
+          lastName: req.body.lastName,
+          imgURL: req.body.imgURL,
+          email,
+        });
+        user.password = user.generateHash(password);
+        user.save()
+        .then(newUser => {
+          return done(null, newUser);
+        })
+        .catch(err => {
+          if (err) {
+            return next(err);
+          }
+        });
+      })
+      .catch(err => {
+        if (err) {
+          console.error(err);
+          return next(err);
+        }
+      });
+    })
+  );
+
+  passport.serializeUser((user, done) => {
     done(null, user.id);
   });
-  passport.deserializeUser(function (id, done) {
+
+  passport.deserializeUser((id, done) => {
     User.findById(id)
-    .then(user => {
-      done(null, user);
-    })
+    .then(user => done(null, user))
     .catch(err => {
+      console.error(err);
       done(err);
     });
   });
-  // Signup
-  passport.use(
-    'signup',
-    new LocalStrategy(
-      {
-        usernameField: 'email',
-        passwordField: 'password',
-        passReqToCallback: true
-      },
-      function (req, email, password, done) {
-        User.findOne({ 'email': email })
-        .then((user) => {
-          if (user) {
-            return done(
-              null,
-              false,
-              req.flash('signupMessage', 'That email is already taken.')
-            );
-          } else {
-            const newUser = new User();
-            newUser.email = email;
-            newUser.firstName = req.body.firstName || 'SpongeBob';
-            newUser.lastName = req.body.lastName || 'SquarePants';
-            newUser.password = newUser.generateHash(password);
-
-            newUser.save()
-            .then((user) => {
-              return done(null, user);
-            })
-            .catch(err => {
-              return done(err)
-            })
-          }
-        })
-        .catch(err => {
-          return done(err);
-        });
-      }
-    )
-  );
-  // Login
-  passport.use(
-    'login',
-    new LocalStrategy(
-      {
-        usernameField: 'email',
-        passwordField: 'password',
-        passReqToCallback: true
-      },
-      function (req, email, password, done) {
-        User.findOne({ 'email': email })
-        .then((user) => {
-          if (!user) {
-            return done(
-              null,
-              false,
-              req.flash('loginMessage', 'No user found.')
-            );
-          }
-
-          if (!user.validPassword(password)) {
-            return done(
-              null,
-              false,
-              req.flash('loginMessage', 'Oops! Email or Password is incorrect.')
-            );
-          }
-
-          return done(null, user);
-        })
-        .catch(err => {
-          return done(err);
-        });
-      }
-    )
-  );
 };

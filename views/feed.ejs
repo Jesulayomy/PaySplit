@@ -1,0 +1,21 @@
+<%- include('partials/header') -%>
+  <div class="container-fluid p-5">
+    <div class="row justify-content-center p-5 ">
+      <ul class="row list-unstyled p-5 pt-0">
+        <% for(var i=0; i<posts.length; i++) {%>
+          <li class="p-2">
+            <div class="card">
+              <img src="<%= posts[i].image %>" class="card-img-top" alt="<%= posts[i].title %>">
+              <div class="card-body">
+                <h5 class="card-title"><%= posts[i].title %></h5>
+                <p class="card-text"><%= posts[i].caption %></p>
+                <a href="/post/<%= posts[i]._id%>" class="btn btn-primary">View Post</a>
+                <p class="card-text"><small class="text-body-secondary"><%= posts[i].likes %> Likes</small></p>
+              </div>
+            </div>
+          </li>
+        <% } %>
+        </ul>
+    </div>
+  </div>  
+<%- include('partials/footer') -%>

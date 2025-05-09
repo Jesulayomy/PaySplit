@@ -3,17 +3,22 @@
 <%- include('chunks/head') -%>
 <body>
   <%- include('chunks/navbar') -%>
-
   <div class="container-fluid p-5">
     <div class="row justify-content-center">
       <div class="col-sm-6">
         <h1><span class="fa fa-sign-in"></span> Login</h1>
-
-        <% if (message.length > 0) { %>
-        <div class="alert alert-danger"><%= message %></div>
+        <% if (locals.messages.errors) { %>
+          <% messages.errors.forEach(el => { %>
+            <div class="alert alert-danger"><%= el.msg %></div>
+          <% }) %>
+        <% } %>
+        <% if (locals.messages.info) { %> 
+          <% messages.info.forEach(el => { %>
+            <div class="alert alert-info"><%= el.msg %></div>
+          <% }) %>
         <% } %>
 
-        <form action="/login" method="post">
+        <form action="/login" method="POST">
           <div class="input-group mb-3">
             <label class="input-group-text" id="email">Email</label>
             <input type="email" class="form-control" placeholder="Enter your email" name="email" aria-label="Email" aria-describedby="email" required>
@@ -29,15 +34,16 @@
 
         <p>Need an account? <a href="/signup">Signup</a></p>
         <button class="sampleUser btn btn-md btn-warning" role="button">Test Credentials</button>
-        <!-- <a tabindex="0" class="btn btn-md btn-warning" role="button" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-title="Test Credentials" data-bs-content="Email: kakyoin28071971@gmail.com\n Pasword: 1234">Test Credentials</a> -->
         <p>Or go <a href="/">home</a>.</p>
       </div>
     </div>
   </div>
-  <script>
-    document.querySelector('.sampleUser').addEventListener('click', function() {
-      document.querySelector('input[name="email"]').value = 'kakyoin28071971@gmail.com';
-      document.querySelector('input[name="password"]').value = '1234';
-    });
-  </script>
+
+<script>
+  document.querySelector('.sampleUser').addEventListener('click', function() {
+    document.querySelector('input[name="email"]').value = 'kakyoin28071971@gmail.com';
+    document.querySelector('input[name="password"]').value = '1234';
+  });
+</script>
+
 <%- include('chunks/footer') -%>
