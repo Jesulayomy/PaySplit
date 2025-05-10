@@ -1,6 +1,6 @@
 const LocalStrategy = require("passport-local").Strategy;
 const { User } = require('../models/models');
-// const cloudinary = require("../middleware/cloudinary");
+const cloudinary = require("../middleware/cloudinary");
 
 
 module.exports = function (passport) {
@@ -36,14 +36,17 @@ module.exports = function (passport) {
     'signup',
     new LocalStrategy({ usernameField: "email", passwordField: "password", passReqToCallback: true }, (req, email, password, done) => {
       User.findOne({ email })
-      .then(existingUser => {
+      .then(async existingUser => {
         if (existingUser) {
           return done(null, false, { msg: `That email is already taken.` });
         }
+        const result = await cloudinary.uploader.upload(req.file.path, { asset_folder: 'paysplit', public_id_prefix: 'user'  });
+
         const user = new User({
           firstName: req.body.firstName,
           lastName: req.body.lastName,
-          imgURL: req.body.imgURL,
+          imgURL: result.secure_url,
+          cloudinaryId: result.public_id,
           email,
         });
         user.password = user.generateHash(password);

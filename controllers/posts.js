@@ -30,8 +30,7 @@ module.exports = {
   },
   createPost: async (req, res) => {
     try {
-      // Upload image to cloudinary
-      const result = await cloudinary.uploader.upload(req.file.path);
+      const result = await cloudinary.uploader.upload(req.file.path, { asset_folder: 'paysplit', public_id_prefix: 'user_or_related_name'  });
 
       await Post.create({
         title: req.body.title,

@@ -30,7 +30,7 @@ module.exports = {
       res.status(500).send('Error fetching users');
     });
   },
-  getSpend: async (req, res) => {
+  getProfile: async (req, res) => {
     Payment.find({
       'user._id': req.user._id
     }).then(payments => {
@@ -47,7 +47,7 @@ module.exports = {
             }
           });
         });
-        res.render('spend.ejs', { payments: contributionPayments, user: req.user, title: 'Spending' });
+        res.render('profile.ejs', { payments: contributionPayments, user: req.user, title: req.user.firstName + ' | Your profile' });
       })
     });
   },
