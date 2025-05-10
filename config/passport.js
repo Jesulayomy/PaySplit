@@ -40,7 +40,15 @@ module.exports = function (passport) {
         if (existingUser) {
           return done(null, false, { msg: `That email is already taken.` });
         }
-        const result = await cloudinary.uploader.upload(req.file.path, { asset_folder: 'paysplit', public_id_prefix: 'user'  });
+        let result;
+        if (req.file) {
+          result = await cloudinary.uploader.upload(req.file.path, { asset_folder: 'paysplit', public_id_prefix: 'user'  });
+        } else {
+          result = {
+            secure_url: '/img/default-profile.png',
+            public_id: ''
+          };
+        }
 
         const user = new User({
           firstName: req.body.firstName,
