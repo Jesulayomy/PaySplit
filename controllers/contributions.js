@@ -120,6 +120,26 @@ module.exports = {
       res.status(500).send('Error finding contribution');
     });
   },
+  getContribEdit: async (req, res) => {
+    const id = req.params.contributionID;
+    Contribution.findOne(
+      { _id: id }
+    ).then(contribution => {
+      if (contribution) {
+        const invite = null;
+        if (contribution.owner.equals(req.user._id)) {
+          res.render('editContribution.ejs', { item: contribution, user: req.user, title: contribution.name, invite });
+        } else {
+          res.render('not-found.ejs', { user: req.user, title: 'Not Found' });
+        }
+      } else {
+        res.status(404).send('Contribution not found');
+      }
+    }).catch(err => {
+      console.error(err);
+      res.status(500).send('Error fetching contribution');
+    });
+  },
   deleteContrib: async (req, res) => {
     Contribution.findOne({
       _id: req.params.contributionID

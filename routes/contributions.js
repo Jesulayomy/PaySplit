@@ -11,6 +11,7 @@ router.get("/:contributionID", ensureAuth, contribController.getContrib);
 router.put("/:contributionID", ensureAuth, contribController.editContrib);
 router.delete("/:contributionID", ensureAuth, contribController.deleteContrib);
 
+router.get("/:contributionID/edit", ensureAuth, contribController.getContribEdit);
 router.post("/:contributionID/pay", ensureAuth, contribController.payContrib);
 router.post("/:contributionID/invite", ensureAuth, contribController.inviteToContrib);
 router.post("/:contributionID/accept", ensureAuth, contribController.acceptContribInvite);
