@@ -7,6 +7,7 @@ const userSchema = new Schema({
   firstName: String,
   lastName: String,
   imgURL: String,
+  cloudinaryId: String,
   email: String,
   password: String,
 });
