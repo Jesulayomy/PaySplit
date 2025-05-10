@@ -29,12 +29,12 @@
 
       <div class="input-group mb-3">
         <label class="input-group-text" id="amount">Amount</label>
-        <input type="number" class="form-control" placeholder="100" aria-label="Amount" aria-describedby="amount" name="amount" required>
+        <input type="number" oninput="this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : 0" oninput="this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : 0" min="0" class="form-control" placeholder="Amount before tax or subtotal" aria-label="Amount" aria-describedby="amount" name="amount" required>
       </div>
 
       <div class="input-group mb-3">
         <label class="input-group-text" id="tax">Tax</label>
-        <input type="number" class="form-control" value="0" placeholder="0" aria-label="Tax" aria-describedby="tax" name="tax">
+        <input type="number" oninput="this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : 0" min="0" class="form-control" value="0" placeholder="0" aria-label="Tax" aria-describedby="tax" name="tax">
         <input type="radio" class="btn-check" id="taxDollar" name="taxType" value="dollar">
         <label class="btn btn-outline-info px-3" for="taxDollar">$</label>
         <input type="radio" class="btn-check" id="taxPercent" name="taxType" value="percent" checked>
@@ -43,7 +43,7 @@
 
       <div class="input-group mb-3">
         <label class="input-group-text" id="tip">Tip</label>
-        <input type="number" class="form-control" value="15" aria-label="Tip" aria-describedby="tip" name="tip">
+        <input type="number" oninput="this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : 0" min="0" class="form-control" value="15" aria-label="Tip" aria-describedby="tip" name="tip">
         <input type="radio" class="btn-check" id="tipDollar" name="tipType" value="dollar">
         <label class="btn btn-outline-info px-3" for="tipDollar">$</label>
         <input type="radio" class="btn-check" id="tipPercent" name="tipType" value="percent" checked>

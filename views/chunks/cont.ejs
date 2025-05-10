@@ -35,10 +35,10 @@
         <% } else { %>
           <% if (item.equal) { %>
             <label class="input-group-text" id="payAmount">Amount</label>
-            <input type="number" class="form-control" value="<%= item.equalSplit() %>" aria-label="Pay" aria-describedby="payAmount" name="payAmount" required>
+            <input type="number" oninput="this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : 0" min="0" class="form-control" value="<%= item.equalSplit() %>" aria-label="Pay" aria-describedby="payAmount" name="payAmount" required>
           <% } else { %>
             <label class="input-group-text" id="payAmount">Amount</label>
-            <input type="number" class="form-control" placehomder="0" aria-label="Pay" aria-describedby="payAmount" name="payAmount" required>
+            <input type="number" oninput="this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : 0" min="0" class="form-control" placehomder="0" aria-label="Pay" aria-describedby="payAmount" name="payAmount" required>
           <% } %>
           <button id="pay" class="btn btn-primary btn-lg"><i class="fa fa-credit-card"></i> Pay</button>
         <% } %>

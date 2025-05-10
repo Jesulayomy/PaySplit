@@ -4,51 +4,87 @@
 <body>
   <%- include('chunks/navbar') -%>
 
-  <div class="container-fluid p-5">
+  <div class="container-fluid p-2">
     <div class="row justify-content-center">
-    <div class="col-sm-6 col-sm-offset-3">
-      <h1><span class="fa fa-user-plus"></span> Signup</h1>
+      <div class="col-sm-6 col-sm-offset-3">
+      <h1 class=""><span class="fa fa-user-plus h4"></span> Signup</h1>
+        <% if (locals.messages.errors) { %>
+          <% messages.errors.forEach( el => { %>
+            <div class="alert alert-danger"><%= el.msg %></div>
+          <% }) %>    
+        <% } %>
+        <% if (locals.messages.info) { %>
+          <% messages.info.forEach( el => { %>
+            <div class="alert alert-info"><%= el.msg %></div>
+          <% }) %>    
+        <% } %>
 
-      <% if (locals.messages.errors) { %>
-        <% messages.errors.forEach( el => { %>
-          <div class="alert alert-danger"><%= el.msg %></div>
-        <% }) %>    
-      <% } %>
-      <% if (locals.messages.info) { %>
-        <% messages.info.forEach( el => { %>
-          <div class="alert alert-info"><%= el.msg %></div>
-        <% }) %>    
-      <% } %>
+        <form action="/signup" enctype="multipart/form-data" method="POST">
+          <div class="text-center mb-3">
+            <img id="imagePreview" src="https://upload.wikimedia.org/wikipedia/commons/2/2c/Default_pfp.svg" alt="Profile Preview" class="rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
+          </div>
+          <div class="input-group mb-3">
+            <label class="input-group-text" for="image">Profile</label>
+            <input type="file" class="form-control" id="image" name="image" accept="image/jpeg, image/png, image/gif" required>
+          </div>
+          <div class="input-group mb-3">
+            <label class="input-group-text" id="firstName">First Name</label>
+            <input type="text" class="form-control" placeholder="Enter your First Name" name="firstName" aria-label="First Name" aria-describedby="firstName" required />
+          </div>
+          <div class="input-group mb-3">
+            <label class="input-group-text" id="lastName">Last Name</label>
+            <input type="text" class="form-control" placeholder="Enter your Last Name" name="lastName" aria-label="Last Name" aria-describedby="lastName" required />
+          </div>
+          <div class="input-group mb-3">
+            <label class="input-group-text" id="email">Email</label>
+            <input type="email" class="form-control" placeholder="Enter your email" name="email" aria-label="Email" aria-describedby="email" required>
+          </div>
+          <div class="input-group mb-3">
+            <label class="input-group-text" id="password">Password</label>
+            <input type="password" class="form-control" placeholder="At least 8 characters" name="password" aria-label="Password" aria-describedby="password" required>
+          </div>
+          <div class="input-group mb-3">
+            <label class="input-group-text" id="confirmPassword">Confirm Password</label>
+            <input type="password" class="form-control" placeholder="********" name="confirmPassword" aria-label="Confirm Password" aria-describedby="confirmPassword" required>
+          </div>
+          <button type="submit" class="btn btn-success btn-md"><i class="fa fa-user-plus"></i> Signup</button>
+        </form>
 
-      <form action="/signup" method="post">
-        <div class="input-group mb-3">
-          <label class="input-group-text" id="firstName">First Name</label>
-          <input type="text" class="form-control" placeholder="Enter your First Name" name="firstName" aria-label="First Name" aria-describedby="firstName" required />
-        </div>
-        <div class="input-group mb-3">
-          <label class="input-group-text" id="lastName">Last Name</label>
-          <input type="text" class="form-control" placeholder="Enter your Last Name" name="lastName" aria-label="Last Name" aria-describedby="lastName" required />
-        </div>
-        <div class="input-group mb-3">
-          <label class="input-group-text" id="email">Email</label>
-          <input type="email" class="form-control" placeholder="Enter your email" name="email" aria-label="Email" aria-describedby="email" required>
-        </div>
-        <div class="input-group mb-3">
-          <label class="input-group-text" id="password">Password</label>
-          <input type="password" class="form-control" placeholder="At least 8 characters" name="password" aria-label="Password" aria-describedby="password" required>
-        </div>
-        <div class="input-group mb-3">
-          <label class="input-group-text" id="confirmPassword">Confirm Password</label>
-          <input type="password" class="form-control" placeholder="********" name="confirmPassword" aria-label="Confirm Password" aria-describedby="confirmPassword" required>
-        </div>
-        <button type="submit" class="btn btn-success btn-md"><i class="fa fa-user-plus"></i> Signup</button>
-      </form>
+        <hr />
 
-      <hr />
-
-      <p>Already have an account? <a href="/login">Login</a></p>
-      <p>Or go <a href="/">home</a>.</p>
-    </div>
+        <p>Already have an account? <a href="/login">Login</a></p>
+        <p>Or go <a href="/">home</a>.</p>
+      </div>
     </div>
   </div>
+
+  <div class="position-fixed top-0 end-0 p-3" style="z-index: 11">
+    <div id="fileSizeToast" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body">
+          Please use a file below 2MB.
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('image').addEventListener('change', function(event) {
+      const file = event.target.files[0];
+      if (file) {
+        if (file.size > 2 * 1024 * 1024) {
+          const toast = new bootstrap.Toast(document.getElementById('fileSizeToast'));
+          toast.show();
+          this.value = "";
+        } else {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            document.getElementById('imagePreview').src = e.target.result || "https://upload.wikimedia.org/wikipedia/commons/2/2c/Default_pfp.svg";
+          };
+          reader.readAsDataURL(file);
+        }
+      }
+    });
+  </script>
 <%- include('chunks/footer') -%>

@@ -21,3 +21,66 @@ body {
 /******************************************
 /* ADDITIONAL STYLES
 /*******************************************/
+
+
+/******************************************
+/* RESPONSIVE STYLES
+/*******************************************/
+
+/* Created based off Stack Overflow: https://stackoverflow.com/questions/46412541/applying-borders-on-elements-depending-on-device-size-with-bootstrap#:~:text=My%20version%20for%20CSS%2C%20compiled%20version%3A */
+@media (min-width: 576px) {
+  .rounded-sm-bottom-0 {
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+  }
+  .rounded-sm-bottom-5 {
+    border-bottom-left-radius: 32px !important;
+    border-bottom-right-radius: 32px !important;
+  }
+  .rounded-sm-end-0 {
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+  }
+  .rounded-sm-end-5 {
+    border-top-right-radius: 32px !important;
+    border-bottom-right-radius: 32px !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .rounded-md-bottom-0 {
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+  }
+  .rounded-md-bottom-5 {
+    border-bottom-left-radius: 32px !important;
+    border-bottom-right-radius: 32px !important;
+  }
+  .rounded-md-end-0 {
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+  }
+  .rounded-md-end-5 {
+    border-top-right-radius: 32px !important;
+    border-bottom-right-radius: 32px !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .rounded-lg-bottom-0 {
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+  }
+  .rounded-lg-bottom-5 {
+    border-bottom-left-radius: 32px !important;
+    border-bottom-right-radius: 32px !important;
+  }
+  .rounded-lg-end-0 {
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+  }
+  .rounded-lg-end-5 {
+    border-top-right-radius: 32px !important;
+    border-bottom-right-radius: 32px !important;
+  }
+}
