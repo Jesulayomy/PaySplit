@@ -1,6 +1,11 @@
 <div class="p-5 py-2">
   <div class="card mb-3 rounded-5 border border-0 shadow-sm">
     <img src="/img/puzzle.png" class="card-img-top rounded-top-5 shadow-sm" alt="<%= item.name %>" style="height: 200px; object-fit: cover;">
+    <% if ( item.owner.equals(user.id) ) { %>
+      <a href="/contributions/<%= item.id %>/edit" class="btn btn-secondary btn-lg position-absolute top-0 end-0 m-3">
+        <i class="fa fa-edit"></i>
+      </a>
+    <% } %>
     <div class="card-body">
       <h5 class="card-title"><%= item.name %></h5>
       <p class="card-text"><%= item.description %></p>
