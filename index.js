@@ -10,7 +10,6 @@ const logger         = require("morgan");
 const session        = require("express-session");
 const MongoStore     = require("connect-mongo");
 const methodOverride = require("method-override");
-// const cookieParser   = require('cookie-parser');
 
 const connectDB      = require("./config/database");
 const mainRoutes     = require("./routes/main");
@@ -31,12 +30,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use(logger("dev"));
-// app.use(cookieParser); // I might not need this anymore?
-
-// Use forms for put / delete
 app.use(methodOverride("_method"));
 
-// Setup Sessions - stored in MongoDB
 app.use(
   session({
     secret: process.env.SECRET,
@@ -50,9 +45,14 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 
-
 app.use("/", mainRoutes);
 app.use("/contributions", contribRoutes);
+app.use(async (req, res) => {
+  res.render(
+    "not-found",
+    {user: req.user || null, title: 'Not found', message: 'Why would you lead us here???', returnTo: { page: 'Home', URL: '/home'}}
+  )
+});
 
 
 const server = createServer(app);

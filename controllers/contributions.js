@@ -1,5 +1,5 @@
 const { User, Contribution, Payment, Item } = require('../models/models');
-
+const CastError = require('mongoose').Error.CastError;
 
 module.exports = {
   newContribPage: async (req, res) => {
@@ -36,15 +36,16 @@ module.exports = {
         contributors: [{ payment }],
         items: items
       });
-      newContribution.save().then((contribution) => {
+      newContribution.save()
+      .then((contribution) => {
         res.json(contribution);
       }).catch(err => {
         console.error(err);
-        res.status(500).send('Error saving contribution');
+        res.status(500).send('Error saving contribution' + err);
       });
     }).catch(err => {
       console.error(err);
-      res.status(500).json({error: 'Internal Server Error'});
+      res.status(500).send('Internal Server Error' + err);
     });
   },
   getContrib: async (req, res) => {
@@ -60,11 +61,21 @@ module.exports = {
           res.render('contribution.ejs', { item: contribution, user: req.user, title: contribution.name, invite });
         }
       } else {
-        res.status(404).send('Contribution not found');
+        res.render(
+          "not-found",
+          {user: req.user, title: 'Contribution Not found', message: 'That contribution isn\'t here anymore', returnTo: { page: 'Home', URL: '/home'}
+        });
       }
     }).catch(err => {
-      console.error(err);
-      res.status(500).send('Error fetching contribution');
+      if (err instanceof CastError) {
+        res.render(
+          "not-found",
+          {user: req.user, title: 'Contribution Not found', message: 'That\'s not even a real contribution', returnTo: { page: 'Home', URL: '/home'}
+        });
+      } else {
+        console.error(err);
+        res.status(500).send('Error fetching contribution');
+      }
     });
   },
   editContrib: async (req, res) => {
@@ -81,7 +92,10 @@ module.exports = {
       { _id: req.params.contributionID }
     ).then(contribution => {
       if (!contribution) {
-        return res.status(404).send('Contribution not found');
+        res.render(
+          "not-found",
+          {user: req.user, title: 'Contribution Not found', message: 'Someone messed up and it\'s not me', returnTo: { page: 'Home', URL: '/home'}
+        });
       }
 
       const paidAmount = contribution.contributors
@@ -112,12 +126,26 @@ module.exports = {
           res.status(404).send('Contribution not found');
         }
       }).catch(err => {
-        console.error(err);
-        res.status(500).send('Error updating contribution');
+        if (err instanceof CastError) {
+          res.render(
+            "not-found",
+            {user: req.user, title: 'Contribution Not found', message: 'That\'s not even a real contribution', returnTo: { page: 'Home', URL: '/home'}
+          });
+        } else {
+          console.error(err);
+          res.status(500).send('Error fetching contribution');
+        }
       });
     }).catch(err => {
-      console.error(err);
-      res.status(500).send('Error finding contribution');
+      if (err instanceof CastError) {
+        res.render(
+          "not-found",
+          {user: req.user, title: 'Contribution Not found', message: 'That\'s not even a real contribution', returnTo: { page: 'Home', URL: '/home'}
+        });
+      } else {
+        console.error(err);
+        res.status(500).send('Error fetching contribution');
+      }
     });
   },
   getContribEdit: async (req, res) => {
@@ -133,11 +161,21 @@ module.exports = {
           res.render('not-found.ejs', { user: req.user, title: 'Not Found' });
         }
       } else {
-        res.status(404).send('Contribution not found');
+        res.render(
+          "not-found",
+          {user: req.user, title: 'Contribution Not found', message: 'You can\'t edit it if it doesn\'t exist', returnTo: { page: 'Home', URL: '/home'}
+        });
       }
     }).catch(err => {
-      console.error(err);
-      res.status(500).send('Error fetching contribution');
+      if (err instanceof CastError) {
+        res.render(
+          "not-found",
+          {user: req.user, title: 'Contribution Not found', message: 'That\'s not even a real contribution', returnTo: { page: 'Home', URL: '/home'}
+        });
+      } else {
+        console.error(err);
+        res.status(500).send('Error fetching contribution');
+      }
     });
   },
   deleteContrib: async (req, res) => {
@@ -179,7 +217,15 @@ module.exports = {
       }
     })
     .catch((err) => {
-      res.status(500).send(`Error fetching contribution: ${err}`);
+      if (err instanceof CastError) {
+        res.render(
+          "not-found",
+          {user: req.user, title: 'Contribution Not found', message: 'It\'s not here, someone beat you to it', returnTo: { page: 'Home', URL: '/home'}
+        });
+      } else {
+        console.error(err);
+        res.status(500).send('Error fetching contribution');
+      }
     });
   },
   payContrib: async (req, res) => {
@@ -200,7 +246,10 @@ module.exports = {
           res.render('contribution.ejs', { item: contribution, user: req.user, title: contribution.name, invite: false });
         }
       } else {
-      res.status(404).send('Contribution not found');
+        res.render(
+          "not-found",
+          {user: req.user, title: 'Contribution Not found', message: 'Contribution not found, did someone delete it?', returnTo: { page: 'Home', URL: '/home'}
+        });
       }
     }).catch(err => {
       console.error(err);
@@ -262,7 +311,14 @@ module.exports = {
         invites: { 'user._id': req.user._id }
       }
     }).then(contribution => {
-      res.status(200).json({ contribution })
+      if (!contribution) {
+        res.render(
+          "not-found",
+          {user: req.user, title: 'Contribution Not found', message: 'That contribution isn\'t here anymore', returnTo: { page: 'Home', URL: '/home'}
+        });
+      } else {
+        res.status(200).json({ contribution })
+      }
     }).catch(err => {
       console.error(err);
       res.status(500).send('Error accepting invite');
@@ -282,7 +338,10 @@ module.exports = {
       if (updatedItem) {
         res.status(200).send('Contribution completed successfully');
       } else {
-        res.status(404).send('Contribution not found');
+        res.render(
+          "not-found",
+          {user: req.user, title: 'Contribution Not found', message: 'That contribution isn\'t here anymore', returnTo: { page: 'Home', URL: '/home'}
+        });
       }
     }).catch(err => {
       console.error(err);

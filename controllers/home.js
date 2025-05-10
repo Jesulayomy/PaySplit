@@ -17,7 +17,13 @@ module.exports = {
       res.render('home.ejs', { contributions, user: req.user, title: 'My Contributions' });
     }).catch(err => {
       console.error(err);
-      res.status(500).send('Error fetching contributions');
+      res.status(500).send('Error fetching contributions' + err);
+    });
+  },
+  notFound: async (req, res) => {
+    res.render(
+      "not-found",
+      {user: null, title: 'Not found', message: 'Why would you lead us here???', returnTo: { page: 'Home', URL: '/home'}
     });
   },
   getUsers: async (req, res) => {
@@ -27,7 +33,7 @@ module.exports = {
     })
     .catch(err => {
       console.error(err);
-      res.status(500).send('Error fetching users');
+      res.status(500).send('Error fetching users' + err);
     });
   },
   getProfile: async (req, res) => {
@@ -142,5 +148,5 @@ module.exports = {
       });
       res.status(200).json({response});
     }
-  }
+  },
 };

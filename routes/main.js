@@ -23,4 +23,6 @@ router.get("/logout", authController.logout);
 router.get("/signup", authController.getSignup);
 router.post("/signup", diskUpload.single('image'), authController.postSignup);
 
+// router.get("/not-found", homeController.notFound);
+
 module.exports = router;
