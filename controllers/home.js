@@ -1,6 +1,7 @@
 const { Type } = require("@google/genai");
 const { User, Contribution, Payment, Item } = require('../models/models');
 const AI = require('../middleware/ai');
+const cloudinary = require("../middleware/cloudinary");
 
 module.exports = {
   getIndex: async (req, res) => {
@@ -9,11 +10,25 @@ module.exports = {
   getHomePage: async (req, res) => {
     Contribution.find({
       $or: [
-      { 'invites._id': req.user._id },
-      { 'contributors.user._id': req.user._id },
-      { 'owner._id': req.user._id }
+      { 'invites': req.user._id },
+      { 'contributors.user': req.user._id },
+      { 'owner': req.user._id }
       ]
-    }).then(contributions => {
+    })
+    .populate('owner')
+    .populate({
+      path: 'invites',
+      // populate: {
+      //   path: 'user'
+      // }
+    })
+    .populate({
+      path: 'contributors',
+      populate: {
+        path: 'user'
+      }
+    })
+    .then(contributions => {
       res.render('home.ejs', { contributions, user: req.user, title: 'My Contributions' });
     }).catch(err => {
       console.error(err);
@@ -36,27 +51,72 @@ module.exports = {
       res.status(500).send('Error fetching users' + err);
     });
   },
-  // This will break due to new payment structure //
   getProfile: async (req, res) => {
-    Payment.find({
-      'user._id': req.user._id
-    }).then(payments => {
-      const paymentIds = {};
-      payments.forEach(payment => { paymentIds[payment._id] = true});
-      Contribution.find({
-        'contributors.payment._id': { $in: Object.keys(paymentIds) }
-      }).then(contributions => {
-        const contributionPayments = {};
-        contributions.forEach(contribution => {
-          contribution.contributors.forEach(contributor => {
-            if (paymentIds[contributor.payment._id]) {
-              contributionPayments[contribution.name] = contributor.payment.amount;
-            }
-          });
-        });
-        res.render('profile.ejs', { payments: contributionPayments, user: req.user, title: req.user.firstName + ' | Your profile' });
+    Contribution.find({
+      $or: [
+      { 'invites': req.user._id },
+      { 'contributors.user': req.user._id },
+      { 'owner': req.user._id }
+      ]
+    })
+    .populate('owner')
+    .populate({
+      path: 'invites',
+    })
+    .populate({
+      path: 'contributors',
+      populate: {
+        path: 'user'
+      }
+    })
+    .then(contributions => {
+      const payments = {};
+      contributions.forEach(contribution => {
+        const userContribution = contribution.contributors.filter(contributor => contributor.user._id.toString() === req.user.id);
+        payments[contribution.name] = userContribution ? userContribution[0].amount : 0;
       })
+      res.render('profile.ejs', { payments, user: req.user, title: req.user.firstName + ' | Your profile', total: Object.values(payments).reduce((acc, amount) => acc + amount, 0) });
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).send('Error fetching contributions' + err);
     });
+  },
+  editProfile: async (req, res) => {
+    const validationErrors = [];
+    const { firstName, lastName, password, confirmPassword } = req.body
+    if (password) {
+      if (!validator.isLength(password, { min: 8 }))
+        validationErrors.push({
+          msg: "Password must be at least 8 characters long",
+        });
+      if (password !== confirmPassword)
+        validationErrors.push({ msg: "Passwords do not match" });
+    }
+    if (validationErrors.length) {
+      req.flash("errors", validationErrors);
+      return res.redirect("/profile");
+    }
+    let result = null;
+    if (req.file) {
+      if (req.user.cloudinaryId) cloudinary.uploader.destroy(req.user.cloudinaryId);
+      result = await cloudinary.uploader.upload(req.file.path, { asset_folder: 'paysplit', public_id_prefix: 'user'  });
+    }
+    let updates = {}
+    if (firstName) updates['firstName'] = firstName;
+    if (lastName) updates['lastName'] = lastName;
+    if (password) updates['password'] = User.generateHash(password);
+    if (result) {
+      updates['imgURL'] = result.secure_url;
+      updates['cloudinaryId'] = result.public_id;
+    }
+
+    User.findOneAndUpdate(
+      { _id: req.user.id },
+      {$set: updates}
+    ).then(user => {
+      res.redirect('/profile');
+    })
   },
   getReceipt: async (req, res) => {
     if (!req.file) {

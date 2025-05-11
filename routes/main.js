@@ -15,6 +15,7 @@ router.get("/", homeController.getIndex);
 router.get("/home", ensureAuth, homeController.getHomePage);
 router.get("/users", homeController.getUsers);
 router.get("/profile", ensureAuth, homeController.getProfile);
+router.put("/profile", ensureAuth, diskUpload.single('image'), homeController.editProfile);
 router.post("/receipt", memoryUpload.single('image'), ensureAuth, homeController.getReceipt);
 
 router.get("/login", authController.getLogin);

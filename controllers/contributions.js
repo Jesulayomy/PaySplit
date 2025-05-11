@@ -18,7 +18,7 @@ module.exports = {
     const newPayment = new Payment({
       amount: 0,
       paid: false,
-      user: req.user,
+      user: req.user._id,
     });
     const newContribution = new Contribution({
       name,
@@ -31,7 +31,7 @@ module.exports = {
       total: amount + taxAmount + tipAmount,
       remainder: amount + taxAmount + tipAmount,
       date: new Date(),
-      owner: req.user,
+      owner: req.user.id,
       contributors: [newPayment],
       items: items
     });
@@ -47,9 +47,26 @@ module.exports = {
     const id = req.params.contributionID;
     Contribution.findOne(
       { _id: id }
-    ).then(contribution => {
+    )
+    .populate('owner')
+    .populate({
+      path: 'invites',
+    })
+    .populate({
+      path: 'contributors',
+      populate: {
+        path: 'user'
+      }
+    })
+    .populate({
+      path: 'contributors',
+      populate: {
+        path: 'user'
+      }
+    })
+    .then(contribution => {
       if (contribution) {
-        const invite = contribution.invites.some(user => user._id.toString() === req.user._id.toString());
+        const invite = contribution.invites.some(user => user.id === req.user.id);
         if (contribution.owner.equals(req.user._id)) {
           res.render('myContribution.ejs', { item: contribution, user: req.user, title: contribution.name, invite });
         } else {
@@ -85,7 +102,20 @@ module.exports = {
 
     Contribution.findOne(
       { _id: req.params.contributionID }
-    ).then(contribution => {
+    )
+    .populate('owner')
+    .populate({
+      path: 'invites',
+      // populate: {
+      //   path: 'user'
+      // }
+    })
+    .populate({
+      path: 'contributors',
+      populate: {
+        path: 'user'
+      }
+    }).then(contribution => {
       if (!contribution) {
         res.render(
           "not-found",
@@ -147,7 +177,20 @@ module.exports = {
     const id = req.params.contributionID;
     Contribution.findOne(
       { _id: id }
-    ).then(contribution => {
+    )
+    .populate('owner')
+    .populate({
+      path: 'invites',
+      // populate: {
+      //   path: 'user'
+      // }
+    })
+    .populate({
+      path: 'contributors',
+      populate: {
+        path: 'user'
+      }
+    }).then(contribution => {
       if (contribution) {
         const invite = null;
         if (contribution.owner.equals(req.user._id)) {
@@ -214,13 +257,26 @@ module.exports = {
     const id = req.params.contributionID;
     const amount = req.body.amount;
     Contribution.findOneAndUpdate(
-      { _id: id, 'contributors.user._id': req.user._id },
+      { _id: id, 'contributors.user': req.user._id },
       {
         $set: { 'contributors.$.paid': true },
         $inc: { 'contributors.$.amount': Math.abs(amount), 'remainder': - Math.abs(amount) },
       },
       { new: true }
-    ).then(contribution => {
+    )
+    .populate('owner')
+    .populate({
+      path: 'invites',
+      // populate: {
+      //   path: 'user'
+      // }
+    })
+    .populate({
+      path: 'contributors',
+      populate: {
+        path: 'user'
+      }
+    }).then(contribution => {
       if (contribution) {
         if (contribution.owner.equals(req.user._id)) {
           res.render('myContribution.ejs', { item: contribution, user: req.user, title: contribution.name, invite: false });
@@ -242,44 +298,57 @@ module.exports = {
     const id = req.params.contributionID;
     const { email } = req.body;
     if (email === req.user.email) {
-      res.status(409).json({error: 'Cannot invite self'});
+      res.status(409).json({message: 'Cannot invite self'});
     } else {
       User.findOne({ email }).then(user => {
         if (!user) {
           res.status(404).json(
-            {user: req.user, title: 'User not found', message: 'You tried to invite a ghost?', returnTo: { page: 'Back to contribution', URL: `/contribution/${id}`}
-          });
+            {message: 'User with that email does not exist.'}
+          );
         } else {
-          const newPayment = new Payment({
-            amount: 0,
-            paid: false,
-            user: user,
-          });
-          Contribution.findOneAndUpdate(
-            { _id: id },
-            {
-            $push: {
-              invites: user,
-              contributors: newPayment
-            }
-            },
-            { new: true }
-          ).then(updatedContribution => {
-            if (updatedContribution) {
-              res.redirect('back');
+          Contribution.findOne({
+            _id: id,
+            $or: [
+              { 'invites': user._id },
+              { 'contributors.user': user._id },
+              { 'owner': user._id }
+            ]
+          }).then(existingContribution => {
+            if (existingContribution) {
+              res.status(409).json({message: 'User already invited.'})
             } else {
-              res.status(404).json({ error: 'Contribution not found' });
-            }
-          }).catch(err => {
-            console.error(err);
-            res.status(500).json({ error: `Error updating contribution: ${err}` });
+              const newPayment = new Payment({
+                amount: 0,
+                paid: false,
+                user: user._id,
+              });
+              Contribution.findOneAndUpdate(
+                { _id: id },
+                {
+                $push: {
+                  invites: user._id,
+                  contributors: newPayment
+                }
+                },
+                { new: true }
+              ).then(updatedContribution => {
+                if (updatedContribution) {
+                  res.redirect('back');
+                } else {
+                  res.status(404).json({ error: 'Contribution not found' });
+                }
+              }).catch(err => {
+                console.error(err);
+                res.status(500).json({ error: `Error updating contribution: ${err}` });
+              });
+            };
           });
-        }
+        };
       }).catch(err => {
         console.error(err);
         res.status(500).json({ error: `Error finding user: ${err}` });
       });
-    }
+    };
   },
   acceptContribInvite: async (req, res) => {
     Contribution.findOneAndUpdate({
@@ -287,7 +356,17 @@ module.exports = {
     },
     {
       $pull: {
-        invites: { '_id': req.user._id }
+        invites: req.user._id 
+      }
+    })
+    .populate('owner')
+    .populate({
+      path: 'invites',
+    })
+    .populate({
+      path: 'contributors',
+      populate: {
+        path: 'user'
       }
     }).then(contribution => {
       if (!contribution) {
@@ -304,9 +383,10 @@ module.exports = {
     });
   },
   completeContrib: async (req, res) => {
+    console.log(req.body);
     const { completed } = req.body;
     Contribution.findOneAndUpdate(
-      { _id: req.params.contributionID, 'owner._id': req.user._id },
+      { _id: req.params.contributionID, 'owner': req.user._id },
       {
         $set: {
           completed

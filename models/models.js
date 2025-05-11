@@ -14,7 +14,7 @@ const userSchema = new Schema({
 
 const paymentSchema = new Schema({
   amount: { type: Number, default: 0 },
-  user: userSchema,
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   paid: { type: Boolean, default: false },
 });
 
@@ -36,9 +36,9 @@ const contributionSchema = new Schema({
   equal: Boolean,
   date: Date,
   completed: { type: Boolean, default: false },
-  owner: userSchema,
+  owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   items: [itemSchema],
-  invites: [userSchema],
+  invites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   contributors: [paymentSchema],
 });
 
