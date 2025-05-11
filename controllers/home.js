@@ -9,8 +9,8 @@ module.exports = {
   getHomePage: async (req, res) => {
     Contribution.find({
       $or: [
-      { 'invites.user._id': req.user._id },
-      { 'contributors.payment.user._id': req.user._id },
+      { 'invites._id': req.user._id },
+      { 'contributors.user._id': req.user._id },
       { 'owner._id': req.user._id }
       ]
     }).then(contributions => {
@@ -36,6 +36,7 @@ module.exports = {
       res.status(500).send('Error fetching users' + err);
     });
   },
+  // This will break due to new payment structure //
   getProfile: async (req, res) => {
     Payment.find({
       'user._id': req.user._id

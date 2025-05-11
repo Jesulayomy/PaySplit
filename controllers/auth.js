@@ -3,21 +3,15 @@ const validator = require("validator");
 
 exports.logout = (req, res, next) => {
   req.logout((err) => {
-    if (err) {
-      return next(err);
-    }
-    if (req.session) {
-      req.session.destroy((err) => {
-        if (err) {
-          console.error("Error : Failed to destroy the session during logout.", err);
-        }
-        req.user = null;
-        res.redirect("/");
-      });
-    } else {
-      req.user = null;
-      res.redirect("/");
-    }
+    if (err) { return next(err) }
+    req.session.destroy((err) => {
+      if (err) {
+        console.error("Error : Failed to destroy the session during logout.", err);
+      }
+    });
+    req.user = null;
+    res.clearCookie('connect.sid');
+    res.redirect("/");
   });
 };
 

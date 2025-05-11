@@ -7,9 +7,9 @@ module.exports = {
   },
   createContrib: async (req, res) => {
     let { name, description, amount, tax, tip, equal, taxType, tipType, items } = req.body;
-    amount = Number(amount);
-    tax = Number(tax);
-    tip = Number(tip);
+    amount = Math.abs(Number(amount));
+    tax = Math.abs(Number(tax));
+    tip = Math.abs(Number(tip));
     let tipAmount = 0;
     let taxAmount = 0;
     tipAmount += tipType === "dollar" ? tip : amount * tip / 100;
@@ -20,32 +20,27 @@ module.exports = {
       paid: false,
       user: req.user,
     });
-    newPayment.save().then((payment) => {
-      const newContribution = new Contribution({
-        name,
-        description,
-        amount,
-        tax: taxAmount,
-        tip: tipAmount,
-        equal,
-        completed: false,
-        total: amount + taxAmount + tipAmount,
-        remainder: amount + taxAmount + tipAmount,
-        date: new Date(),
-        owner: req.user,
-        contributors: [{ payment }],
-        items: items
-      });
-      newContribution.save()
-      .then((contribution) => {
-        res.json(contribution);
-      }).catch(err => {
-        console.error(err);
-        res.status(500).send('Error saving contribution' + err);
-      });
+    const newContribution = new Contribution({
+      name,
+      description,
+      amount,
+      tax: taxAmount,
+      tip: tipAmount,
+      equal,
+      completed: false,
+      total: amount + taxAmount + tipAmount,
+      remainder: amount + taxAmount + tipAmount,
+      date: new Date(),
+      owner: req.user,
+      contributors: [newPayment],
+      items: items
+    });
+    newContribution.save()
+    .then((contribution) => {
+      res.json(contribution);
     }).catch(err => {
       console.error(err);
-      res.status(500).send('Internal Server Error' + err);
+      res.status(500).send('Error saving contribution' + err);
     });
   },
   getContrib: async (req, res) => {
@@ -54,7 +49,7 @@ module.exports = {
       { _id: id }
     ).then(contribution => {
       if (contribution) {
-        const invite = contribution.invites.some(invite => invite.user._id.toString() === req.user._id.toString());
+        const invite = contribution.invites.some(user => user._id.toString() === req.user._id.toString());
         if (contribution.owner.equals(req.user._id)) {
           res.render('myContribution.ejs', { item: contribution, user: req.user, title: contribution.name, invite });
         } else {
@@ -80,9 +75,9 @@ module.exports = {
   },
   editContrib: async (req, res) => {
     let { name, description, amount, tax, tip, equal, taxType, tipType } = req.body;
-    amount = Number(amount);
-    tax = Number(tax);
-    tip = Number(tip);
+    amount = Math.abs(Number(amount));
+    tax = Math.abs(Number(tax));
+    tip = Math.abs(Number(tip));
     let tipAmount = 0;
     let taxAmount = 0;
     tipAmount += tipType === "dollar" ? tip : amount * tip / 100;
@@ -99,8 +94,8 @@ module.exports = {
       }
 
       const paidAmount = contribution.contributors
-        .filter(contributor => contributor.payment.paid)
-        .reduce((sum, contributor) => sum + contributor.payment.amount, 0);
+        .filter(payment => payment.paid)
+        .reduce((sum, payment) => sum + payment.amount, 0);
 
       const remainder = amount + taxAmount + tipAmount - paidAmount;
 
@@ -183,35 +178,22 @@ module.exports = {
       _id: req.params.contributionID
     }).then(contribution => {
       if (contribution) {
-        const paymentIds = contribution.contributors.map(
-          (contributor) => contributor.payment._id
-        );
-        Payment.deleteMany({
-          _id: { $in: paymentIds }
+        Contribution.findOneAndDelete({
+          _id: req.params.contributionID
         })
-          .then(() => {
-            Contribution.findOneAndDelete({
-              _id: req.params.contributionID
-            })
-              .then((deletedItem) => {
-                if (deletedItem) {
-                  res
-                    .status(200)
-                    .json({
-                      success:
-                        'Contribution and associated payments deleted successfully'
-                    });
-                } else {
-                  res.status(404).json({ error: 'Contribution not found' });
-                }
-              })
-              .catch((err) => {
-                res.status(500).send(`Error deleting contribution: ${err}`);
-              });
-          })
-          .catch((err) => {
-            res.status(500).send(`Error deleting payments: ${err}`);
-          });
+        .then((deletedItem) => {
+          if (deletedItem) {
+            res.status(200).json({
+              success:
+                'Contribution deleted successfully'
+            });
+          } else {
+            res.status(404).json({ error: 'Contribution not found' });
+          }
+        })
+        .catch((err) => {
+          res.status(500).send(`Error deleting contribution: ${err}`);
+        });
       } else {
         res.status(404).json({ error: 'Contribution not found' });
       }
@@ -232,10 +214,10 @@ module.exports = {
     const id = req.params.contributionID;
     const amount = req.body.amount;
     Contribution.findOneAndUpdate(
-      { _id: id, 'contributors.payment.user._id': req.user._id },
+      { _id: id, 'contributors.user._id': req.user._id },
       {
-        $set: { 'contributors.$.payment.paid': true },
-        $inc: { 'contributors.$.payment.amount': amount, 'remainder': -amount },
+        $set: { 'contributors.$.paid': true },
+        $inc: { 'contributors.$.amount': Math.abs(amount), 'remainder': - Math.abs(amount) },
       },
       { new: true }
     ).then(contribution => {
@@ -264,38 +246,35 @@ module.exports = {
     } else {
       User.findOne({ email }).then(user => {
         if (!user) {
-          return res.status(404).json({ error: `User with email '${email}' not found` });
-        }
-        const newPayment = new Payment({
-          amount: 0,
-          paid: false,
-          user: user,
-        });
-  
-        newPayment.save().then(payment => {
+          res.status(404).json(
+            {user: req.user, title: 'User not found', message: 'You tried to invite a ghost?', returnTo: { page: 'Back to contribution', URL: `/contribution/${id}`}
+          });
+        } else {
+          const newPayment = new Payment({
+            amount: 0,
+            paid: false,
+            user: user,
+          });
           Contribution.findOneAndUpdate(
             { _id: id },
             {
             $push: {
-              invites: { user },
-              contributors: { payment }
+              invites: user,
+              contributors: newPayment
             }
             },
             { new: true }
           ).then(updatedContribution => {
             if (updatedContribution) {
-              res.status(200).json({ success: 'User invited and payment added', item: updatedContribution });
+              res.redirect('back');
             } else {
               res.status(404).json({ error: 'Contribution not found' });
             }
           }).catch(err => {
-          console.error(err);
+            console.error(err);
             res.status(500).json({ error: `Error updating contribution: ${err}` });
           });
-        }).catch(err => {
-          console.error(err);
-          res.status(500).json({ error: `Error creating payment: ${err}` });
-        });
+        }
       }).catch(err => {
         console.error(err);
         res.status(500).json({ error: `Error finding user: ${err}` });
@@ -308,7 +287,7 @@ module.exports = {
     },
     {
       $pull: {
-        invites: { 'user._id': req.user._id }
+        invites: { '_id': req.user._id }
       }
     }).then(contribution => {
       if (!contribution) {

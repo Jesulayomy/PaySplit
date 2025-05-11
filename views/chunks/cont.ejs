@@ -12,8 +12,8 @@
 
       <div class="progress progress-stacked">
         <% const colors = ['bg-primary', 'bg-success', 'bg-info', 'bg-warning', 'bg-danger']; %>
-        <% item.contributors.forEach((contribution, index) => { %>
-          <% const progressPercentage = (contribution.payment.amount / item.total) * 100; %>
+        <% item.contributors.forEach((payment, index) => { %>
+          <% const progressPercentage = (payment.amount / item.total) * 100; %>
           <div 
             class="progress-bar progress-bar-striped progress-bar-animated <%= colors[index % colors.length] %>" 
             role="progressbar" 
@@ -22,13 +22,13 @@
             aria-valuemax="100"
             style="width: <%= progressPercentage %>%"
           >
-            <%= contribution.payment.user.firstName %>
+            <%= payment.user.firstName %>
           </div>
         <% }); %>
       </div>
       <p class="card-text text-center">
         <small class="text-body-secondary">
-          <% const contrib = item.contributors.reduce((acc, contribution) => acc + contribution.payment.amount, 0); %>
+          <% const contrib = item.contributors.reduce((acc, payment) => acc + payment.amount, 0); %>
           $<%= contrib %> / $<%= item.total %>
         </small>
       </p>

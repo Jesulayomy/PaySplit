@@ -38,8 +38,8 @@ const contributionSchema = new Schema({
   completed: { type: Boolean, default: false },
   owner: userSchema,
   items: [itemSchema],
-  invites: [{user: userSchema}],
-  contributors: [{payment: paymentSchema}],
+  invites: [userSchema],
+  contributors: [paymentSchema],
 });
 
 userSchema.methods.generateHash = function(password) {
@@ -55,7 +55,7 @@ userSchema.methods.fullName = function() {
 };
 
 contributionSchema.methods.equalSplit = function() {
-  const unpaidContributors = this.contributors.filter(contributor => !contributor.payment.paid);
+  const unpaidContributors = this.contributors.filter(payment => !payment.paid);
   return unpaidContributors.length > 0 
     ? this.remainder / unpaidContributors.length 
     : this.remainder;

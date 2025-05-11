@@ -3,22 +3,22 @@
     <% for( let i = 0; i < item.contributors.length; i++ ) { %>
     <li class="list-group-item d-flex justify-content-between align-items-start">
       <div class="ms-2 me-auto d-flex">
-        <img class="rounded-circle" width="40" height="40" src="<%= item.contributors[i].payment.user.imgURL %>" alt="">
+        <img class="rounded-circle" width="40" height="40" src="<%= item.contributors[i].user.imgURL %>" alt="">
         <div class="ms-2 me-auto">
-          <div class="fw-bold"><%= item.contributors[i].payment.user.fullName() %></div>
+          <div class="fw-bold"><%= item.contributors[i].user.fullName() %></div>
           <%
-            const isInvitePending = item.invites.some(invite => invite.user._id.toString() === item.contributors[i].payment.user._id.toString());
+            const isInvitePending = item.invites.some(invitedUser => invitedUser._id.toString() === item.contributors[i].user._id.toString());
           %>
           <% if (isInvitePending) { %>
             <span class="text-danger">Invite Pending</span>
-          <% } else if (item.contributors[i].payment.paid) { %>
+          <% } else if (item.contributors[i].paid) { %>
             <span class="text-success">Paid</span>
           <% } else { %>
             <span class="text-warning">Payment Pending</span>
           <% } %>
         </div>
       </div>
-      <span class="badge text-bg-primary rounded-pill bid">$<%= item.contributors[i].payment.amount %></span>
+      <span class="badge text-bg-primary rounded-pill bid">$<%= item.contributors[i].amount %></span>
     </li>
     <% } %>
   </div>

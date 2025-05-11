@@ -13,7 +13,7 @@
 		<div class="row p-3">
 			<% contributions.forEach((contribution, index) => { %>
 			<%
-				const isInvitePending = contribution.invites.some(invite => invite.user._id.toString() === user._id.toString());
+				const isInvitePending = contribution.invites.some(invitedUser => invitedUser._id.toString() === user._id.toString());
 			%>
 			<a href="/contributions/<%= contribution._id %>" class="col-12 col-md-6 p-3 btn text-start m-0 rounded-5 border-0 border-none">
 			<% if (isInvitePending) { %>
@@ -30,7 +30,7 @@
 								<% } %>
 									<div class="p-1">
 									<% contribution.contributors.forEach(payment => { %>
-									 <img class="rounded-circle" width="20" height="20" src="<%= payment.payment.user.imgURL %>" alt="">
+									 <img class="rounded-circle" width="20" height="20" src="<%= payment.user.imgURL %>" alt="">
 									<% }) %>
 									</div>
 								<p class="card-text fw-bold mt-auto <%= contribution.completed ? 'text-success' : '' %>">$<%= (contribution.total - contribution.remainder).toFixed(2) %> / $<%= contribution.total.toFixed(2) %></p>
