@@ -45,9 +45,14 @@ module.exports = {
   },
   getContrib: async (req, res) => {
     const id = req.params.contributionID;
-    Contribution.findOne(
-      { _id: id }
-    )
+    Contribution.findOne({ 
+      _id: id ,
+      $or: [
+      { 'invites': req.user._id },
+      { 'contributors.user': req.user._id },
+      { 'owner': req.user._id }
+      ]
+    })
     .populate('owner')
     .populate({
       path: 'invites',
@@ -70,15 +75,11 @@ module.exports = {
           return a.name.localeCompare(b.name);
         });
         const invite = contribution.invites.some(user => user.id === req.user.id);
-        if (contribution.owner.equals(req.user._id)) {
-          res.render('myContribution.ejs', { contribution, user: req.user, title: contribution.name, invite });
-        } else {
-          res.render('contribution.ejs', { contribution, user: req.user, title: contribution.name, invite });
-        }
+        res.render('contribution.ejs', { contribution, user: req.user, title: contribution.name, invite });
       } else {
         res.render(
           "not-found",
-          {user: req.user, title: 'Contribution Not found', message: 'That contribution isn\'t here anymore', returnTo: { page: 'Home', URL: '/home'}
+          {user: req.user, title: 'Contribution Not found', message: 'You can\'t access that contribution anymore', returnTo: { page: 'Home', URL: '/home'}
         });
       }
     }).catch(err => {
@@ -184,9 +185,6 @@ module.exports = {
     .populate('owner')
     .populate({
       path: 'invites',
-      // populate: {
-      //   path: 'user'
-      // }
     })
     .populate({
       path: 'contributors',
@@ -195,9 +193,8 @@ module.exports = {
       }
     }).then(contribution => {
       if (contribution) {
-        const invite = null;
         if (contribution.owner.equals(req.user._id)) {
-          res.render('editContribution.ejs', { item: contribution, user: req.user, title: contribution.name, invite });
+          res.render('editContribution.ejs', { contribution, user: req.user, title: contribution.name, invite: false });
         } else {
           res.render('not-found.ejs', { user: req.user, title: 'Not Found' });
         }
@@ -293,11 +290,7 @@ module.exports = {
         });
       }
       if (contribution) {
-        if (contribution.owner.equals(req.user._id)) {
-          res.render('myContribution.ejs', { contribution, user: req.user, title: contribution.name, invite: false });
-        } else {
-          res.render('contribution.ejs', { contribution, user: req.user, title: contribution.name, invite: false });
-        }
+        res.render('contribution.ejs', { contribution, user: req.user, title: contribution.name, invite: false });
       } else {
         res.render(
           "not-found",

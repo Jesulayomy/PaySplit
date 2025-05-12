@@ -16,12 +16,10 @@ module.exports = {
       { 'owner': req.user._id }
       ]
     })
+    .sort({ completed: 1, invites: -1 })
     .populate('owner')
     .populate({
       path: 'invites',
-      // populate: {
-      //   path: 'user'
-      // }
     })
     .populate({
       path: 'contributors',
@@ -76,7 +74,7 @@ module.exports = {
         const userContribution = contribution.contributors.filter(contributor => contributor.user._id.toString() === req.user.id);
         payments[contribution.name] = userContribution ? userContribution[0].amount : 0;
       })
-      res.render('profile.ejs', { payments, user: req.user, title: req.user.firstName + ' | Your profile', total: Object.values(payments).reduce((acc, amount) => acc + amount, 0) });
+      res.render('profile.ejs', { payments, user: req.user, title: req.user.firstName + ' | Your Profile', total: Object.values(payments).reduce((acc, amount) => acc + amount, 0) });
     })
     .catch(err => {
       console.error(err);
