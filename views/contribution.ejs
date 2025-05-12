@@ -3,39 +3,20 @@
 <%- include('chunks/head') -%>
 <body>
   <%- include('chunks/navbar') -%>
-  <div class="px-5">
-    <div class="px-4 py-2"><a class="btn" href="/home"><span class="fa fa-backward"></span> Home</a></div>
-    <%- include('chunks/cont.ejs') -%>
-    <%- include('chunks/group') -%>
-  </div>
 
-  <div class="container-fluid">
-    <h4>Items</h4>
-    <div class="container-fluid">
-    <div class="border-danger">
-      <div class="p-2">
-        <input class="btn-check item-toggle" type="checkbox" id="taxButton" <%= contribution.equal ? 'disabled checked' : '' %>>
-        <label class="btn btn-outline-info" for="taxButton">
-          Tax <span class="badge text-bg-info rounded-pill">$ <span id="taxID"><%= contribution.equalTax() %></span></span>
-        </label>
-      </div>
-      <div class="p-2">
-        <input class="btn-check item-toggle" type="checkbox" id="tipButton" checked <%= contribution.equal ? 'disabled' : '' %>>
-        <label class="btn btn-outline-info" for="tipButton">
-          Tip <span class="badge text-bg-info rounded-pill">$ <span id="tipID"><%= contribution.equalTip() %></span></span>
-        </label>
-      </div>
-      <% contribution.items.forEach(item => { %>
-        <div class="p-2">
-          <input class="btn-check item-toggle" type="checkbox" id="<%= item._id %>" <%= contribution.equal || item.paid ? 'disabled' : '' %>>
-          <label class="btn <%= item.paid ? 'btn-outline-success' : 'btn-outline-primary' %>" for="<%= item._id %>">
-            <%= item.name %> <span class="badge <%= item.paid ? 'text-bg-success' : 'text-bg-primary' %> rounded-pill">$ <span id="item-<%= item._id %>"><%= item.price.toFixed(2) %></span></span>
-          </label>
-        </div>
-      <% }) %>
-      </div>
+  <div class="container-fluid row m-0 p-3 py-lg-3 p-lg-5 pt-0">
+    <div class="p-3 py-lg-3 p-lg-5 pt-0"><a class="btn" href="/home"><span class="fa fa-backward"></span> Home</a></div>
+    <div class="col-sm-6 m-0 p-0">
+      <%- include('chunks/cont.ejs') -%>
+      <%- include('chunks/invite.ejs') -%>
+      <%- include('chunks/group') -%>
+    </div>
+    <div class="col-sm-6 m-0 p-0">
+      <%- include('chunks/items.ejs') -%>
     </div>
   </div>
+
+
   <script>
     const selectedItems = [];
 
@@ -115,6 +96,31 @@
           document.querySelector('input[name="payAmount"]').style.border = '2px solid red';
         }
       });  
+
+      document.getElementById('inviteUser').addEventListener('click', function() {
+      const id = '<%= contribution._id %>';
+      const email = document.querySelector('input[name="invite"]').value;
+      fetch(`/contributions/${id}/invite`, {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email })
+      })
+        .then(response => {
+          if (response.ok) {
+            location.reload();
+          } else {
+            response.json().then(data => {
+              document.querySelector('.toast-body').innerText = data.message;
+              const toast = new bootstrap.Toast(document.getElementById('validEmailToast'));
+              toast.show();
+            })
+          }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+
     </script>
   <% } %>
 <%- include('chunks/footer') -%>

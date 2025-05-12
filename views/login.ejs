@@ -3,9 +3,10 @@
 <%- include('chunks/head') -%>
 <body>
   <%- include('chunks/navbar') -%>
+
   <div class="container-fluid p-5">
     <div class="row justify-content-center">
-      <div class="col-sm-6">
+      <div class="col-sm-8 col-lg-6 col-sm-offset-3">
         <h1><span class="fa fa-sign-in"></span> Login</h1>
         <% if (locals.messages.errors) { %>
           <% messages.errors.forEach(el => { %>

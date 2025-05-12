@@ -1,0 +1,19 @@
+<div class="container-fluid p-3 py-lg-3 p-lg-5 pt-0">
+  <h6>Select items to pay for</h6>
+  <div class="">
+      <input class="btn-check item-toggle" type="checkbox" id="taxButton" <%= contribution.equal ? 'disabled checked' : '' %>>
+      <label class="btn btn-outline-info m-1" for="taxButton">
+        Tax <span class="badge text-bg-info rounded-pill">$ <span id="taxID"><%= contribution.equalTax() %></span></span>
+      </label>
+      <input class="btn-check item-toggle" type="checkbox" id="tipButton" checked <%= contribution.equal ? 'disabled' : '' %>>
+      <label class="btn btn-outline-info m-1" for="tipButton">
+        Tip <span class="badge text-bg-info rounded-pill">$ <span id="tipID"><%= contribution.equalTip() %></span></span>
+      </label>
+      <% contribution.items.forEach(item => { %>
+        <input class="btn-check item-toggle" type="checkbox" id="<%= item._id %>" <%= contribution.equal || item.paid ? 'disabled' : '' %>>
+        <label class="btn <%= item.paid ? 'btn-outline-secondary' : 'btn-outline-primary' %> m-1" for="<%= item._id %>">
+          <%= item.name %> <span class="badge <%= item.paid ? 'text-bg-secondary' : 'text-bg-primary' %> rounded-pill">$ <span id="item-<%= item._id %>"><%= item.price.toFixed(2) %></span></span>
+        </label>
+      <% }) %>
+  </div>
+</div>

@@ -1,4 +1,4 @@
-<div class="p-5 py-2">
+<div class="container-fluid p-3 py-lg-3 p-lg-5 pt-0">
   <div class="card mb-3 rounded-5 border border-0 shadow-sm">
     <img src="/img/puzzle.png" class="card-img-top rounded-top-5 shadow-sm" alt="<%= contribution.name %>" style="height: 200px; object-fit: cover;">
     <% if ( contribution.owner.equals(user.id) ) { %>
@@ -36,7 +36,7 @@
       <% if (!contribution.complete) { %>
       <div id="pay-button-container" class="p-2 input-group">
         <% if (invite) { %>
-        <button id="accept" class="btn btn-success btn-md">Join</button>
+          <button id="accept" class="btn btn-success btn-md">Join</button>
         <% } else { %>
           <% if (contribution.equal) { %>
             <label class="input-group-text" id="payAmount">Amount</label>

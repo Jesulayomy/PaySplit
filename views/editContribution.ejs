@@ -4,97 +4,78 @@
 <body>
   <%- include('chunks/navbar') -%>
 
-	<div class="px-5">
-    <div class="px-4 py-2"><a class="btn" href="/contributions/<%= item.id %>"><span class="fa fa-backward"></span> <%= item.name %></a></div>
+	<div class="container-fluid p-3 py-lg-3 p-lg-5 pt-0">
+    <div class="p-3 py-lg-3 p-lg-5 pt-0"><a class="btn" href="/contributions/<%= contribution.id %>"><span class="fa fa-backward"></span> <%= contribution.name %></a></div>
 
-    <div class="container-fluid p-5 py-3">
-      <div class="py-3 d-flex justify-content-between">
-        <h2>Editing: <%= item.name %></h2>
-        <div class="">
-          <button class="btn <%= item.completed ? 'btn-success' : 'btn-outline-success' %>" id="completeItem" style="margin-left: 10px;">
-            <span class="fa fa-check"></span> <%= item.completed ? 'Completed' : 'Complete' %>
-          </button>
-          <button class="btn btn-outline-danger" id="deleteItem" style="margin-left: 10px;">
-            <span class="fa fa-trash"></span> Delete
-          </button>
-        </div>
-      </div>
-
-      <div>
-        <div class="input-group mb-3">
-          <label class="input-group-text" id="name">Name</label>
-          <input type="text" class="form-control" value="<%= item.name %>" aria-label="Name" aria-describedby="name" name="name" required>
-        </div>
-
-        <div class="input-group mb-3">
-          <label class="input-group-text" id="description">Description</label>
-          <textarea class="form-control" aria-label="Description" aria-describedby="description" name="description"><%= item.description %></textarea>
-        </div>
-  
-        <div class="input-group mb-3">
-          <label class="input-group-text" id="amount">Amount</label>
-          <input type="number" min="0" class="form-control" value="<%= item.amount.toFixed(2) %>" aria-label="Amount" aria-describedby="amount" name="amount" required>
-        </div>
-  
-        <div class="input-group mb-3">
-          <label class="input-group-text" id="tax">Tax</label>
-          <input type="number" min="0" class="form-control" value="<%= item.tax %>" aria-label="Tax" aria-describedby="tax" name="tax">
-          <input type="radio" class="btn-check" id="taxDollar" name="taxType" value="dollar" checked>
-          <label class="btn btn-outline-info px-3" for="taxDollar">$</label>
-          <input type="radio" class="btn-check" id="taxPercent" name="taxType" value="percent">
-          <label class="btn btn-outline-primary px-3" for="taxPercent">%</label>
-        </div>
-  
-        <div class="input-group mb-3">
-          <label class="input-group-text" id="tip">Tip</label>
-          <input type="number" class="form-control" value="<%= item.tip %>" aria-label="Tip" aria-describedby="tip" name="tip">
-          <input type="radio" class="btn-check" id="tipDollar" name="tipType" value="dollar" checked>
-          <label class="btn btn-outline-info px-3" for="tipDollar">$</label>
-          <input type="radio" class="btn-check" id="tipPercent" name="tipType" value="percent">
-          <label class="btn btn-outline-primary px-3" for="tipPercent">%</label>
-        </div>
-      </div>
-  
-      <div class="pb-3 d-flex justify-content-end">
-        <div class="form-check text-center me-3">
-          <% if (item.equal) { %>
-            <input class="btn-check" type="checkbox" id="equal" name="equal" checked>
-          <% } else { %>
-            <input class="btn-check" type="checkbox" id="equal" name="equal">
-          <% } %>
-          <label class="btn btn-outline-warning" for="equal">Equal Payments</label>
-        </div>
-        <button id="save" type="submit" class="btn btn-success">Save</button>
-      </div>
-  
-      <hr class="border border-1 opacity-75">
-    </div>
-
-    <div class="p-5 py-3 text-center">
-      <div class="input-group mb-3">
-        <label class="input-group-text" id="invite">Email</label>
-        <input type="text" class="form-control" value="hespy@gmail.com" aria-label="Email" aria-describedby="invite" name="invite" required>
-        <button id="inviteUser" type="submit" class="btn btn-success">Invite</button>
-      </div>
-    </div>
-
-    <div class="position-fixed top-0 end-0 p-3" style="z-index: 11">
-      <div id="validEmailToast" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="d-flex">
-          <div class="toast-body">
+    <div class="row justify-content-center p-3 py-lg-3 p-lg-5 pt-0">
+      <div class="col-sm-8 col-lg-6  m-0 p-0">
+        <div class="py-3 d-flex flex-column flex-lg-row justify-content-between align-items-start align-items-lg-center">
+          <h2 class="mb-3 mb-lg-0">Editing: <%= contribution.name %></h2>
+          <div class="d-flex">
+            <button class="btn <%= contribution.completed ? 'btn-success' : 'btn-outline-success' %>" id="completeItem" style="margin-left: 10px;">
+              <span class="fa fa-check"></span> <%= contribution.completed ? 'Completed' : 'Complete' %>
+            </button>
+            <button class="btn btn-outline-danger" id="deleteItem" style="margin-left: 10px;">
+              <span class="fa fa-trash"></span> Delete
+            </button>
           </div>
-          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
+        <div>
+          <div class="input-group mb-3">
+            <label class="input-group-text" id="name">Name</label>
+            <input type="text" class="form-control" value="<%= contribution.name %>" aria-label="Name" aria-describedby="name" name="name" required>
+          </div>
+
+          <div class="input-group mb-3">
+            <label class="input-group-text" id="description">Description</label>
+            <textarea class="form-control" aria-label="Description" aria-describedby="description" name="description"><%= contribution.description %></textarea>
+          </div>
+    
+          <div class="input-group mb-3">
+            <label class="input-group-text" id="amount">Amount</label>
+            <input type="number" min="0" class="form-control" value="<%= contribution.amount.toFixed(2) %>" aria-label="Amount" aria-describedby="amount" name="amount" required>
+          </div>
+    
+          <div class="input-group mb-3">
+            <label class="input-group-text" id="tax">Tax</label>
+            <input type="number" min="0" class="form-control" value="<%= contribution.tax %>" aria-label="Tax" aria-describedby="tax" name="tax">
+            <input type="radio" class="btn-check" id="taxDollar" name="taxType" value="dollar" checked>
+            <label class="btn btn-outline-info px-3" for="taxDollar">$</label>
+            <input type="radio" class="btn-check" id="taxPercent" name="taxType" value="percent">
+            <label class="btn btn-outline-primary px-3" for="taxPercent">%</label>
+          </div>
+    
+          <div class="input-group mb-3">
+            <label class="input-group-text" id="tip">Tip</label>
+            <input type="number" class="form-control" value="<%= contribution.tip %>" aria-label="Tip" aria-describedby="tip" name="tip">
+            <input type="radio" class="btn-check" id="tipDollar" name="tipType" value="dollar" checked>
+            <label class="btn btn-outline-info px-3" for="tipDollar">$</label>
+            <input type="radio" class="btn-check" id="tipPercent" name="tipType" value="percent">
+            <label class="btn btn-outline-primary px-3" for="tipPercent">%</label>
+          </div>
+        </div>
+        <div class="pb-3 d-flex justify-content-end">
+          <div class="form-check text-center me-3">
+            <% if (contribution.equal) { %>
+              <input class="btn-check" type="checkbox" id="equal" name="equal" checked>
+            <% } else { %>
+              <input class="btn-check" type="checkbox" id="equal" name="equal">
+            <% } %>
+            <label class="btn btn-outline-warning" for="equal">Equal Payments</label>
+          </div>
+          <button id="save" type="submit" class="btn btn-success">Save</button>
+        </div>
+        <hr class="border border-1 opacity-75">
+        <%- include('chunks/invite.ejs') -%>
       </div>
     </div>
-
   </div>
 
   <script>
     document.getElementById('save').addEventListener('click', async (event) => {
       event.preventDefault();
 
-      const contributionID = '<%= item._id %>';
+      const contributionID = '<%= contribution._id %>';
       const url = `/contributions/${contributionID}`;
 
       const name = document.querySelector('input[name="name"]').value;
@@ -139,7 +120,7 @@
     document.getElementById('completeItem').addEventListener('click', async (event) => {
       event.preventDefault();
 
-      const contributionID = '<%= item._id %>';
+      const contributionID = '<%= contribution._id %>';
       const url = `/contributions/${contributionID}/complete`;
 
       fetch(url, {
@@ -148,7 +129,7 @@
         'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          completed: '<%= item.completed %>' === 'false'
+          completed: '<%= contribution.completed %>' === 'false'
         })
       })
       .then(response => {
@@ -164,7 +145,7 @@
     });
 
     document.getElementById('deleteItem').addEventListener('click', async () => {
-      const itemID = '<%= item._id %>';
+      const itemID = '<%= contribution._id %>';
       const url = `/contributions/${itemID}`;
 
       try {
@@ -186,7 +167,7 @@
     });
 
     document.getElementById('inviteUser').addEventListener('click', function() {
-      const id = '<%= item._id %>';
+      const id = '<%= contribution._id %>';
       const email = document.querySelector('input[name="invite"]').value;
       fetch(`/contributions/${id}/invite`, {
         method: 'POST',

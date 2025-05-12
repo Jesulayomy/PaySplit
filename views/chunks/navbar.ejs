@@ -5,19 +5,29 @@
     </a>
     <ul class="navbar-nav ms-auto mb-2 mb-lg-0 d-flex flex-row">
       <% if (user) { %>
+        <% if (title !== user.firstName + ' | Your Profile') { %>
         <li class="nav-item p-2">
           <a class="btn btn-md btn-md-lg bg-white rounded-pill shadow-sm text-success" href="/profile"><img class="rounded-circle" width="20" height="20" src="<%= user.imgURL %>" alt="<%= user.firstName %>"> <%= user.firstName %></a>
         </li>
+        <% } else { %>
+        <li class="nav-item p-2">
+          <a class="btn btn-md btn-md-lg bg-white rounded-pill shadow-sm text-success" href="/home"><i class="fa fa-home"></i> Home</a>
+        </li>
+        <% } %> 
         <li class="nav-item p-2">
           <a class="btn btn-md btn-md-lg bg-white rounded-pill shadow-sm text-danger" href="/logout" aria-label="Logout"><i class="fa fa-sign-out"></i></a>
         </li>
       <% } else { %>
+        <% if (title !== 'Login') { %>
         <li class="nav-item p-2">
           <a class="text-primary btn btn-md btn-md-lg rounded-pill shadow-sm bg-white" href="/login"><i class="fa fa-sign-in"></i> Login</a>
         </li>
+        <% } %>
+        <% if (title !== 'Create Account') { %>
         <li class="nav-item p-2">
           <a class="btn btn-md btn-md-lg btn-primary rounded-pill shadow-sm" href="/signup"><i class="fa fa-user-plus"></i> Signup</a>
         </li>
+        <% } %>
       <% } %>
     </ul>
   </div>
