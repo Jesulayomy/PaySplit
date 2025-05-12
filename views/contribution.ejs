@@ -9,10 +9,75 @@
     <%- include('chunks/group') -%>
   </div>
 
+  <div class="container-fluid">
+    <h4>Items</h4>
+    <div class="container-fluid">
+    <div class="border-danger">
+      <div class="p-2">
+        <input class="btn-check item-toggle" type="checkbox" id="taxButton" <%= contribution.equal ? 'disabled checked' : '' %>>
+        <label class="btn btn-outline-info" for="taxButton">
+          Tax <span class="badge text-bg-info rounded-pill">$ <span id="taxID"><%= contribution.equalTax() %></span></span>
+        </label>
+      </div>
+      <div class="p-2">
+        <input class="btn-check item-toggle" type="checkbox" id="tipButton" checked <%= contribution.equal ? 'disabled' : '' %>>
+        <label class="btn btn-outline-info" for="tipButton">
+          Tip <span class="badge text-bg-info rounded-pill">$ <span id="tipID"><%= contribution.equalTip() %></span></span>
+        </label>
+      </div>
+      <% contribution.items.forEach(item => { %>
+        <div class="p-2">
+          <input class="btn-check item-toggle" type="checkbox" id="<%= item._id %>" <%= contribution.equal || item.paid ? 'disabled' : '' %>>
+          <label class="btn <%= item.paid ? 'btn-outline-success' : 'btn-outline-primary' %>" for="<%= item._id %>">
+            <%= item.name %> <span class="badge <%= item.paid ? 'text-bg-success' : 'text-bg-primary' %> rounded-pill">$ <span id="item-<%= item._id %>"><%= item.price.toFixed(2) %></span></span>
+          </label>
+        </div>
+      <% }) %>
+      </div>
+    </div>
+  </div>
+  <script>
+    const selectedItems = [];
+
+    document.querySelectorAll('.item-toggle').forEach(toggle => {
+      toggle.addEventListener('change', function() {
+        const itemID = this.getAttribute('id');
+        if (this.checked) {
+          let newAmount;
+          if (itemID !== "taxButton" && itemID !== "tipButton") {
+            selectedItems.push(itemID);
+            newAmount = Number(document.querySelector(`span#item-${itemID}`).innerText);
+          } else if (itemID === "taxButton") {
+            newAmount = Number(document.querySelector(`span#taxID`).innerText);
+          } else if (itemID === "tipButton") {
+            newAmount = Number(document.querySelector(`span#tipID`).innerText);
+          }
+          newAmount += parseFloat(document.querySelector('input[name="payAmount"]').value);
+          document.querySelector('input[name="payAmount"]').value = newAmount.toFixed(2);
+        } else {
+          let newAmount;
+          if (itemID !== "taxButton" && itemID !== "tipButton") {
+            const index = selectedItems.findIndex(i => i === itemID);
+            if (index > -1) {
+              selectedItems.splice(index, 1);
+            }
+            newAmount = Number(document.querySelector(`span#item-${itemID}`).innerText);
+          } else if (itemID === "taxButton") {
+            newAmount = Number(document.querySelector(`span#taxID`).innerText);
+          } else if (itemID === "tipButton") {
+            newAmount = Number(document.querySelector(`span#tipID`).innerText);
+          }
+          newAmount = parseFloat(document.querySelector('input[name="payAmount"]').value) - newAmount; 
+          document.querySelector('input[name="payAmount"]').value = newAmount.toFixed(2);
+        }
+      });
+    });
+  </script>
+
   <% if (invite) { %>
     <script>
       document.getElementById('accept').addEventListener('click', function() {
-        const id = '<%= item._id %>';
+        const id = '<%= contribution._id %>';
         fetch(`/contributions/${id}/accept`, { method: 'POST' })
           .then(response => {
             if (response.ok) {
@@ -28,15 +93,15 @@
     <script>
       document.getElementById('pay').addEventListener('click', async (event) => {
         event.preventDefault();
-        const id = '<%= item._id %>';
+        const id = '<%= contribution._id %>';
         const amount = parseFloat(document.querySelector('input[name="payAmount"]').value);
-        if (!Number.isNaN(amount)) {
+        if (!Number.isNaN(amount) && amount >= 0) {
           fetch(`/contributions/${id}/pay`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ amount }) 
+            body: JSON.stringify({ amount, items: selectedItems }) 
           })
           .then(response => {
             if (response.ok) {

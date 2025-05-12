@@ -5,20 +5,20 @@
   <%- include('chunks/navbar') -%>
 
   <div class="container-fluid">
-    <% if (locals.messages.errors) { %>
-      <% messages.errors.forEach( el => { %>
-        <div class="alert alert-danger"><%= el.msg %></div>
-      <% }) %>
-    <% } %>
-    <% if (locals.messages.info) { %>
-      <% messages.info.forEach( el => { %>
-        <div class="alert alert-info"><%= el.msg %></div>
-      <% }) %>
-    <% } %>
     <form action="/profile?_method=PUT" enctype="multipart/form-data" method="POST">
       <div class="text-center mb-3">
         <img id="imagePreview" src="<%= user.imgURL %>" alt="Profile Preview" class="rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
       </div>
+      <% if (locals.messages.errors) { %>
+        <% messages.errors.forEach( el => { %>
+          <div class="alert alert-danger"><%= el.msg %></div>
+        <% }) %>
+      <% } %>
+      <% if (locals.messages.info) { %>
+        <% messages.info.forEach( el => { %>
+          <div class="alert alert-info"><%= el.msg %></div>
+        <% }) %>
+      <% } %>
       <div class="input-group mb-3">
         <label class="input-group-text" for="image">Profile</label>
         <input type="file" class="form-control" id="image" name="image" accept="image/jpeg, image/png, image/gif">

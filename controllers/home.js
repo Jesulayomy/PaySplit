@@ -2,6 +2,7 @@ const { Type } = require("@google/genai");
 const { User, Contribution, Payment, Item } = require('../models/models');
 const AI = require('../middleware/ai');
 const cloudinary = require("../middleware/cloudinary");
+const validator = require("validator");
 
 module.exports = {
   getIndex: async (req, res) => {

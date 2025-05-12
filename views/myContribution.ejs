@@ -33,7 +33,7 @@
   <script>
     document.getElementById('pay').addEventListener('click', async (event) => {
       event.preventDefault();
-      const id = '<%= item._id %>';
+      const id = '<%= contribution._id %>';
       const amount = parseFloat(document.querySelector('input[name="payAmount"]').value);
       if (!Number.isNaN(amount)) {
         fetch(`/contributions/${id}/pay`, {
@@ -55,7 +55,7 @@
     });
 
     document.getElementById('inviteUser').addEventListener('click', function() {
-      const id = '<%= item._id %>';
+      const id = '<%= contribution._id %>';
       const email = document.querySelector('input[name="invite"]').value;
       fetch(`/contributions/${id}/invite`, {
         method: 'POST',

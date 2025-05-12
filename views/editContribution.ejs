@@ -33,12 +33,12 @@
   
         <div class="input-group mb-3">
           <label class="input-group-text" id="amount">Amount</label>
-          <input type="number" oninput="this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : 0" min="0" class="form-control" value="<%= item.amount %>" aria-label="Amount" aria-describedby="amount" name="amount" required>
+          <input type="number" min="0" class="form-control" value="<%= item.amount.toFixed(2) %>" aria-label="Amount" aria-describedby="amount" name="amount" required>
         </div>
   
         <div class="input-group mb-3">
           <label class="input-group-text" id="tax">Tax</label>
-          <input type="number" oninput="this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : 0" min="0" class="form-control" value="<%= item.tax %>" aria-label="Tax" aria-describedby="tax" name="tax">
+          <input type="number" min="0" class="form-control" value="<%= item.tax %>" aria-label="Tax" aria-describedby="tax" name="tax">
           <input type="radio" class="btn-check" id="taxDollar" name="taxType" value="dollar" checked>
           <label class="btn btn-outline-info px-3" for="taxDollar">$</label>
           <input type="radio" class="btn-check" id="taxPercent" name="taxType" value="percent">
@@ -47,7 +47,7 @@
   
         <div class="input-group mb-3">
           <label class="input-group-text" id="tip">Tip</label>
-          <input type="number" oninput="this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : 0" min="0" class="form-control" value="<%= item.tip %>" aria-label="Tip" aria-describedby="tip" name="tip">
+          <input type="number" class="form-control" value="<%= item.tip %>" aria-label="Tip" aria-describedby="tip" name="tip">
           <input type="radio" class="btn-check" id="tipDollar" name="tipType" value="dollar" checked>
           <label class="btn btn-outline-info px-3" for="tipDollar">$</label>
           <input type="radio" class="btn-check" id="tipPercent" name="tipType" value="percent">

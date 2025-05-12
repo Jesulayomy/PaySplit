@@ -97,17 +97,22 @@
         document.querySelector('input[name="tip"]').value = contribution.tip
         document.getElementById('taxDollar').checked = true;
         document.getElementById('tipDollar').checked = true;
-        items = contribution.items;
+        contribution.items.forEach(item => {
+          for (let i = 0; i < item.quantity; i++) {
+            items.push({ quantity: 1, name: item.name, price: item.price / item.quantity });
+          }
+        });
         let itemData = `
           <h4>Items</h4>
           <div class="container-fluid">
             <ul class="list-group">
         `
+        console.log(items)
         items.forEach(item => {
           itemData += `
               <li class="list-group-item d-flex justify-content-between align-items-center">
                 ${item.quantity} ${item.name}
-                <span class="badge text-bg-primary rounded-pill">$${item.price}</span>
+                <span class="badge text-bg-primary rounded-pill">$${item.price.toFixed(2)}</span>
               </li>`
         });
         itemData += `</ul></div>`;

@@ -66,11 +66,14 @@ module.exports = {
     })
     .then(contribution => {
       if (contribution) {
+        contribution.items.sort((a, b) => {
+          return a.name.localeCompare(b.name);
+        });
         const invite = contribution.invites.some(user => user.id === req.user.id);
         if (contribution.owner.equals(req.user._id)) {
-          res.render('myContribution.ejs', { item: contribution, user: req.user, title: contribution.name, invite });
+          res.render('myContribution.ejs', { contribution, user: req.user, title: contribution.name, invite });
         } else {
-          res.render('contribution.ejs', { item: contribution, user: req.user, title: contribution.name, invite });
+          res.render('contribution.ejs', { contribution, user: req.user, title: contribution.name, invite });
         }
       } else {
         res.render(
@@ -256,6 +259,7 @@ module.exports = {
   payContrib: async (req, res) => {
     const id = req.params.contributionID;
     const amount = req.body.amount;
+    const itemIds = req.body.items;
     Contribution.findOneAndUpdate(
       { _id: id, 'contributors.user': req.user._id },
       {
@@ -267,9 +271,6 @@ module.exports = {
     .populate('owner')
     .populate({
       path: 'invites',
-      // populate: {
-      //   path: 'user'
-      // }
     })
     .populate({
       path: 'contributors',
@@ -277,11 +278,25 @@ module.exports = {
         path: 'user'
       }
     }).then(contribution => {
+      if (itemIds) {
+        contribution.items.forEach(item => {
+          if (itemIds.includes(item._id.toString())) {
+            item.paid = true;
+          }
+        });
+        contribution.save()
+        .then(() => {
+          console.log('Items updated successfully');
+        })
+        .catch(err => {
+          console.error('Error updating items:', err);
+        });
+      }
       if (contribution) {
         if (contribution.owner.equals(req.user._id)) {
-          res.render('myContribution.ejs', { item: contribution, user: req.user, title: contribution.name, invite: false });
+          res.render('myContribution.ejs', { contribution, user: req.user, title: contribution.name, invite: false });
         } else {
-          res.render('contribution.ejs', { item: contribution, user: req.user, title: contribution.name, invite: false });
+          res.render('contribution.ejs', { contribution, user: req.user, title: contribution.name, invite: false });
         }
       } else {
         res.render(

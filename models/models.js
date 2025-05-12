@@ -57,8 +57,16 @@ userSchema.methods.fullName = function() {
 contributionSchema.methods.equalSplit = function() {
   const unpaidContributors = this.contributors.filter(payment => !payment.paid);
   return unpaidContributors.length > 0 
-    ? this.remainder / unpaidContributors.length 
-    : this.remainder;
+    ? (this.remainder / unpaidContributors.length ).toFixed(2)
+    : this.remainder.toFixed(2);
+};
+
+contributionSchema.methods.equalTax = function() {
+  return (this.tax / this.contributors.length ).toFixed(2);
+};
+
+contributionSchema.methods.equalTip = function() {
+  return (this.tip / this.contributors.length ).toFixed(2);
 };
 
 module.exports = {
