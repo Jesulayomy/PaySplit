@@ -78,6 +78,16 @@
       </div>
     </div>
 
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 11">
+      <div id="validEmailToast" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+          <div class="toast-body">
+          </div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <script>
@@ -118,7 +128,7 @@
         if (!response.ok) {
           response.json().then(data => console.error(data));
         } else {
-          window.location.href = '/home';
+          window.location.href = `/contributions/${contributionID}`;
         }
       })
       .catch(error => {
@@ -138,7 +148,7 @@
         'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          completed: !Boolean('<%= item.completed %>')
+          completed: '<%= item.completed %>' === 'false'
         })
       })
       .then(response => {
@@ -174,5 +184,30 @@
         console.error('Error:', error);
       }
     });
+
+    document.getElementById('inviteUser').addEventListener('click', function() {
+      const id = '<%= item._id %>';
+      const email = document.querySelector('input[name="invite"]').value;
+      fetch(`/contributions/${id}/invite`, {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email })
+      })
+        .then(response => {
+          if (response.ok) {
+            location.reload();
+          } else {
+            response.json().then(data => {
+              document.querySelector('.toast-body').innerText = data.message;
+              const toast = new bootstrap.Toast(document.getElementById('validEmailToast'));
+              toast.show();
+            })
+          }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+
   </script>
 <%- include('chunks/footer') -%>

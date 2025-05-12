@@ -21,7 +21,6 @@
       <div id="validEmailToast" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
         <div class="d-flex">
           <div class="toast-body">
-            That email is not registered yet.
           </div>
           <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
@@ -69,12 +68,15 @@
           if (response.ok) {
             location.reload();
           } else {
-            const toast = new bootstrap.Toast(document.getElementById('validEmailToast'));
-            toast.show();
-            console.error('Failed to invite user');
+            response.json().then(data => {
+              document.querySelector('.toast-body').innerText = data.message;
+              const toast = new bootstrap.Toast(document.getElementById('validEmailToast'));
+              toast.show();
+            })
           }
         })
         .catch(error => console.error('Error:', error));
     });
+
   </script>
 <%- include('chunks/footer') -%>

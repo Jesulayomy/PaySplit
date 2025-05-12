@@ -4,12 +4,65 @@
 <body>
   <%- include('chunks/navbar') -%>
 
-  <div class="container-fluid p-5 pt-0">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h1>Your Spending</h1>
+  <div class="container-fluid">
+    <% if (locals.messages.errors) { %>
+      <% messages.errors.forEach( el => { %>
+        <div class="alert alert-danger"><%= el.msg %></div>
+      <% }) %>
+    <% } %>
+    <% if (locals.messages.info) { %>
+      <% messages.info.forEach( el => { %>
+        <div class="alert alert-info"><%= el.msg %></div>
+      <% }) %>
+    <% } %>
+    <form action="/profile?_method=PUT" enctype="multipart/form-data" method="POST">
+      <div class="text-center mb-3">
+        <img id="imagePreview" src="<%= user.imgURL %>" alt="Profile Preview" class="rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
+      </div>
+      <div class="input-group mb-3">
+        <label class="input-group-text" for="image">Profile</label>
+        <input type="file" class="form-control" id="image" name="image" accept="image/jpeg, image/png, image/gif">
+      </div>
+      <div class="input-group mb-3">
+        <label class="input-group-text" id="firstName">First Name</label>
+        <input type="text" class="form-control" placeholder="Enter your First Name" name="firstName" aria-label="First Name" aria-describedby="firstName" value="<%= user.firstName %>" />
+      </div>
+      <div class="input-group mb-3">
+        <label class="input-group-text" id="lastName">Last Name</label>
+        <input type="text" class="form-control" placeholder="Enter your Last Name" name="lastName" aria-label="Last Name" aria-describedby="lastName" value="<%= user.lastName %>" />
+      </div>
+      <div class="input-group mb-3">
+        <label class="input-group-text" id="email">Email</label>
+        <input type="email" class="form-control" placeholder="Enter your email" name="email" aria-label="Email" aria-describedby="email" value="<%= user.email %>" disabled>
+      </div>
+      <div class="input-group mb-3">
+        <label class="input-group-text" id="password">New Password</label>
+        <input type="password" class="form-control" placeholder="At least 8 characters" name="password" aria-label="Password" aria-describedby="password">
+      </div>
+      <div class="input-group mb-3">
+        <label class="input-group-text" id="confirmPassword">Confirm Password</label>
+        <input type="password" class="form-control" placeholder="********" name="confirmPassword" aria-label="Confirm Password" aria-describedby="confirmPassword">
+      </div>
+      <button type="submit" class="btn btn-success btn-md"> Update Profile</button>
+    </form>
+    <hr />
+    <div class="container-fluid p-5 pt-0">
+      <div class="mb-3">
+        <h1 class="text-center">Your Spending</h1>
+      </div>
+      <canvas id="myChart" style="width:100%;" aria-label="Contributions chart" role="img"></canvas>
     </div>
-    <canvas id="myChart" style="width:100%;"></canvas>
+  </div>
 
+  <div class="position-fixed top-0 end-0 p-3" style="z-index: 11">
+    <div id="fileSizeToast" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body">
+          Please use a file below 2MB.
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
   </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
   <script>
@@ -29,9 +82,27 @@
       options: {
         title: {
           display: true,
-          text: "Contributions"
+          text: "Contributions: $<%= total %>"
         }
       }
     });
+
+    document.getElementById('image').addEventListener('change', function(event) {
+      const file = event.target.files[0];
+      if (file) {
+        if (file.size > 2 * 1024 * 1024) {
+          const toast = new bootstrap.Toast(document.getElementById('fileSizeToast'));
+          toast.show();
+          this.value = "";
+        } else {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            document.getElementById('imagePreview').src = e.target.result || "<%= user.imgURL %>";
+          };
+          reader.readAsDataURL(file);
+        }
+      }
+    });
+
   </script>
 <%- include('chunks/footer') -%>
