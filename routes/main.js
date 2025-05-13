@@ -5,11 +5,9 @@ const homeController = require("../controllers/home");
 const { ensureAuth, ensureGuest } = require("../middleware/auth");
 const path = require("path");
 
-
 const { diskUpload, memoryUpload } = require("../middleware/multer");
 
 
-//Main Routes - simplified for now
 router.get("/", homeController.getIndex);
 
 router.get("/home", ensureAuth, homeController.getHomePage);
@@ -23,7 +21,5 @@ router.post("/login", authController.postLogin);
 router.get("/logout", authController.logout);
 router.get("/signup", authController.getSignup);
 router.post("/signup", diskUpload.single('image'), authController.postSignup);
-
-// router.get("/not-found", homeController.notFound);
 
 module.exports = router;
