@@ -2,9 +2,9 @@
 
 ### Tasks
 - [ ] Populate DB
-- [ ] Deploy App
+- [x] Deploy App
 
-- [ ] Optimize README
+- [x] Optimize README
 - [x] Optimize Repository details
 - [x] add about
 - [x] description
