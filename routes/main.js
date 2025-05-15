@@ -12,6 +12,9 @@ router.get("/", homeController.getIndex);
 
 router.get("/home", ensureAuth, homeController.getHomePage);
 router.get("/users", homeController.getUsers);
+router.get("/about", homeController.getAbout);
+router.get("/contact", homeController.getContact);
+router.post("/contact", homeController.postContact);
 router.get("/profile", ensureAuth, homeController.getProfile);
 router.put("/profile", ensureAuth, diskUpload.single('image'), homeController.editProfile);
 router.post("/receipt", memoryUpload.single('image'), ensureAuth, homeController.getReceipt);
