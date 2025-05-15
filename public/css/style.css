@@ -5,6 +5,7 @@
 /* Box Model Hack */
 * {
   box-sizing: border-box;
+  /* color: #060F1D; */
 }
 
 /******************************************
@@ -26,6 +27,93 @@ body {
   font-family: "Gloria Hallelujah", cursive;
   font-weight: 600;
   font-style: normal;
+}
+
+.text-corn {
+  color: #FDF8E0;
+}
+
+.text-rich {
+  color: #060F1D;
+}
+
+.text-jasper {
+  color: #CF5D51;
+}
+
+.text-cine {
+  color: #9F8C86;
+}
+
+.btn-white {
+  background-color: white;
+  color: black;
+}
+.btn-white:hover {
+  background-color: #FDF8E0;
+  color: black;
+}
+
+.btn-corn {
+  background-color: #FDF8E0;
+  color: black;
+}
+.btn-corn:hover {
+  background-color: #CF5D51;
+  color: white;
+}
+.btn-corn:checked {
+  background-color: #CF5D51;
+  color: white;
+}
+
+.btn-rich {
+  background-color: #060F1D;
+}
+
+.btn-jasper {
+  background-color: #CF5D51;
+  color: white;
+}
+.btn-jasper:hover {
+  background-color: #FDF8E0;
+  color: black;
+}
+
+.btn-cine {
+  background-color: #9F8C86;
+  color: white;
+}
+.btn-cine:hover {
+  background-color: #FDF8E0;
+  color: black;
+}
+
+
+.bg-white {
+  background-color: white;
+  color: black;
+}
+.bg-corn {
+  background-color: #FDF8E0;
+  color: black;
+}
+.bg-rich {
+  background-color: #060F1D;
+}
+.bg-jasper {
+  background-color: #CF5D51;
+  color: white;
+}
+.bg-cine {
+  background-color: #9F8C86;
+  color: white;
+}
+
+.form-check-input:checked {
+  background-color: #CF5D51;
+  color: white;
+  border: none;
 }
 
 /******************************************
@@ -89,3 +177,4 @@ body {
     border-bottom-right-radius: 32px !important;
   }
 }
+

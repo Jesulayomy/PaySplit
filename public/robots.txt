@@ -1,0 +1,5 @@
+User-Agent: *
+Allow: /
+Disallow: /contact
+
+Sitemap: https://paysplit.jesulayomi.tech/sitemap.xml
