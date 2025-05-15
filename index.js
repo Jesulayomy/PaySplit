@@ -49,7 +49,7 @@ app.use("/", mainRoutes);
 app.use("/contributions", contribRoutes);
 app.use(async (req, res) => {
   res.render(
-    "not-found",
+    "notFound",
     {user: req.user || null, title: 'Not found', message: 'Why would you lead us here???', returnTo: { page: 'Home', URL: '/home'}}
   )
 });
