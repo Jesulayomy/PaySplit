@@ -201,61 +201,56 @@
       itemContainer.innerHTML = itemsLoader;
 
       const formData = new FormData(receiptForm);
-      const amount = parseFloat(document.querySelector('input[name="amount"]').value);
-      if (!Number.isNaN(amount) && amount > 0) {
-        try {
-          const response = await fetch('/receipt', {
-            method: 'POST',
-            body: formData,
-          });
-          if (!response.ok) {
-            addItemsButton.innerHTML = originalButtonContent;
-            poolHolder.innerHTML = originalPool;
-            itemContainer.innerHTML = originalItems;
-            addItemsButton.disabled = false;
-            response.json().then(data => {
-              alert(data.error);
-            });
-            return;
-          }
-          poolHolder.innerHTML = originalPool;
-
-          const data = await response.json();
-          const contribution = JSON.parse(data.response.candidates[0].content.parts[0].text);
-          document.querySelector('input[name="name"]').value = contribution.name;
-          document.querySelector('textarea[name="description"]').value = contribution.description;
-          document.querySelector('input[name="amount"]').value = contribution.amount;
-          document.querySelector('input[name="tax"]').value = contribution.tax;
-          document.querySelector('input[name="tip"]').value = contribution.tip
-          document.getElementById('taxDollar').checked = true;
-          document.getElementById('tipDollar').checked = true;
-          contribution.items.forEach(item => {
-            for (let i = 0; i < item.quantity; i++) {
-              items.push({ quantity: 1, name: item.name, price: item.price / item.quantity });
-            }
-          });
-          let itemData = `
-            <h4>Items</h4>
-            <div class="container-fluid">
-              <ul class="list-group text-start">
-          `
-          items.forEach(item => {
-            item.name = item.name.charAt(0).toUpperCase() + item.name.slice(1).toLowerCase();
-            itemData += `
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                  ${item.quantity} ${item.name}
-                  <span class="badge text-bg-primary rounded-pill">$${item.price.toFixed(2)}</span>
-                </li>`
-          });
-          itemData += `</ul></div>`;
-          itemContainer.innerHTML = itemData;
+      try {
+        const response = await fetch('/receipt', {
+          method: 'POST',
+          body: formData,
+        });
+        if (!response.ok) {
           addItemsButton.innerHTML = originalButtonContent;
+          poolHolder.innerHTML = originalPool;
+          itemContainer.innerHTML = originalItems;
           addItemsButton.disabled = false;
-        } catch (error) {
-          console.error(error)
+          response.json().then(data => {
+            alert(data.error);
+          });
+          return;
         }
-      } else {
-        document.querySelector('input[name="amount"]').style.border = '2px solid red';
+        poolHolder.innerHTML = originalPool;
+
+        const data = await response.json();
+        const contribution = JSON.parse(data.response.candidates[0].content.parts[0].text);
+        document.querySelector('input[name="name"]').value = contribution.name;
+        document.querySelector('textarea[name="description"]').value = contribution.description;
+        document.querySelector('input[name="amount"]').value = contribution.amount;
+        document.querySelector('input[name="tax"]').value = contribution.tax;
+        document.querySelector('input[name="tip"]').value = contribution.tip
+        document.getElementById('taxDollar').checked = true;
+        document.getElementById('tipDollar').checked = true;
+        contribution.items.forEach(item => {
+          for (let i = 0; i < item.quantity; i++) {
+            items.push({ quantity: 1, name: item.name, price: item.price / item.quantity });
+          }
+        });
+        let itemData = `
+          <h4>Items</h4>
+          <div class="container-fluid">
+            <ul class="list-group text-start">
+        `
+        items.forEach(item => {
+          item.name = item.name.charAt(0).toUpperCase() + item.name.slice(1).toLowerCase();
+          itemData += `
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                ${item.quantity} ${item.name}
+                <span class="badge text-bg-primary rounded-pill">$${item.price.toFixed(2)}</span>
+              </li>`
+        });
+        itemData += `</ul></div>`;
+        itemContainer.innerHTML = itemData;
+        addItemsButton.innerHTML = originalButtonContent;
+        addItemsButton.disabled = false;
+      } catch (error) {
+        console.error(error)
       }
     });
 
