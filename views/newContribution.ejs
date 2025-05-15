@@ -16,7 +16,7 @@
             <button class="btn text-white receipt" type="submit" id="addItems"><img width="20px" src="https://cdn.simpleicons.org/googlegemini/fff"></i> Upload</button>
           </form>
         </div>
-        <div id="poolHolder">
+        <form id="poolHolder">
           <div class="input-group mb-3">
             <label class="input-group-text" id="name">Title</label>
             <input type="text" class="form-control" placeholder="Thai restaurant visit" aria-label="Name" aria-describedby="name" name="name" required>
@@ -27,13 +27,13 @@
           </div>
           <div class="input-group mb-3">
             <label class="input-group-text" id="amount">Amount</label>
-            <input type="number" oninput="this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : 0" oninput="this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : 0" min="0" class="form-control" placeholder="Amount before tax or subtotal" aria-label="Amount" aria-describedby="amount" name="amount" required>
+            <input type="number" min="0" step="any" class="form-control" placeholder="Amount before tax or subtotal" aria-label="Amount" aria-describedby="amount" name="amount" required>
           </div>
           <div class="row">
             <div class="col-6 pe-1">
               <div class="input-group mb-3">
                 <label class="input-group-text" id="tax">Tax</label>
-                <input type="number" min="0" class="form-control" value="0" aria-label="Tax" aria-describedby="tax" name="tax">
+                <input type="number" min="0" step="any" class="form-control" value="0" aria-label="Tax" aria-describedby="tax" name="tax">
                 <input type="radio" class="btn-check" id="taxDollar" name="taxType" value="dollar">
                 <label class="btn btn-outline-secondary px-md-3" for="taxDollar">$</label>
                 <input type="radio" class="btn-check" id="taxPercent" name="taxType" value="percent" checked>
@@ -43,7 +43,7 @@
             <div class="col-6 ps-1">
               <div class="input-group mb-3">
                 <label class="input-group-text" id="tip">Tip</label>
-                <input type="number" class="form-control" value="10" aria-label="Tip" aria-describedby="tip" name="tip">
+                <input type="number" min="0" step="any" class="form-control" value="10" aria-label="Tip" aria-describedby="tip" name="tip">
                 <input type="radio" class="btn-check" id="tipDollar" name="tipType" value="dollar">
                 <label class="btn btn-outline-secondary px-md-3" for="tipDollar">$</label>
                 <input type="radio" class="btn-check" id="tipPercent" name="tipType" value="percent" checked>
@@ -62,7 +62,7 @@
             </div>
           </div>
           <button id="createPool" type="submit" class="btn btn-jasper btn-md rounded-4 shadow-sm">Add Item</button>
-        </div>
+        </form>
       </div>
     </div>
     <div class="col-sm-6 row m-0 p-2 align-items-center">
@@ -133,6 +133,9 @@
     </div>
     `
     
+    const createForm = document.getElementById('poolHolder')
+    createForm.addEventListener('submit', poolCreator);
+  
     const poolHolder = document.querySelector('#poolHolder');
     const itemContainer = document.getElementById('itemContainer');
     const originalPool = poolHolder.innerHTML;
@@ -184,9 +187,9 @@
       }
     };
 
-    const form = document.getElementById('imageForm');
+    const receiptForm = document.getElementById('imageForm');
     let items = [];
-    form.addEventListener('submit', async (event) => {
+    receiptForm.addEventListener('submit', async (event) => {
       event.preventDefault();
       items = [];
       const addItemsButton = document.getElementById('addItems');
@@ -197,64 +200,65 @@
       poolHolder.innerHTML = contribLoader;
       itemContainer.innerHTML = itemsLoader;
 
-      const formData = new FormData(form);
-
-      try {
-        const response = await fetch('/receipt', {
-          method: 'POST',
-          body: formData,
-        });
-        if (!response.ok) {
-          addItemsButton.innerHTML = originalButtonContent;
-          poolHolder.innerHTML = originalPool;
-          document.getElementById('createPool').addEventListener('click', poolCreator);
-          itemContainer.innerHTML = originalItems;
-          addItemsButton.disabled = false;
-          response.json().then(data => {
-            alert(data.error);
+      const formData = new FormData(receiptForm);
+      const amount = parseFloat(document.querySelector('input[name="amount"]').value);
+      if (!Number.isNaN(amount) && amount > 0) {
+        try {
+          const response = await fetch('/receipt', {
+            method: 'POST',
+            body: formData,
           });
-          return;
-        }
-        poolHolder.innerHTML = originalPool;
-        document.getElementById('createPool').addEventListener('click', poolCreator);
-
-        const data = await response.json();
-        const contribution = JSON.parse(data.response.candidates[0].content.parts[0].text);
-        document.querySelector('input[name="name"]').value = contribution.name;
-        document.querySelector('textarea[name="description"]').value = contribution.description;
-        document.querySelector('input[name="amount"]').value = contribution.amount;
-        document.querySelector('input[name="tax"]').value = contribution.tax;
-        document.querySelector('input[name="tip"]').value = contribution.tip
-        document.getElementById('taxDollar').checked = true;
-        document.getElementById('tipDollar').checked = true;
-        contribution.items.forEach(item => {
-          for (let i = 0; i < item.quantity; i++) {
-            items.push({ quantity: 1, name: item.name, price: item.price / item.quantity });
+          if (!response.ok) {
+            addItemsButton.innerHTML = originalButtonContent;
+            poolHolder.innerHTML = originalPool;
+            itemContainer.innerHTML = originalItems;
+            addItemsButton.disabled = false;
+            response.json().then(data => {
+              alert(data.error);
+            });
+            return;
           }
-        });
-        let itemData = `
-          <h4>Items</h4>
-          <div class="container-fluid">
-            <ul class="list-group text-start">
-        `
-        items.forEach(item => {
-          item.name = item.name.charAt(0).toUpperCase() + item.name.slice(1).toLowerCase();
-          itemData += `
-              <li class="list-group-item d-flex justify-content-between align-items-center">
-                ${item.quantity} ${item.name}
-                <span class="badge text-bg-primary rounded-pill">$${item.price.toFixed(2)}</span>
-              </li>`
-        });
-        itemData += `</ul></div>`;
-        itemContainer.innerHTML = itemData;
-        addItemsButton.innerHTML = originalButtonContent;
-        addItemsButton.disabled = false;
-      } catch (error) {
-        console.error(error)
+          poolHolder.innerHTML = originalPool;
+
+          const data = await response.json();
+          const contribution = JSON.parse(data.response.candidates[0].content.parts[0].text);
+          document.querySelector('input[name="name"]').value = contribution.name;
+          document.querySelector('textarea[name="description"]').value = contribution.description;
+          document.querySelector('input[name="amount"]').value = contribution.amount;
+          document.querySelector('input[name="tax"]').value = contribution.tax;
+          document.querySelector('input[name="tip"]').value = contribution.tip
+          document.getElementById('taxDollar').checked = true;
+          document.getElementById('tipDollar').checked = true;
+          contribution.items.forEach(item => {
+            for (let i = 0; i < item.quantity; i++) {
+              items.push({ quantity: 1, name: item.name, price: item.price / item.quantity });
+            }
+          });
+          let itemData = `
+            <h4>Items</h4>
+            <div class="container-fluid">
+              <ul class="list-group text-start">
+          `
+          items.forEach(item => {
+            item.name = item.name.charAt(0).toUpperCase() + item.name.slice(1).toLowerCase();
+            itemData += `
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  ${item.quantity} ${item.name}
+                  <span class="badge text-bg-primary rounded-pill">$${item.price.toFixed(2)}</span>
+                </li>`
+          });
+          itemData += `</ul></div>`;
+          itemContainer.innerHTML = itemData;
+          addItemsButton.innerHTML = originalButtonContent;
+          addItemsButton.disabled = false;
+        } catch (error) {
+          console.error(error)
+        }
+      } else {
+        document.querySelector('input[name="amount"]').style.border = '2px solid red';
       }
     });
 
-    document.getElementById('createPool').addEventListener('click', poolCreator);
   </script>
 
 <%- include('chunks/footer') -%>

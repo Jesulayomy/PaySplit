@@ -20,7 +20,7 @@
             </button>
           </div>
         </div>
-        <div>
+        <form id="editForm">
           <div class="input-group mb-3">
             <label class="input-group-text" id="name">Name</label>
             <input type="text" class="form-control" value="<%= contribution.name %>" aria-label="Name" aria-describedby="name" name="name" required>
@@ -33,14 +33,14 @@
     
           <div class="input-group mb-3">
             <label class="input-group-text" id="amount">Amount</label>
-            <input type="number" min="0" class="form-control" value="<%= contribution.amount.toFixed(2) %>" aria-label="Amount" aria-describedby="amount" name="amount" required>
+            <input type="number" min="0" step="any" class="form-control" value="<%= contribution.amount.toFixed(2) %>" aria-label="Amount" aria-describedby="amount" name="amount" required>
           </div>
 
           <div class="row">
             <div class="col-6 pe-1">
               <div class="input-group mb-3">
                 <label class="input-group-text" id="tax">Tax</label>
-                <input type="number" min="0" class="form-control" value="<%= contribution.tax %>" aria-label="Tax" aria-describedby="tax" name="tax">
+                <input type="number" min="0" step="any" class="form-control" value="<%= contribution.tax %>" aria-label="Tax" aria-describedby="tax" name="tax">
                 <input type="radio" class="btn-check" id="taxDollar" name="taxType" value="dollar" checked>
                 <label class="btn btn-outline-secondary px-md-3" for="taxDollar">$</label>
                 <input type="radio" class="btn-check" id="taxPercent" name="taxType" value="percent">
@@ -50,7 +50,7 @@
             <div class="col-6 ps-1">
               <div class="input-group mb-3">
                 <label class="input-group-text" id="tip">Tip</label>
-                <input type="number" class="form-control" value="<%= contribution.tip %>" aria-label="Tip" aria-describedby="tip" name="tip">
+                <input type="number" min="0" step="any" class="form-control" value="<%= contribution.tip %>" aria-label="Tip" aria-describedby="tip" name="tip">
                 <input type="radio" class="btn-check" id="tipDollar" name="tipType" value="dollar" checked>
                 <label class="btn btn-outline-secondary px-md-3" for="tipDollar">$</label>
                 <input type="radio" class="btn-check" id="tipPercent" name="tipType" value="percent">
@@ -58,18 +58,18 @@
               </div>
             </div>
           </div>
-        </div>
-        <div class="pb-3 d-flex justify-content-end">
-          <div class="me-3">
-            <div class="input-group">
-              <div class="input-group-text">
-                <input class="form-check-input mt-0" id="equal" type="checkbox" name="equal" aria-label="Equal Payments" <%= contribution.equal ? 'checked' : '' %>>
+          <div class="pb-3 d-flex justify-content-end">
+            <div class="me-3">
+              <div class="input-group">
+                <div class="input-group-text">
+                  <input class="form-check-input mt-0" id="equal" type="checkbox" name="equal" aria-label="Equal Payments" <%= contribution.equal ? 'checked' : '' %>>
+                </div>
+                <label class="input-group-text" for="equal">Equal Payments</label>
               </div>
-              <label class="input-group-text" for="equal">Equal Payments</label>
             </div>
+            <button id="save" type="submit" class="btn btn-success">Save</button>
           </div>
-          <button id="save" type="submit" class="btn btn-success">Save</button>
-        </div>
+        </form>
         <hr class="border border-1 opacity-75">
         <%- include('chunks/invite.ejs') -%>
       </div>
@@ -78,7 +78,8 @@
 	<%- include('chunks/foot') -%>
 
   <script>
-    document.getElementById('save').addEventListener('click', async (event) => {
+    const editForm = document.getElementById('editForm');
+    editForm.addEventListener('submit', async (event) => {
       event.preventDefault();
 
       const contributionID = '<%= contribution._id %>';
@@ -172,7 +173,9 @@
       }
     });
 
-    document.getElementById('inviteUser').addEventListener('click', function() {
+    const inviteForm = document.getElementById('inviteForm');
+    inviteForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
       const id = '<%= contribution._id %>';
       const email = document.querySelector('input[name="invite"]').value;
       fetch(`/contributions/${id}/invite`, {

@@ -64,7 +64,7 @@
             if (response.ok) {
               location.reload();
             } else {
-              console.error('Failed to process payment');
+              console.error('Failed to accept invite');
             }
           })
           .catch(error => console.error('Error:', error));
@@ -72,7 +72,8 @@
     </script>
   <% } else { %>
     <script>
-      document.getElementById('pay').addEventListener('click', async (event) => {
+      const payForm = document.getElementById('payContainer');
+      payForm.addEventListener('submit', async (event) => {
         event.preventDefault();
         const id = '<%= contribution._id %>';
         const amount = parseFloat(document.querySelector('input[name="payAmount"]').value);
@@ -99,7 +100,9 @@
     </script>
   <% } %>
   <script>
-    document.getElementById('inviteUser').addEventListener('click', function() {
+    const inviteForm = document.getElementById('inviteForm');
+    inviteForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
       const id = '<%= contribution._id %>';
       const email = document.querySelector('input[name="invite"]').value;
       fetch(`/contributions/${id}/invite`, {

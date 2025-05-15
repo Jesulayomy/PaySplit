@@ -131,12 +131,12 @@ You can use the following login details to access the site:
 or signup for your own account.
 
 ### Testing
-- API was tested with Postman, and frontend accessibility, performance and SEO was tested on the browser with Lighthouse
+- API was tested with Postman and manually for the backend. On the frontend, accessibility, performance, and SEO was tested with Lighthouse.
 
 
 ## Future Ideas
 - A robust notification system for updates when items are paid for, updated or deleted.
-
+- Integration with a payment processor i.e Venmo, Paypal, or Zelle
 
 ## My Other projects
 - [SCHub](https://github.com/Jesulayomy/SCHub)

@@ -35,20 +35,20 @@
       </p>
 
       <% if (!contribution.complete) { %>
-      <div id="pay-button-container" class="p-2 input-group">
+      <form id="payContainer" class="p-2 input-group">
         <% if (invite) { %>
           <button id="accept" class="btn btn-jasper btn-md rounded-5 shadow-sm">Join</button>
         <% } else { %>
           <% if (contribution.equal) { %>
             <label class="input-group-text" id="payAmount">Amount</label>
-            <input type="number" min="0" class="form-control" value="<%= contribution.equalSplit() %>" aria-label="Pay" aria-describedby="payAmount" name="payAmount" required>
+            <input type="number" min="0" step="any" class="form-control" value="<%= contribution.equalSplit() %>" aria-label="Pay" aria-describedby="payAmount" name="payAmount" required>
           <% } else { %>
             <label class="input-group-text" id="payAmount">Amount</label>
-            <input value="<%= contribution.equalTip() %>" type="number" min="0" class="form-control" placehomder="0" aria-label="Pay" aria-describedby="payAmount" name="payAmount" required>
+            <input value="<%= contribution.equalTip() %>" type="number" min="0" step="any" class="form-control" placehomder="0" aria-label="Pay" aria-describedby="payAmount" name="payAmount" required>
           <% } %>
-          <button id="pay" class="btn btn-jasper btn-md shadow-sm"><i class="fa fa-credit-card"></i> Complete</button>
+          <button type="submit" id="pay" class="btn btn-jasper btn-md shadow-sm"><i class="fa fa-credit-card"></i> Complete</button>
         <% } %>
-      </div>
+      </form>
       <% } %>
     </div>
   </div>
