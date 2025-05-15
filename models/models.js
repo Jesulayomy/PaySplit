@@ -42,6 +42,14 @@ const contributionSchema = new Schema({
   contributors: [paymentSchema],
 });
 
+const contactSchema = new Schema({
+  name: String,
+  email: String,
+  subject: String,
+  message: String,
+  createdAt: { type: Date, default: Date.now }
+});
+
 userSchema.methods.generateHash = function(password) {
   return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
 };
@@ -74,4 +82,5 @@ module.exports = {
   Contribution: mongoose.model('Contribution', contributionSchema),
   Payment: mongoose.model('Payment', paymentSchema),
   Item: mongoose.model('Item', itemSchema),
+  Contact: mongoose.model('Contact', contactSchema),
 };
