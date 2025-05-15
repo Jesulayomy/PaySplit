@@ -1,34 +1,73 @@
-<nav class="navbar w-100 p-1 p-md-3 mb-3">
+<nav class="navbar navbar-expand-md w-100 p-1 p-md-3 mb-3">
   <div class="container-fluid">
-    <a class="navbar-brand" href="/home">
+    <a class="navbar-brand" href="/">
       <img src="/img/icon.png" alt="PaySplit" width="40" height="40" />
     </a>
-    <ul class="navbar-nav ms-auto mb-2 mb-lg-0 d-flex flex-row">
-      <% if (user) { %>
+    <div class="d-flex d-md-none align-items-center ms-auto">
+      <div class="collapse navbar-collapse multi-collapse show" id="navbarShort">
+      <ul class="navbar-nav mb-2 mb-lg-0 flex-row">
+        <% if (user) { %>
         <% if (title !== user.firstName + ' | Your Profile') { %>
         <li class="nav-item p-2">
-          <a class="btn btn-md btn-md-lg bg-white rounded-pill shadow-sm text-success" href="/profile"><img class="rounded-circle" width="20" height="20" src="<%= user.imgURL %>" alt="<%= user.firstName %>"> <%= user.firstName %></a>
+          <a class="btn btn-md btn-md-lg btn-corn rounded-pill shadow-sm" href="/profile"><img class="rounded-circle" width="20" height="20" src="<%= user.imgURL %>" alt=""> <%= user.firstName %></a>
+        </li>
+        <% } %>
+        <li class="nav-item p-2">
+          <a class="btn btn-md btn-md-lg btn-white rounded-pill shadow-sm text-danger" href="/logout" aria-label="Logout"><i class="fa fa-sign-out"></i></a>
         </li>
         <% } else { %>
-        <li class="nav-item p-2">
-          <a class="btn btn-md btn-md-lg bg-white rounded-pill shadow-sm text-success" href="/home"><i class="fa fa-home"></i> Home</a>
-        </li>
-        <% } %> 
-        <li class="nav-item p-2">
-          <a class="btn btn-md btn-md-lg bg-white rounded-pill shadow-sm text-danger" href="/logout" aria-label="Logout"><i class="fa fa-sign-out"></i></a>
-        </li>
-      <% } else { %>
         <% if (title !== 'Login') { %>
         <li class="nav-item p-2">
-          <a class="text-primary btn btn-md btn-md-lg rounded-pill shadow-sm bg-white" href="/login"><i class="fa fa-sign-in"></i> Login</a>
+          <a class="btn btn-md btn-md-lg rounded-pill shadow-sm btn-corn" href="/login"><i class="fa fa-sign-in"></i> Login</a>
         </li>
         <% } %>
         <% if (title !== 'Create Account') { %>
         <li class="nav-item p-2">
-          <a class="btn btn-md btn-md-lg btn-primary rounded-pill shadow-sm" href="/signup"><i class="fa fa-user-plus"></i> Signup</a>
+          <a class="btn btn-md btn-md-lg rounded-pill shadow-sm btn-jasper" href="/signup"><i class="fa fa-user-plus"></i> Signup</a>
+        </li>
+        <% } %>
+        <% } %>
+      </ul>
+      </div>
+      <button class="navbar-toggler bg-white shadow-sm rounded-4 ms-2" type="button" data-bs-toggle="collapse" data-bs-target=".multi-collapse" aria-controls="navbarLong navbarShort" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+      </button>
+    </div>
+    <div class="collapse navbar-collapse multi-collapse" id="navbarLong">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+      <% if (title !== 'My Contributions') { %>
+      <li class="nav-item p-2">
+        <a class="btn btn-md btn-md-lg btn-white rounded-pill shadow-sm" href="/home"><i class="fa fa-home"></i> Home</a>
+      </li>
+      <% } %>
+      <li class="nav-item p-2">
+        <a class="btn btn-md btn-md-lg btn-white rounded-pill shadow-sm" href="/about" aria-label="About"><i class="fa fa-info-circle"></i> About</a>
+      </li>
+      <li class="nav-item p-2">
+        <a class="btn btn-md btn-md-lg btn-white rounded-pill shadow-sm" href="/contact" aria-label="Contact"><i class="fa fa-envelope-open-text"></i> Contact</a>
+      </li>
+      <% if (user) { %>
+        <% if (title !== user.firstName + ' | Your Profile') { %>
+        <li class="nav-item p-2">
+        <a class="btn btn-md btn-md-lg btn-corn rounded-pill shadow-sm" href="/profile"><img class="rounded-circle" width="20" height="20" src="<%= user.imgURL %>" alt=""> <%= user.firstName %></a>
+        </li>
+        <% } %> 
+        <li class="nav-item p-2">
+        <a class="btn btn-md btn-md-lg btn-white rounded-pill shadow-sm text-danger" href="/logout" aria-label="Logout"><i class="fa fa-sign-out"></i><span class="d-inline d-md-none"> Logout</span></a>
+        </li>
+      <% } else { %>
+        <% if (title !== 'Login') { %>
+        <li class="nav-item p-2">
+          <a class="btn btn-md btn-md-lg rounded-pill shadow-sm btn-corn" href="/login"><i class="fa fa-sign-in"></i> Login</a>
+        </li>
+        <% } %>
+        <% if (title !== 'Create Account') { %>
+        <li class="nav-item p-2">
+          <a class="btn btn-md btn-md-lg rounded-pill shadow-sm btn-jasper" href="/signup"><i class="fa fa-user-plus"></i> Signup</a>
         </li>
         <% } %>
       <% } %>
-    </ul>
+      </ul>
+    </div>
   </div>
 </nav>

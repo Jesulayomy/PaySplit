@@ -1,0 +1,122 @@
+<footer class="bg-cine m-0 w-100 p-2 p-md-4 mt-3">
+  <div class="row m-0 p-0">
+    <div class="col-6 col-md-3 mb-3">
+      <h5>
+        <a class="navbar-brand" href="/">
+          <img src="/img/icon.png" alt="PaySplit" width="40" height="40" />
+        </a>
+        PaySplit
+      </h5>
+      <p>PaySplit makes tracking shared costs easier between groups of people, so you can focus on enjoying time with friends. Designed and built by Layomi.</p>
+    </div>
+    <div class="col-6 col-md-2 mb-3 text-end text-md-start">
+      <h5>Links</h5>
+      <ul class="nav flex-column">
+        <li class="nav-item mb-2">
+          <a href="/" class="nav-link p-0 text-white">PaySplit</a>
+        </li>
+        <li class="nav-item mb-2">
+          <a href="/home" class="nav-link p-0 text-white">Home</a>
+        </li>
+        <li class="nav-item mb-2">
+          <a href="/about" class="nav-link p-0 text-white">About</a>
+        </li>
+        <li class="nav-item mb-2">
+          <a href="/contact" class="nav-link p-0 text-white">Contact</a>
+        </li>
+        <li class="nav-item mb-2">
+          <a href="/login" class="nav-link p-0 text-white">Login</a>
+        </li>
+        <li class="nav-item mb-2">
+          <a href="/signup" class="nav-link p-0 text-white">Sign up</a>
+        </li>
+      </ul>
+    </div>
+    <div class="col-6 col-md-2 mb-3">
+      <h5>Author</h5>
+      <ul class="nav flex-column">
+        <li class="nav-item mb-2">
+          <a href="https://www.jesulayomi.tech" target="_blank" class="nav-link p-0 text-white"><i class="fa fa-globe"></i> Jesulayomi</a>
+        </li>
+        <li class="nav-item mb-2">
+          <a href="https://www.linkedin.com/in/jesulayomi" target="_blank" class="nav-link p-0 text-white"><img width="20px" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/LinkedIn_icon.svg/1200px-LinkedIn_icon.svg.png" alt=""> LinkedIn</a>
+        </li>
+        <li class="nav-item mb-2">
+          <a href="https://github.com/Jesulayomy" target="_blank" class="nav-link p-0 text-white"><img width="20px" src="https://cdn.simpleicons.org/github?viewbox=auto" alt=""> Github</a>
+        </li>
+        <li class="nav-item mb-2">
+          <a href="mailto:jesulayomi081@gmail.com?subject=PaySplit" target="_blank" class="nav-link p-0 text-white"><img width="20px" src="https://cdn.simpleicons.org/gmail?viewbox=auto" alt="">  Email</a>
+        </li>
+        <li class="nav-item mb-2">
+          <a href="https://calendly.com/jesulayomi" target="_blank" class="nav-link p-0 text-white"><img width="20px" src="https://cdn.simpleicons.org/calendly?viewbox=auto" alt="">  Calendly</a>
+        </li>
+        <li class="nav-item mb-2">
+          <a href="https://drive.google.com/drive/folders/1OKD_GUDveD8SpG-YsmUUxADZM5LWP80o?usp=sharing" target="_blank" class="nav-link p-0 text-white"><img width="20px" height="20px" src="https://cdn.simpleicons.org/googledocs?viewbox=auto" alt="">  My Resume</a>
+        </li>
+      </ul>
+    </div>
+    <div class="col-md-4 mb-3">
+      <form id="subscribe" method="POST">
+        <h5>Stay informed about new updates</h5>
+        <p>To keep in touch or be updated on the progress of this app.</p>
+        <div class="d-flex flex-column flex-sm-row w-100 gap-2">
+          <label for="sendMail" class="visually-hidden">Email address</label>
+          <input type="text" name="name" value="Anon" class="visually-hidden" >
+          <input type="text" name="subject" value="Newsletter" class="visually-hidden" >
+          <input type="text" name="message" value="Keep me updated" class="visually-hidden" >
+          <input
+            id="sendMail"
+            type="email"
+            class="form-control"
+            placeholder="Email address"
+            name="email"
+            required
+          />
+          <button id="subSubmit" class="btn btn-jasper" type="submit">Subscribe</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div
+    class="d-flex flex-column flex-sm-row justify-content-between py-4 border-top"
+  >
+    <p>© 2025 Jesulayomi.tech. All rights reserved.</p>
+    <ul class="list-unstyled d-flex">
+      <li class="ms-3">
+        <a class="" target="_blank" href="https://github.com/Jesulayomy/PaySplit" aria-label="Repository">
+          <img width="40px" src="https://cdn.simpleicons.org/github?viewbox=auto" alt="Github Repo">
+        </a>
+      </li>
+    </ul>
+  </div>
+</footer>
+
+<script>
+  const subForm = document.getElementById('subscribe');
+  subForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const name = subForm.name.value;
+    const email = subForm.email.value;
+    const subject = subForm.subject.value;
+    const message = subForm.message.value;
+
+    fetch('/contact', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        name,
+        email,
+        subject,
+        message,
+      })
+    });
+    const subButton = document.getElementById('subSubmit');
+    subButton.innerText = 'Subscribed!';
+    subButton.classList.toggle('btn-jasper');
+    subButton.classList.add('btn-success');
+    subForm.email = "";
+  });
+</script>
