@@ -45,7 +45,7 @@ module.exports = function (passport) {
           result = await cloudinary.uploader.upload(req.file.path, { asset_folder: 'paysplit', public_id_prefix: 'user'  });
         } else {
           result = {
-            secure_url: '/img/default-profile.png',
+            secure_url: '/img/defaultProfile.png',
             public_id: ''
           };
         }

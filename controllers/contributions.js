@@ -78,14 +78,14 @@ module.exports = {
         res.render('contribution.ejs', { contribution, user: req.user, title: contribution.name, invite });
       } else {
         res.render(
-          "not-found",
+          "notFound",
           {user: req.user, title: 'Contribution Not found', message: 'You can\'t access that contribution anymore', returnTo: { page: 'Home', URL: '/home'}
         });
       }
     }).catch(err => {
       if (err instanceof CastError) {
         res.render(
-          "not-found",
+          "notFound",
           {user: req.user, title: 'Contribution Not found', message: 'That\'s not even a real contribution', returnTo: { page: 'Home', URL: '/home'}
         });
       } else {
@@ -110,9 +110,6 @@ module.exports = {
     .populate('owner')
     .populate({
       path: 'invites',
-      // populate: {
-      //   path: 'user'
-      // }
     })
     .populate({
       path: 'contributors',
@@ -122,7 +119,7 @@ module.exports = {
     }).then(contribution => {
       if (!contribution) {
         res.render(
-          "not-found",
+          "notFound",
           {user: req.user, title: 'Contribution Not found', message: 'Someone messed up and it\'s not me', returnTo: { page: 'Home', URL: '/home'}
         });
       }
@@ -157,7 +154,7 @@ module.exports = {
       }).catch(err => {
         if (err instanceof CastError) {
           res.render(
-            "not-found",
+            "notFound",
             {user: req.user, title: 'Contribution Not found', message: 'That\'s not even a real contribution', returnTo: { page: 'Home', URL: '/home'}
           });
         } else {
@@ -168,7 +165,7 @@ module.exports = {
     }).catch(err => {
       if (err instanceof CastError) {
         res.render(
-          "not-found",
+          "notFound",
           {user: req.user, title: 'Contribution Not found', message: 'That\'s not even a real contribution', returnTo: { page: 'Home', URL: '/home'}
         });
       } else {
@@ -196,18 +193,18 @@ module.exports = {
         if (contribution.owner.equals(req.user._id)) {
           res.render('editContribution.ejs', { contribution, user: req.user, title: contribution.name, invite: false });
         } else {
-          res.render('not-found.ejs', { user: req.user, title: 'Not Found' });
+          res.render('notFound.ejs', { user: req.user, title: 'Not Found' });
         }
       } else {
         res.render(
-          "not-found",
+          "notFound",
           {user: req.user, title: 'Contribution Not found', message: 'You can\'t edit it if it doesn\'t exist', returnTo: { page: 'Home', URL: '/home'}
         });
       }
     }).catch(err => {
       if (err instanceof CastError) {
         res.render(
-          "not-found",
+          "notFound",
           {user: req.user, title: 'Contribution Not found', message: 'That\'s not even a real contribution', returnTo: { page: 'Home', URL: '/home'}
         });
       } else {
@@ -244,7 +241,7 @@ module.exports = {
     .catch((err) => {
       if (err instanceof CastError) {
         res.render(
-          "not-found",
+          "notFound",
           {user: req.user, title: 'Contribution Not found', message: 'It\'s not here, someone beat you to it', returnTo: { page: 'Home', URL: '/home'}
         });
       } else {
@@ -293,7 +290,7 @@ module.exports = {
         res.render('contribution.ejs', { contribution, user: req.user, title: contribution.name, invite: false });
       } else {
         res.render(
-          "not-found",
+          "notFound",
           {user: req.user, title: 'Contribution Not found', message: 'Contribution not found, did someone delete it?', returnTo: { page: 'Home', URL: '/home'}
         });
       }
@@ -379,7 +376,7 @@ module.exports = {
     }).then(contribution => {
       if (!contribution) {
         res.render(
-          "not-found",
+          "notFound",
           {user: req.user, title: 'Contribution Not found', message: 'That contribution isn\'t here anymore', returnTo: { page: 'Home', URL: '/home'}
         });
       } else {
@@ -406,7 +403,7 @@ module.exports = {
         res.status(200).send('Contribution completed successfully');
       } else {
         res.render(
-          "not-found",
+          "notFound",
           {user: req.user, title: 'Contribution Not found', message: 'That contribution isn\'t here anymore', returnTo: { page: 'Home', URL: '/home'}
         });
       }

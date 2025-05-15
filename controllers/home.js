@@ -1,5 +1,5 @@
 const { Type } = require("@google/genai");
-const { User, Contribution, Payment, Item } = require('../models/models');
+const { User, Contribution, Contact } = require('../models/models');
 const AI = require('../middleware/ai');
 const cloudinary = require("../middleware/cloudinary");
 const validator = require("validator");
@@ -7,6 +7,29 @@ const validator = require("validator");
 module.exports = {
   getIndex: async (req, res) => {
     res.render("index.ejs", { user: req.user || null, title: 'Home' });
+  },
+  getAbout: async (req, res) => {
+    res.render("about", { user: req.user || null, title: 'About PaySplit' });
+  },
+  getContact: async (req, res) => {
+    res.render("contact", { user: req.user || null, title: 'Contact & Feedback' });
+  },
+  postContact: async (req, res) => {
+    let { name, email, subject, message } = req.body;
+    console.log(req.body)
+    const contact = new Contact({
+      name,
+      email,
+      subject,
+      message,
+    });
+    contact.save()
+    .then((newContact) => {
+      res.json({ message: 'success', contact: newContact });
+    })
+    .catch(err => {
+      res.json({ message: 'Error creating contact' + err });
+    });
   },
   getHomePage: async (req, res) => {
     Contribution.find({
@@ -36,7 +59,7 @@ module.exports = {
   },
   notFound: async (req, res) => {
     res.render(
-      "not-found",
+      "notFound",
       {user: null, title: 'Not found', message: 'Why would you lead us here???', returnTo: { page: 'Home', URL: '/home'}
     });
   },
