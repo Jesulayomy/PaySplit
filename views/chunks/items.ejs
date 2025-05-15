@@ -1,19 +1,40 @@
 <div class="container-fluid p-3 py-lg-3 p-lg-5 pt-0">
   <h6>Select items to pay for</h6>
-  <div class="">
-      <input class="btn-check item-toggle" type="checkbox" id="taxButton" <%= contribution.equal ? 'disabled checked' : '' %>>
-      <label class="btn btn-outline-info m-1" for="taxButton">
-        Tax <span class="badge text-bg-info rounded-pill">$ <span id="taxID"><%= contribution.equalTax() %></span></span>
+  <ul class="list-group">
+    <li class="list-group-item bg-corn d-flex justify-content-between align-items-center">
+      <label class="form-check-label w-100 d-flex justify-content-between align-items-center" for="tipButton">
+        <div>
+          <input class="form-check-input me-2 item-toggle" type="checkbox" value="" id="tipButton" checked>
+          Tip
+        </div>
+        <span class="badge bg-secondary rounded-pill">$ <span id="tipID"><%= contribution.equalTip() %></span></span>
       </label>
-      <input class="btn-check item-toggle" type="checkbox" id="tipButton" checked <%= contribution.equal ? 'disabled' : '' %>>
-      <label class="btn btn-outline-info m-1" for="tipButton">
-        Tip <span class="badge text-bg-info rounded-pill">$ <span id="tipID"><%= contribution.equalTip() %></span></span>
+    </li>
+    <li class="list-group-item bg-corn d-flex justify-content-between align-items-center">
+      <label class="form-check-label w-100 d-flex justify-content-between align-items-center" for="taxButton">
+        <div>
+          <input class="form-check-input me-2 item-toggle" type="checkbox" value="" id="taxButton">
+          Tax
+        </div>
+        <span class="badge bg-secondary rounded-pill">$ <span id="taxID"><%= contribution.equalTax() %></span></span>
       </label>
-      <% contribution.items.forEach(item => { %>
-        <input class="btn-check item-toggle" type="checkbox" id="<%= item._id %>" <%= contribution.equal || item.paid ? 'disabled' : '' %>>
-        <label class="btn <%= item.paid ? 'btn-outline-secondary' : 'btn-outline-primary' %> m-1" for="<%= item._id %>">
-          <%= item.name %> <span class="badge <%= item.paid ? 'text-bg-secondary' : 'text-bg-primary' %> rounded-pill">$ <span id="item-<%= item._id %>"><%= item.price.toFixed(2) %></span></span>
-        </label>
-      <% }) %>
-  </div>
+    </li>
+    <% contribution.items.forEach(item => { %>
+      <% if (item.paid) { %>
+        <li class="list-group-item bg-corn d-flex justify-content-between align-items-center bg-light text-decoration-line-through text-muted">
+          <%= item.name %> <span class="badge bg-secondary rounded-pill">$<%= item.price.toFixed(2) %></span>
+        </li>
+      <% } else { %>
+        <li class="list-group-item bg-corn d-flex justify-content-between align-items-center">
+          <label class="form-check-label w-100 d-flex justify-content-between align-items-center" for="<%= item._id %>">
+            <div>
+              <input class="form-check-input me-2 item-toggle" type="checkbox" value="" id="<%= item._id %>">
+              <%= item.name %>
+            </div>
+            <span class="badge bg-secondary rounded-pill">$ <span id="item-<%= item._id %>"><%= item.price.toFixed(2) %></span></span>
+          </label>
+        </li>
+      <% } %>
+    <% }) %>
+    </ul>
 </div>

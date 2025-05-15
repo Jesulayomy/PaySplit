@@ -1,21 +1,22 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <%- include('chunks/head') -%>
 <body>
   <%- include('chunks/navbar') -%>
 
   <div class="container-fluid row m-0 p-3 py-lg-3 p-lg-5 pt-0">
-      <div class="p-3 py-lg-3 p-lg-5 pt-0"><a class="btn" href="/home"><span class="fa fa-backward"></span> Home</a></div>
-      <h1 class="col-12 text-center">Create a Pool</h1>
-      <div class="col-sm-6 m-0 p-2">
+    <div class="p-3 py-lg-3 p-lg-5 pt-0"><a class="btn btn-md btn-md-lg bg-white rounded-pill shadow-sm" href="/home"><span class="fa fa-chevron-left"></span> Home</a></div>
+    <h1 class="col-12 text-center">Create a Pool</h1>
+    <div class="col-sm-6 m-0 p-2">
+      <div>
         <div>
-          <div>
-            <h4>Create from a receipt</h4>
-            <form class="input-group mb-3" id="imageForm" enctype="multipart/form-data" method="POST">
-              <input type="file" accept="image/jpeg, image/png, image/gif" class="form-control" id="receiptImage" aria-describedby="addItems" aria-label="Upload" name="image">
-              <button class="btn text-white receipt" type="submit" id="addItems"><img width="20px" src="https://cdn.simpleicons.org/googlegemini/fff"></i> Upload</button>
-            </form>
-          </div>
+          <h4>Create from a receipt</h4>
+          <form class="input-group mb-3" id="imageForm" enctype="multipart/form-data" method="POST">
+            <input type="file" accept="image/jpeg, image/png, image/gif" class="form-control" id="receiptImage" aria-describedby="addItems" aria-label="Upload" name="image">
+            <button class="btn text-white receipt" type="submit" id="addItems"><img width="20px" src="https://cdn.simpleicons.org/googlegemini/fff"></i> Upload</button>
+          </form>
+        </div>
+        <div id="poolHolder">
           <div class="input-group mb-3">
             <label class="input-group-text" id="name">Title</label>
             <input type="text" class="form-control" placeholder="Thai restaurant visit" aria-label="Name" aria-describedby="name" name="name" required>
@@ -28,99 +29,116 @@
             <label class="input-group-text" id="amount">Amount</label>
             <input type="number" oninput="this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : 0" oninput="this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : 0" min="0" class="form-control" placeholder="Amount before tax or subtotal" aria-label="Amount" aria-describedby="amount" name="amount" required>
           </div>
-          <div class="input-group mb-3">
-            <label class="input-group-text" id="tax">Tax</label>
-            <input type="number" oninput="this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : 0" min="0" class="form-control" value="0" placeholder="0" aria-label="Tax" aria-describedby="tax" name="tax">
-            <input type="radio" class="btn-check" id="taxDollar" name="taxType" value="dollar">
-            <label class="btn btn-outline-info px-3" for="taxDollar">$</label>
-            <input type="radio" class="btn-check" id="taxPercent" name="taxType" value="percent" checked>
-            <label class="btn btn-outline-primary px-3" for="taxPercent">%</label>
+          <div class="row">
+            <div class="col-6 pe-1">
+              <div class="input-group mb-3">
+                <label class="input-group-text" id="tax">Tax</label>
+                <input type="number" min="0" class="form-control" value="0" aria-label="Tax" aria-describedby="tax" name="tax">
+                <input type="radio" class="btn-check" id="taxDollar" name="taxType" value="dollar">
+                <label class="btn btn-outline-secondary px-md-3" for="taxDollar">$</label>
+                <input type="radio" class="btn-check" id="taxPercent" name="taxType" value="percent" checked>
+                <label class="btn btn-outline-secondary px-md-3" for="taxPercent">%</label>
+              </div>
+            </div>
+            <div class="col-6 ps-1">
+              <div class="input-group mb-3">
+                <label class="input-group-text" id="tip">Tip</label>
+                <input type="number" class="form-control" value="10" aria-label="Tip" aria-describedby="tip" name="tip">
+                <input type="radio" class="btn-check" id="tipDollar" name="tipType" value="dollar">
+                <label class="btn btn-outline-secondary px-md-3" for="tipDollar">$</label>
+                <input type="radio" class="btn-check" id="tipPercent" name="tipType" value="percent" checked>
+                <label class="btn btn-outline-secondary px-md-3" for="tipPercent">%</label>
+              </div>
+            </div>
           </div>
-          <div class="input-group mb-3">
-            <label class="input-group-text" id="tip">Tip</label>
-            <input type="number" oninput="this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : 0" min="0" class="form-control" value="15" aria-label="Tip" aria-describedby="tip" name="tip">
-            <input type="radio" class="btn-check" id="tipDollar" name="tipType" value="dollar">
-            <label class="btn btn-outline-info px-3" for="tipDollar">$</label>
-            <input type="radio" class="btn-check" id="tipPercent" name="tipType" value="percent" checked>
-            <label class="btn btn-outline-primary px-3" for="tipPercent">%</label>
+          <div class="pb-3 d-flex justify-content-end">
+            <div class="me-3">
+              <div class="input-group">
+                <div class="input-group-text">
+                  <input class="form-check-input mt-0" id="equal" type="checkbox" name="equal" aria-label="Equal Payments">
+                </div>
+                <label class="input-group-text" for="equal">Equal Payments</label>
+              </div>
+            </div>
           </div>
-          <div class="form-check text-center mb-3">
-            <input class="btn-check" type="checkbox" id="equal" name="equal">
-            <label class="btn btn-outline-warning" for="equal">Equal Payments</label>
-          </div>
-          <button id="createPool" type="submit" class="btn btn-primary">Add Item</button>
+          <button id="createPool" type="submit" class="btn btn-jasper btn-md rounded-4 shadow-sm">Add Item</button>
         </div>
       </div>
-      <div class="col-sm-6 row m-0 p-2 align-items-center">
-        <div id="itemContainer" class="py-3 text-center align-items-center justify-content-center">
-          <p class="h2 text-secondary">Add a receipt to view items here</p>
-        </div>
+    </div>
+    <div class="col-sm-6 row m-0 p-2 align-items-center">
+      <div id="itemContainer" class="py-3 row text-center align-items-center justify-content-center">
+        <p class="h2 text-secondary">Add a receipt to view items here</p>
       </div>
+    </div>
   </div>
+	<%- include('chunks/foot') -%>
 
   <script>
-    const form = document.getElementById('imageForm');
-    let items = [];
-    form.addEventListener('submit', async (event) => {
-      event.preventDefault();
-      const addItemsButton = document.getElementById('addItems');
-      const originalButtonContent = addItemsButton.innerHTML;
+    const contribLoader = `
+    <div class="col-8 mb-3">
+      <div class="card" aria-hidden="true">
+        <div class="card-body">
+          <h5 class="card-title placeholder-glow text-center">
+            <span class="placeholder col-8"></span>
+          </h5>
+          <p class="card-text placeholder-glow">
+            <span class="placeholder col-8"></span>
+          </p>
+          <hr>
+          <p class="card-text placeholder-glow">
+            <span class="placeholder col-6"></span> <span class="placeholder col-1 float-end"></span>
+          </p>
+          <p class="card-text placeholder-glow">
+            <span class="placeholder col-6"></span> <span class="placeholder col-1 float-end"></span>
+          </p>
+          <p class="card-text placeholder-glow">
+            <span class="placeholder col-6"></span> <span class="placeholder col-1 float-end"></span>
+          </p>
+          <hr>
+          <p class="card-text placeholder-glow">
+            <strong><span class="placeholder col-4"></span></strong> <span class="placeholder col-1 float-end"></span>
+          </p>
+          <p class="card-text placeholder-glow">
+            <strong><span class="placeholder col-3"></span></strong> <span class="placeholder col-1 float-end"></span>
+          </p>
+          <p class="card-text placeholder-glow">
+            <strong><span class="placeholder col-5"></span></strong> <span class="placeholder col-2 float-end"></span>
+          </p>
+          <hr>
+          <p class="card-text placeholder-glow text-center">
+            <span class="placeholder col-10"></span>
+          </p>
+        </div>
+      </div>
+    </div>
+    `
+    const itemsLoader = `
+    <div class="col-8">
+      <div class="card" aria-hidden="true">
+        <ul class="list-group">
+          <li class="list-group-item d-flex justify-content-between align-items-center placeholder-glow">
+            <span class="placeholder col-6"></span> <span class="placeholder col-1 float-end"></span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between align-items-center placeholder-glow">
+            <span class="placeholder col-6"></span> <span class="placeholder col-1 float-end"></span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between align-items-center placeholder-glow">
+            <span class="placeholder col-6"></span> <span class="placeholder col-1 float-end"></span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between align-items-center placeholder-glow">
+            <span class="placeholder col-6"></span> <span class="placeholder col-1 float-end"></span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    `
+    
+    const poolHolder = document.querySelector('#poolHolder');
+    const itemContainer = document.getElementById('itemContainer');
+    const originalPool = poolHolder.innerHTML;
+    const originalItems = itemContainer.innerHTML;
 
-      addItemsButton.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Uploading...`;
-      addItemsButton.disabled = true;
-
-      const formData = new FormData(form);
-
-      try {
-        const response = await fetch('/receipt', {
-          method: 'POST',
-          body: formData,
-        });
-        if (!response.ok) {
-          addItemsButton.innerHTML = originalButtonContent;
-          addItemsButton.disabled = false;
-          response.json().then(data => {
-            alert(data.error);
-          });
-          return;
-        }
-
-        const data = await response.json();
-        const contribution = JSON.parse(data.response.candidates[0].content.parts[0].text);
-        document.querySelector('input[name="name"]').value = contribution.name;
-        document.querySelector('textarea[name="description"]').value = contribution.description;
-        document.querySelector('input[name="amount"]').value = contribution.amount;
-        document.querySelector('input[name="tax"]').value = contribution.tax;
-        document.querySelector('input[name="tip"]').value = contribution.tip
-        document.getElementById('taxDollar').checked = true;
-        document.getElementById('tipDollar').checked = true;
-        contribution.items.forEach(item => {
-          for (let i = 0; i < item.quantity; i++) {
-            items.push({ quantity: 1, name: item.name, price: item.price / item.quantity });
-          }
-        });
-        let itemData = `
-          <h4>Items</h4>
-          <div class="container-fluid">
-            <ul class="list-group text-start">
-        `
-        items.forEach(item => {
-          itemData += `
-              <li class="list-group-item d-flex justify-content-between align-items-center">
-                ${item.quantity} ${item.name}
-                <span class="badge text-bg-primary rounded-pill">$${item.price.toFixed(2)}</span>
-              </li>`
-        });
-        itemData += `</ul></div>`;
-        document.getElementById('itemContainer').innerHTML = itemData;
-        addItemsButton.innerHTML = originalButtonContent;
-        addItemsButton.disabled = false;
-      } catch (error) {
-        console.error(error)
-      }
-    });
-
-    document.getElementById('createPool').addEventListener('click', async (event) => {
+    async function poolCreator (event) {
       event.preventDefault();
 
       const name = document.querySelector('input[name="name"]').value;
@@ -164,8 +182,79 @@
         console.error('Error:', error);
         alert('An error occurred. Please try again.');
       }
+    };
+
+    const form = document.getElementById('imageForm');
+    let items = [];
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      items = [];
+      const addItemsButton = document.getElementById('addItems');
+      const originalButtonContent = addItemsButton.innerHTML;
+
+      addItemsButton.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Uploading...`;
+      addItemsButton.disabled = true;
+      poolHolder.innerHTML = contribLoader;
+      itemContainer.innerHTML = itemsLoader;
+
+      const formData = new FormData(form);
+
+      try {
+        const response = await fetch('/receipt', {
+          method: 'POST',
+          body: formData,
+        });
+        if (!response.ok) {
+          addItemsButton.innerHTML = originalButtonContent;
+          poolHolder.innerHTML = originalPool;
+          document.getElementById('createPool').addEventListener('click', poolCreator);
+          itemContainer.innerHTML = originalItems;
+          addItemsButton.disabled = false;
+          response.json().then(data => {
+            alert(data.error);
+          });
+          return;
+        }
+        poolHolder.innerHTML = originalPool;
+        document.getElementById('createPool').addEventListener('click', poolCreator);
+
+        const data = await response.json();
+        const contribution = JSON.parse(data.response.candidates[0].content.parts[0].text);
+        document.querySelector('input[name="name"]').value = contribution.name;
+        document.querySelector('textarea[name="description"]').value = contribution.description;
+        document.querySelector('input[name="amount"]').value = contribution.amount;
+        document.querySelector('input[name="tax"]').value = contribution.tax;
+        document.querySelector('input[name="tip"]').value = contribution.tip
+        document.getElementById('taxDollar').checked = true;
+        document.getElementById('tipDollar').checked = true;
+        contribution.items.forEach(item => {
+          for (let i = 0; i < item.quantity; i++) {
+            items.push({ quantity: 1, name: item.name, price: item.price / item.quantity });
+          }
+        });
+        let itemData = `
+          <h4>Items</h4>
+          <div class="container-fluid">
+            <ul class="list-group text-start">
+        `
+        items.forEach(item => {
+          item.name = item.name.charAt(0).toUpperCase() + item.name.slice(1).toLowerCase();
+          itemData += `
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                ${item.quantity} ${item.name}
+                <span class="badge text-bg-primary rounded-pill">$${item.price.toFixed(2)}</span>
+              </li>`
+        });
+        itemData += `</ul></div>`;
+        itemContainer.innerHTML = itemData;
+        addItemsButton.innerHTML = originalButtonContent;
+        addItemsButton.disabled = false;
+      } catch (error) {
+        console.error(error)
+      }
     });
 
+    document.getElementById('createPool').addEventListener('click', poolCreator);
   </script>
 
 <%- include('chunks/footer') -%>

@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <%- include('chunks/head') -%>
 <body>
   <%- include('chunks/navbar') -%>
 
   <div class="container-fluid row m-0 p-3 py-lg-3 p-lg-5 pt-0">
-    <div class="p-3 py-lg-3 p-lg-5 pt-0"><a class="btn" href="/home"><span class="fa fa-backward"></span> Home</a></div>
+    <div class="p-3 py-lg-3 p-lg-5 pt-0"><a class="btn btn-md btn-md-lg bg-white rounded-pill shadow-sm" href="/home"><span class="fa fa-chevron-left"></span> Home</a></div>
     <div class="col-sm-6 m-0 p-0">
       <%- include('chunks/cont.ejs') -%>
       <%- include('chunks/invite.ejs') -%>
@@ -15,7 +15,7 @@
       <%- include('chunks/items.ejs') -%>
     </div>
   </div>
-
+	<%- include('chunks/foot') -%>
 
   <script>
     const selectedItems = [];
@@ -76,7 +76,7 @@
         event.preventDefault();
         const id = '<%= contribution._id %>';
         const amount = parseFloat(document.querySelector('input[name="payAmount"]').value);
-        if (!Number.isNaN(amount) && amount >= 0) {
+        if (!Number.isNaN(amount) && amount > 0) {
           fetch(`/contributions/${id}/pay`, {
             method: 'POST',
             headers: {
@@ -96,8 +96,10 @@
           document.querySelector('input[name="payAmount"]').style.border = '2px solid red';
         }
       });  
-
-      document.getElementById('inviteUser').addEventListener('click', function() {
+    </script>
+  <% } %>
+  <script>
+    document.getElementById('inviteUser').addEventListener('click', function() {
       const id = '<%= contribution._id %>';
       const email = document.querySelector('input[name="invite"]').value;
       fetch(`/contributions/${id}/invite`, {
@@ -121,6 +123,5 @@
         .catch(error => console.error('Error:', error));
     });
 
-    </script>
-  <% } %>
+  </script>
 <%- include('chunks/footer') -%>

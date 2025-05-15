@@ -1,9 +1,9 @@
 <div class="container-fluid p-3 py-lg-3 p-lg-5 pt-0">
   <div class="card mb-3 rounded-5 border border-0 shadow-sm">
-    <img src="/img/puzzle.png" class="card-img-top rounded-top-5 shadow-sm" alt="<%= contribution.name %>" style="height: 200px; object-fit: cover;">
+    <img src="/img/split.png" class="card-img-top rounded-top-5 shadow-sm" alt="<%= contribution.name %>" style="height: 200px; object-fit: cover;">
     <% if ( contribution.owner.equals(user.id) ) { %>
-      <a href="/contributions/<%= contribution.id %>/edit" class="btn btn-warning btn-lg position-absolute top-0 end-0 m-3">
-        <i class="fa fa-edit text-white"></i>
+      <a href="/contributions/<%= contribution.id %>/edit" class="btn btn-jasper btn-lg rounded-4 shadow-sm position-absolute top-0 end-0 m-3" aria-label="Edit <%= contribution.name %>">
+        <i class="fa fa-edit"></i>
       </a>
     <% } %>
     <div class="card-body">
@@ -21,6 +21,7 @@
             aria-valuemin="0" 
             aria-valuemax="100"
             style="width: <%= progressPercentage %>%"
+            aria-label="<%= payment.user.firstName %>'s Contribution <%= progressPercentage.toFixed(2) %>%"
           >
             <%= payment.user.firstName %>
           </div>
@@ -36,16 +37,16 @@
       <% if (!contribution.complete) { %>
       <div id="pay-button-container" class="p-2 input-group">
         <% if (invite) { %>
-          <button id="accept" class="btn btn-success btn-md">Join</button>
+          <button id="accept" class="btn btn-jasper btn-md rounded-5 shadow-sm">Join</button>
         <% } else { %>
           <% if (contribution.equal) { %>
             <label class="input-group-text" id="payAmount">Amount</label>
-            <input type="number" min="0" class="form-control" value="<%= contribution.equalSplit() %>" aria-label="Pay" aria-describedby="payAmount" name="payAmount" required> <!--  oninput="this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : 0" -->
+            <input type="number" min="0" class="form-control" value="<%= contribution.equalSplit() %>" aria-label="Pay" aria-describedby="payAmount" name="payAmount" required>
           <% } else { %>
             <label class="input-group-text" id="payAmount">Amount</label>
             <input value="<%= contribution.equalTip() %>" type="number" min="0" class="form-control" placehomder="0" aria-label="Pay" aria-describedby="payAmount" name="payAmount" required>
           <% } %>
-          <button id="pay" class="btn btn-primary btn-lg"><i class="fa fa-credit-card"></i> Pay</button>
+          <button id="pay" class="btn btn-jasper btn-md shadow-sm"><i class="fa fa-credit-card"></i> Complete</button>
         <% } %>
       </div>
       <% } %>
