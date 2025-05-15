@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('chunks/head') -%>
+<body>
+  <%- include('chunks/navbar') -%>
+
+  <div class="container-fluid p-3 py-lg-3 p-lg-5 pt-0">
+	  <div class="px-4 py-2"><a class="btn btn-md btn-md-lg bg-white rounded-pill shadow-sm" href="<%= returnTo.URL %>"><span class="fa fa-chevron-left"></span> <%= returnTo.page %></a></div>
+
+		<div class="row p-3 justify-content-center">
+      <img style="width: 300px" src="/img/notFoundIcon.gif" alt="Not Found" />
+      <h4 class="err m-0 text-center"><%= message %></h4>
+		</div>
+  </div>
+	<%- include('chunks/foot') -%>
+<%- include('chunks/footer') -%>

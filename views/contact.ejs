@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('chunks/head') -%>
+<body>
+  <%- include('chunks/navbar') -%>
+
+  <section class="py-5">
+    <div class="container">
+      <div class="row justify-content-center text-center mb-2 mb-lg-4">
+        <div class="col-lg-8 col-xxl-7">
+          <span class="text-muted">Let's Talk</span>
+          <h2 class="display-5 fw-bold mb-3"><span class="fa fa-envelope-open-text h4"></span> Contact Us</h2>
+          <p class="lead mb-0">Leave a message, feedback or feature request in our email.</p>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-sm-8 col-lg-6 col-sm-offset-3">
+          <form id="contactForm" enctype="multipart/form-data" method="POST">
+            <div class="input-group mb-3">
+              <label class="input-group-text" id="Name">Name</label>
+              <input type="text" class="form-control" placeholder="Enter your Name" name="name" aria-label="Name" aria-describedby="nameame" required />
+            </div>
+            <div class="input-group mb-3">
+              <label class="input-group-text" id="email">Email</label>
+              <input type="email" class="form-control" placeholder="Enter your email" name="email" aria-label="Email" aria-describedby="email" required>
+            </div>
+            <div class="input-group mb-3">
+              <label class="input-group-text" id="subject">Subject</label>
+              <input value="PaySplit: " type="subject" class="form-control" placeholder="Feedback" name="subject" aria-label="Subject" aria-describedby="subject" required>
+            </div>
+            <div class="input-group mb-3">
+              <label class="input-group-text" id="message">Message</label>
+              <textarea rows="4" type="text" class="form-control" placeholder="Feedback about an issue, a feature request or follow up" name="message" aria-label="Message" aria-describedby="message" required></textarea>
+            </div>
+            <div class="row justify-content-center">
+              <button type="submit" class="col-6 col-md-4 col-lg-3 btn btn-md shadow-sm btn-jasper"><i class="fa fa-mail"></i> Open Mail</button>
+            </div>
+          </form>
+        <hr />
+        </div>
+      </div>
+    </div>
+    <div class="p-md-5">
+      <iframe width="100%" height="650px" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyB2NIWI3Tv9iDPrlnowr_0ZqZWoAQydKJU&q=New York City&maptype=satellite" allowfullscreen></iframe>
+    </div>
+  </section>
+  <%- include('chunks/foot') %>
+
+  <script>
+    const form = document.getElementById('contactForm');
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const name = form.name.value;
+      const email = form.email.value;
+      const subject = form.subject.value;
+      const message = form.message.value;
+
+      fetch('/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          subject,
+          message,
+        })
+      });
+
+      const mailtoLink = `mailto:jesulayomi081@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(
+        `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`
+      )}`;
+
+      window.open(mailtoLink);
+    })
+  </script>
+
+<%- include('chunks/footer') -%>
