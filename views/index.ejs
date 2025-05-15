@@ -4,16 +4,227 @@
 <body>
   <%- include('chunks/navbar') -%>
 
-  <div class="container-fluid p-2 p-md-3 p-lg-5">
-    <div class="bg-white text-center p-5">
-      <h1>PaySplit</h1>
-      <img class="img-fluid" style="min-width: 160px;" src="img/icon.png" alt="PaySplit" />
-
-      <p class="p-3">Login or Signup to share payments with friends</p>
-
-      <a href="/login" class="btn btn-outline-primary rounded-pill btn-lg mx-2"><i class="fa fa-sign-in"></i> Login</a>
-      <a href="/signup" class="btn btn-primary rounded-pill btn-lg mx-2"><i class="fa fa-user-plus"></i> Signup</a>
+  <section class="py-5">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6 mb-4 mb-lg-0">
+          <h1 class="display-3 fw-bold">Simplify Shared Expenses with <span class="text-jasper">PaySplit</span></h1>
+          <p class="lead my-4">Effortlessly split bills, manage group expenses, and settle payments with friends. Create pools, track contributions, and let PaySplit handle the calculations for you.</p>
+          <a class="btn btn-lg btn-jasper rounded-pill shadow-sm" href="/signup">Get Started</a>
+        </div>
+        <div class="col-lg-6">
+          <img alt="Illustration of friends splitting a bill and managing expenses together" class="img-fluid" src="/img/about4.png">
+        </div>
+      </div>
+      <div class="row mt-5">
+        <div class="col-md-3 col-sm-6 mb-3 mb-md-0">
+          <div class="mb-3">
+            <i class="fa fa-user-group h2"></i>
+          </div>
+          <h4>Collaborative</h4>
+          <p>Invite friends to join and manage expenses together.</p>
+        </div>
+        <div class="col-md-3 col-sm-6 mb-3 mb-md-0">
+          <div class="mb-3">
+            <i class="fa fa-calculator h2"></i>
+          </div>
+          <h4>Accurate</h4>
+          <p>Let PaySplit handle the calculations for you.</p>
+        </div>
+        <div class="col-md-3 col-sm-6 mb-3 mb-md-0">
+          <div class="mb-3">
+            <i class="fa fa-bolt h2"></i>
+          </div>
+          <h4>Efficient</h4>
+          <p>Save time with streamlined expense tracking.</p>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="mb-3">
+            <i class="fa fa-user-lock h2"></i>
+          </div>
+          <h4>Secure</h4>
+          <p>Your data is stored safely and securely.</p>
+        </div>
+      </div>
     </div>
-  </div>
+  </section>
+  <section class="py-5 bg-corn">
+    <div class="container">
+      <div class="row justify-content-center text-center mb-4">
+        <div class="col-lg-8 col-xxl-7">
+          <span class="text-muted">Steps</span>
+          <h2 class="display-5 fw-bold">Simplify your shared bills</h2>
+            <p class="lead">PaySplit works by allowing users to create groups or pools for shared expenses. Users can add expenses, specify how they should be split, and track contributions. The platform calculates balances to accelerate payment settling.</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-3">
+          <div class="text-center position-relative">
+            <div class="step-icon mx-auto btn-jasper border rounded-circle d-flex align-items-center justify-content-center" style="width:120px;height:120px;">
+              <i class="fa fa-receipt h2"></i>
+            </div>
+            <h4 class="mt-3 fs-5">Step 1</h4>
+            <p class="lead text-muted mt-4 fs-5 px-lg-3 mb-5 mb-lg-0">Create a pool by uploading a receipt or filling the details</p>
+            <div class="arrow-icon position-absolute d-none d-lg-block" style="top:50px; right:-25px">
+              <svg class="bi bi-arrow-right" fill="currentColor" height="30" viewbox="0 0 16 16" width="30" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" fill-rule="evenodd"></path></svg>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="text-center position-relative">
+            <div class="step-icon mx-auto btn-jasper border rounded-circle d-flex align-items-center justify-content-center" style="width: 120px;height: 120px;">
+              <i class="fa fa-users h2"></i>
+            </div>
+            <h4 class="mt-3 fs-5">Step 2</h4>
+            <p class="lead text-muted mt-4 fs-5 px-lg-3 mb-5 mb-lg-0">Invite friends to join</p>
+            <div class="arrow-icon d-none d-lg-block position-absolute" style="top:50px; right:-25px">
+              <svg class="bi bi-arrow-right" fill="currentColor" height="30" viewbox="0 0 16 16" width="30" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" fill-rule="evenodd"></path></svg>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="text-center position-relative">
+            <div class="step-icon mx-auto btn-jasper border rounded-circle d-flex align-items-center justify-content-center" style="width: 120px;height: 120px;">
+              <i class="fa fa-check h2"></i>
+            </div>
+            <h4 class="mt-3 fs-5">Step 3</h4>
+            <p class="lead text-muted mt-4 fs-5 px-lg-3 mb-5 mb-lg-0">Friends accept invitation</p>
+            <div class="arrow-icon d-none d-lg-block position-absolute" style="top:50px; right:-25px">
+              <svg class="bi bi-arrow-right" fill="currentColor" height="30" viewbox="0 0 16 16" width="30" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" fill-rule="evenodd"></path></svg>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="text-center position-relative">
+            <div class="step-icon mx-auto btn-jasper border rounded-circle d-flex align-items-center justify-content-center" style="width: 120px;height: 120px;">
+              <i class="fa fa-money-bills h2"></i>
+            </div>
+            <h4 class="mt-3 fs-5">Step 4</h4>
+            <p class="lead text-muted mt-4 fs-5 px-lg-3 mb-5 mb-lg-0">Select items and pay!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="py-5">
+    <div class="container">
+      <div class="row justify-content-center text-center mb-3">
+        <div class="col-lg-8 col-xl-7">
+          <span class="text-muted">F.A.Q</span>
+          <h2 class="display-5 fw-bold">Frequently Asked Questions</h2>
+          <p class="lead">Find answers to common questions about how PaySplit works and its features.</p>
+        </div>
+      </div>
+      <div class="row justify-content-center py-lg-3">
+        <div class="col-md-10">
+          <div class="row justify-content-center mb-4">
+            <div class="col-lg-8">
+              <h6 class="mb-3 mt-3 mt-md-0">Features</h6>
+              <div class="accordion" id="Features">
+                <div class="accordion-item bg-corn bg-corn">
+                  <h2 class="accordion-header" id="Feat-headingOne">
+                  <button aria-controls="Feat-collapseOne" aria-expanded="true" class="accordion-button" data-bs-target="#Feat-collapseOne" data-bs-toggle="collapse" type="button">
+                  <div class="text-muted me-3">
+                    <svg class="bi bi-question-circle-fill" fill="currentColor" height="24" viewbox="0 0 16 16" width="24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.496 6.033h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286a.237.237 0 0 0 .241.247zm2.325 6.443c.61 0 1.029-.394 1.029-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94 0 .533.425.927 1.01.927z"></path></svg>
+                  </div>What is PaySplit and what does it do?
+                  </button>
+                  </h2>
+                  <div aria-labelledby="Feat-headingOne" class="accordion-collapse collapse show" data-bs-parent="#Features" id="Feat-collapseOne">
+                    <div class="accordion-body">
+                      PaySplit is a web application designed to simplify how groups of people split bills and manage shared expenses. It allows users to create virtual "pools" of money, input the total amount of an expense (like a restaurant bill or trip cost), and then either divide it equally among participants or allow individuals to contribute different amounts. PaySplit automatically calculates how much each person owes or is owed, including handling taxes and tips, making settling up with friends easy and transparent.
+                    </div>
+                  </div>
+                </div>
+                <div class="accordion-item bg-corn">
+                  <h2 class="accordion-header" id="Feat-headingTwo"><button aria-controls="Feat-collapseTwo" aria-expanded="false" class="accordion-button collapsed" data-bs-target="#Feat-collapseTwo" data-bs-toggle="collapse" type="button">
+                  <div class="text-muted me-3">
+                    <svg class="bi bi-question-circle-fill" fill="currentColor" height="24" viewbox="0 0 16 16" width="24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.496 6.033h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286a.237.237 0 0 0 .241.247zm2.325 6.443c.61 0 1.029-.394 1.029-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94 0 .533.425.927 1.01.927z"></path></svg>
+                  </div>How do I create a group or pool?</button></h2>
+                  <div aria-labelledby="Feat-headingTwo" class="accordion-collapse collapse" data-bs-parent="#Features" id="Feat-collapseTwo">
+                    <div class="accordion-body">
+                      You can invite friends to a pool by sending invitations via email or sharing the pool link. They must be logged in and have an account to join.
+                    </div>
+                  </div>
+                </div>
+                <div class="accordion-item bg-corn">
+                  <h2 class="accordion-header" id="Feat-headingThree"><button aria-controls="Feat-collapseThree" aria-expanded="false" class="accordion-button collapsed" data-bs-target="#Feat-collapseThree" data-bs-toggle="collapse" type="button">
+                  <div class="text-muted me-3">
+                    <svg class="bi bi-question-circle-fill" fill="currentColor" height="24" viewbox="0 0 16 16" width="24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.496 6.033h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286a.237.237 0 0 0 .241.247zm2.325 6.443c.61 0 1.029-.394 1.029-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94 0 .533.425.927 1.01.927z"></path></svg>
+                  </div>Can I split expenses for things other than restaurants, like rent or trips?</button></h2>
+                  <div aria-labelledby="Feat-headingThree" class="accordion-collapse collapse" data-bs-parent="#Features" id="Feat-collapseThree">
+                    <div class="accordion-body">
+                      Yes, PaySplit is versatile and can be used for splitting various types of shared expenses, including rent, utilities, travel costs, groceries, event tickets, and more. Any situation where a group needs to divide a cost can benefit from PaySplit.
+                    </div>
+                  </div>
+                </div>
+                <div class="accordion-item bg-corn">
+                  <h2 class="accordion-header" id="Feat-headingFour"><button aria-controls="Feat-collapseFour" aria-expanded="false" class="accordion-button collapsed" data-bs-target="#Feat-collapseFour" data-bs-toggle="collapse" type="button">
+                  <div class="text-muted me-3">
+                    <svg class="bi bi-question-circle-fill" fill="currentColor" height="24" viewbox="0 0 16 16" width="24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.496 6.033h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286a.237.237 0 0 0 .241.247zm2.325 6.443c.61 0 1.029-.394 1.029-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94 0 .533.425.927 1.01.927z"></path></svg>
+                  </div>How can I easily add items and their costs from a physical receipt or digital invoice to my contribution in PaySplit?</button></h2>
+                  <div aria-labelledby="Feat-headingFour" class="accordion-collapse collapse" data-bs-parent="#Features" id="Feat-collapseFour">
+                    <div class="accordion-body">
+                      PaySplit offers a convenient way to input items from your receipts or invoices using generative AI. On the "New Contribution" page, you will find an option to Upload Receipt. Your items will be parsed from the receipt and you can make final adjustments to the result.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row justify-content-center">
+            <div class="col-lg-8">
+              <h6 class="mb-3 mt-3 mt-md-0">Technical</h6>
+              <div class="accordion" id="Tech-accordion">
+                <div class="accordion-item bg-corn">
+                  <h2 class="accordion-header" id="Tech-headingOne"><button aria-controls="Tech-collapseOne" aria-expanded="false" class="accordion-button collapsed" data-bs-target="#Tech-collapseOne" data-bs-toggle="collapse" type="button">
+                  <div class="text-muted me-3">
+                    <svg class="bi bi-question-circle-fill" fill="currentColor" height="24" viewbox="0 0 16 16" width="24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.496 6.033h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286a.237.237 0 0 0 .241.247zm2.325 6.443c.61 0 1.029-.394 1.029-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94 0 .533.425.927 1.01.927z"></path></svg>
+                  </div>Does PaySplit integrate with any payment platforms (like Venmo, PayPal or Stripe)?</button></h2>
+                  <div aria-labelledby="Tech-headingOne" class="accordion-collapse collapse" data-bs-parent="#Tech-accordion" id="Tech-collapseOne">
+                    <div class="accordion-body">
+                      Not yet. PaySplit may integrate with payment platforms like Venmo or PayPal in the future to facilitate the actual transfer of funds between users based on the calculated balances. Currently, it likely focuses on the calculation and tracking aspect, with users settling up through their preferred external payment methods.
+                    </div>
+                  </div>
+                </div>
+                <div class="accordion-item bg-corn">
+                  <h2 class="accordion-header" id="Tech-headingTwo"><button aria-controls="Tech-collapseTwo" aria-expanded="false" class="accordion-button collapsed" data-bs-target="#Tech-collapseTwo" data-bs-toggle="collapse" type="button">
+                  <div class="text-muted me-3">
+                    <svg class="bi bi-question-circle-fill" fill="currentColor" height="24" viewbox="0 0 16 16" width="24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.496 6.033h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286a.237.237 0 0 0 .241.247zm2.325 6.443c.61 0 1.029-.394 1.029-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94 0 .533.425.927 1.01.927z"></path></svg>
+                  </div>How is my data stored?</button></h2>
+                  <div aria-labelledby="Tech-headingTwo" class="accordion-collapse collapse" data-bs-parent="#Tech-accordion" id="Tech-collapseTwo">
+                    <div class="accordion-body">
+                      Your data, including user profiles, pool details, contributions, and transaction history, is stored securely in a <span class="fw-bold">MongoDB</span> database. MongoDB is a NoSQL database known for its flexibility and scalability. Access to this data is controlled through secure server-side logic and authentication mechanisms.
+                    </div>
+                  </div>
+                </div>
+                <div class="accordion-item bg-corn">
+                  <h2 class="accordion-header" id="Tech-headingThree"><button aria-controls="Tech-collapseThree" aria-expanded="false" class="accordion-button collapsed" data-bs-target="#Tech-collapseThree" data-bs-toggle="collapse" type="button">
+                  <div class="text-muted me-3">
+                    <svg class="bi bi-question-circle-fill" fill="currentColor" height="24" viewbox="0 0 16 16" width="24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.496 6.033h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286a.237.237 0 0 0 .241.247zm2.325 6.443c.61 0 1.029-.394 1.029-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94 0 .533.425.927 1.01.927z"></path></svg>
+                  </div>What technologies are used to build PaySplit?</button></h2>
+                  <div aria-labelledby="Tech-headingThree" class="accordion-collapse collapse" data-bs-parent="#Tech-accordion" id="Tech-collapseThree">
+                    <div class="accordion-body">
+                      PaySplit is built using core technologies like Node.js and Express.js for the backend, with MongoDB as the database for storing user profiles, contributions, and transaction history. It uses Passport.js for authentication, and EJS as the templating engine for rendering dynamic web pages. The application also incorporates Bootstrap for responsive design and styling, along with utilities like dotenv for environment configuration and Multer for file uploads.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
+  <%- include('chunks/foot') %>
 <%- include('chunks/footer') -%>

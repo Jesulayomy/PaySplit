@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <%- include('chunks/head') -%>
 <body>
   <%- include('chunks/navbar') -%>
@@ -44,7 +44,7 @@
           <label class="input-group-text" id="confirmPassword">Confirm Password</label>
           <input type="password" class="form-control" placeholder="********" name="confirmPassword" aria-label="Confirm Password" aria-describedby="confirmPassword">
         </div>
-        <button type="submit" class="btn btn-success btn-md"> Update Profile</button>
+        <button type="submit" class="btn btn-jasper btn-md rounded-4 shadow-sm"> Update Profile</button>
         <hr />
       </form>
       <div class="container-fluid p-5 pt-0">
@@ -66,6 +66,7 @@
       </div>
     </div>
   </div>
+	<%- include('chunks/foot') -%>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
   <script>
@@ -85,7 +86,7 @@
       options: {
         title: {
           display: true,
-          text: "Contributions: $<%= total %>"
+          text: "Contributions: $<%= total.toFixed(2) %>"
         },
         responsive: true,
         maintainAspectRatio: false,

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <%- include('chunks/head') -%>
 <body>
   <%- include('chunks/navbar') -%>
@@ -28,21 +28,24 @@
             <label class="input-group-text" id="password">Password</label>
             <input type="password" class="form-control" placeholder="Enter your password" name="password" aria-label="Password" aria-describedby="password" required>
           </div>
-          <button type="submit" class="btn btn-primary btn-lg"><i class="fa fa-sign-in"></i> Login</button>
+          <button type="submit" class="btn btn-jasper btn-md rounded-4 shadow-sm"><i class="fa fa-sign-in"></i> Login</button>
         </form>
 
         <hr />
 
         <p>Need an account? <a href="/signup">Signup</a></p>
-        <button class="sampleUser btn btn-md btn-warning" role="button">Test Credentials</button>
+        <button class="sampleUser btn btn-corn btn-md rounded-4 shadow-sm" role="button">Autofill Test Credentials</button>
         <p>Or go <a href="/">home</a>.</p>
       </div>
     </div>
   </div>
+	<%- include('chunks/foot') -%>
 
 <script>
   document.querySelector('.sampleUser').addEventListener('click', function() {
-    document.querySelector('input[name="email"]').value = 'kakyoin28071971@gmail.com';
+    const testUsers = ['jonathan@jojo.com', 'dio@jojo.com', 'lisa@jojo.com', 'zeppeli@jojo.com', 'joseph@jojo.com'];
+    const randomUser = testUsers[Math.floor(Math.random() * testUsers.length)];
+    document.querySelector('input[name="email"]').value = randomUser;
     document.querySelector('input[name="password"]').value = '12345678';
   });
 </script>

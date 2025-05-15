@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <%- include('chunks/head') -%>
 <body>
   <%- include('chunks/navbar') -%>
@@ -47,7 +47,7 @@
             <label class="input-group-text" id="confirmPassword">Confirm Password</label>
             <input type="password" class="form-control" placeholder="********" name="confirmPassword" aria-label="Confirm Password" aria-describedby="confirmPassword" required>
           </div>
-          <button type="submit" class="btn btn-success btn-md"><i class="fa fa-user-plus"></i> Signup</button>
+          <button type="submit" class="btn btn-jasper btn-md rounded-4 shadow-sm"><i class="fa fa-user-plus"></i> Signup</button>
         </form>
 
         <hr />
@@ -68,6 +68,7 @@
       </div>
     </div>
   </div>
+	<%- include('chunks/foot') -%>
 
   <script>
     document.getElementById('image').addEventListener('change', function(event) {
