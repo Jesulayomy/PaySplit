@@ -2,6 +2,27 @@
 
 ### Tasks
 - [ ] Populate DB
+
+- [x] Robust Headers & Footer
+- [x] Collect emails by subscription
+- [x] Create a landing page /index
+- [x] Allow users to hit landing page whether logged in or not
+- [x] Change Home icon from logo
+- [x] Add List Loader on new content
+- [x] Place paid-for items below unpaid
+- [x] Use a checkbox on the buttons/switch
+- [x] Maybe a different primary button color or palette
+- [x] Fix context on buttons → use consistent colors on buttons
+- [x] Maybe randomize the test login
+- [x] Clarify Gemini's Icon mode
+- [x] Future ideas section for listing
+- [x] TA of Receipt
+- [x] Rename not-found notFound CSS
+- [x] Nurture images in posts
+- [x] Remove files like main.js
+- [x] Add an interface for contribution
+- [x] People for feedback or some requests
+- [x] Filters for invites, completed, ongoing
 - [x] Deploy App
 
 - [x] Optimize README
@@ -21,7 +42,7 @@
 - [x] Add profile images
 - [x] Use _method for new `PUT/DELETE` requests
 - [x] Implement Border responsivenes
-- [x] Implement not-found.ejs for all points of failure 
+- [x] Implement notFound.ejs for all points of failure 
 - [x] Add frontend check for positive `$inc`
 - [x] Add backend check for positive `$inc`
 - [x] Remove Payment object creation to skip `contribution.contributors[i].payment...` line

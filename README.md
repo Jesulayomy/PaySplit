@@ -5,16 +5,16 @@
 PaySplit is an app that simplifies splitting bills among friends by allowing easy money pooling and automatic calculation of shares, including complex scenarios like tax and tips, with real-time updates for transparent and fair settlements.
 **Website:** [PaySplit Home](https://paysplit.jesulayomi.tech)
 
-![PaySplit Homepage](./docs/home.png)
+![PaySplit Homepage](./docs/images/home.png)
 
 
 ## How It's Made:
 
 **Tech used:** `Express`, `Node.js`, `MongoDB`, `ejs`, `Cloudinary`, `Github`, `Heroku`, `HTML`, `CSS`, `JavaScript`, 
 
-The application was built using `node.js` as the environment, It uses an `Express` server, `MongoDB` database for storage, `Gemini` for Reciept parsing, `Cloudinary` for image storage and `Passport` for authentication strategies in the core backend. On the front end, It uses `HTML/CSS`, `EJS`, `Bootstrap`, `Font Awesome`.
+The application was built using `node.js` as the environment, It uses an `Express` server, `MongoDB` database for storage, `Gemini` for Receipt parsing, `Cloudinary` for image storage and `Passport` for authentication strategies in the core backend. On the front end, It uses `HTML/CSS`, `EJS`, `Bootstrap`, `Font Awesome`.
 The application follows the MVC framework as shown:
-![MVC](./docs/MVC.png)
+![MVC](./docs/images/MVC.png)
 
 
 ### Installation
@@ -55,13 +55,13 @@ npm start # OR npm run dev for dev version
 
 ## Optimizations
 
-- Using structured output for reciept data eliminated need for cleaning data: [JSON mode](https://ai.google.dev/gemini-api/docs/structured-output)
+- Using structured output for receipt data eliminated need for cleaning data: [Gemini's JSON mode](https://ai.google.dev/gemini-api/docs/images/structured-output)
 - Used the socket.io library to enable real time updates of contribution changes through an emitter and listener.
 - Utilized ejs partials (`chunks`) to reuse content like navbars, headers, and other content across several pages.
 
 ## Lessons Learned
 
-I learned more about socket IO, bootstrap classes, responsive classes, JSON mode.
+I learned more about socket IO, bootstrap classes, responsive classes, Gemini's JSON mode.
 
 - Using sockets to emit , broadcast and listen for events.
 ```javascript
@@ -116,7 +116,7 @@ const response = await AI.models.generateContent({
 });
 ```
 
-![Get Data from A Receipt](./docs/new.png)
+![Get Data from A Receipt](./docs/images/new.png)
 
 
 ### PUBLIC ACCESS
@@ -129,6 +129,13 @@ You can use the following login details to access the site:
 }
 ```
 or signup for your own account.
+
+### Testing
+- API was tested with Postman, and frontend accessibility, performance and SEO was tested on the browser with Lighthouse
+
+
+## Future Ideas
+- A robust notification system for updates when items are paid for, updated or deleted.
 
 
 ## My Other projects
