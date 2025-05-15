@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <%- include('chunks/head') -%>
 <body>
   <%- include('chunks/navbar') -%>
@@ -7,15 +7,28 @@
   <div class="container-fluid p-3 py-lg-3 p-lg-5 pt-0">
     <div class="d-flex justify-content-between align-items-end mb-3">
       <h1 class="m-0 text-start">Your Contributions</h1>
-      <a href="/contributions/new" class="btn btn-outline-primary btn-md btn-md-lg rounded-pill shadow-sm"><i class="fa fa-group"></i> Create Pool</a>
+      <a href="/contributions/new" class="btn btn-dark btn-md btn-md-lg rounded-pill shadow-sm"><i class="fa fa-group"></i> Create Pool</a>
     </div>
 
 		<div class="row p-3">
+			<div id="filterContainer" class="col-12">
+				<input  id="filterAll" class="btn-check" name="filterBy" autocomplete="off" type="radio" checked></button>
+				<label for="filterAll" class="btn btn-outline-primary shadow-sm rounded-pill" >All</label>
+				<input  id="filterCompleted" class="btn-check" name="filterBy" autocomplete="off" type="radio"></button>
+				<label for="filterCompleted" class="btn btn-outline-success shadow-sm rounded-pill" >Completed</label>
+				<input  id="filterInvited" class="btn-check" name="filterBy" autocomplete="off" type="radio"></button>
+				<label for="filterInvited" class="btn btn-outline-warning shadow-sm rounded-pill" >Invited</label>
+				<input  id="filterMy" class="btn-check" name="filterBy" autocomplete="off" type="radio"></button>
+				<label for="filterMy" class="btn btn-outline-secondary shadow-sm rounded-pill" >My Pools</label>
+			</div>
+			<% if (contributions.length === 0) { %>
+				<p class="p-5 lead h2 text-center">You do not have any contributions yet, create one, or recieve an invite from a friend</p>
+			<% } %>
 			<% contributions.forEach((contribution, index) => { %>
 			<%
 				const isInvitePending = contribution.invites.some(invitedUser => invitedUser._id.toString() === user._id.toString());
 			%>
-			<a href="/contributions/<%= contribution._id %>" class="col-12 col-md-6 p-3 btn text-start m-0 rounded-5 border-0 border-none">
+			<a href="/contributions/<%= contribution._id %>" class="contrib col-12 col-md-6 p-3 btn text-start m-0 rounded-5 border-0 border-none <%= isInvitePending ? 'invited' : contribution.completed ? 'completed' : 'ongoing' %> <%= contribution.owner.id === user.id ? 'owner' : '' %>">
 			<% if (isInvitePending) { %>
 				<div class="card p-0 rounded-5 border-warning shadow-sm h-100">
 			<% } else { %>
@@ -45,4 +58,35 @@
 			<% }) %>
 		</div>
   </div>
+	<%- include('chunks/foot') -%>
+	<script>
+		document.querySelectorAll('input[name="filterBy"]').forEach(radio => {
+			radio.addEventListener('change', (event) => {
+				const allContribs = document.querySelectorAll('a.contrib');
+				allContribs.forEach(contrib => contrib.style.display = 'none');
+
+				if (radio.id === 'filterAll') {
+					allContribs.forEach(contrib => contrib.style.display = 'block');
+				} else if (radio.id === 'filterCompleted') {
+					allContribs.forEach(contrib => {
+						if (contrib.classList.contains('completed')) {
+							contrib.style.display = 'block';
+						}
+					});
+				} else if (radio.id === 'filterInvited') {
+					allContribs.forEach(contrib => {
+						if (contrib.classList.contains('invited')) {
+							contrib.style.display = 'block';
+						}
+					});
+				} else if (radio.id === 'filterMy') {
+					allContribs.forEach(contrib => {
+						if (contrib.classList.contains('owner')) {
+							contrib.style.display = 'block';
+						}
+					});
+				}
+			});
+		});
+	</script>
 <%- include('chunks/footer') -%>
