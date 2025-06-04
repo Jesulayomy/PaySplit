@@ -4,59 +4,118 @@
 <body>
   <%- include('chunks/navbar') -%>
 
-  <div class="container-fluid p-5">
-    <div class="row justify-content-center">
-      <div class="col-sm-8 col-lg-6 col-sm-offset-3">
-      <h1 class=""><span class="fa fa-user-plus h4"></span> Signup</h1>
-        <% if (locals.messages.errors) { %>
-          <% messages.errors.forEach( el => { %>
-            <div class="alert alert-danger"><%= el.msg %></div>
-          <% }) %>    
-        <% } %>
-        <% if (locals.messages.info) { %>
-          <% messages.info.forEach( el => { %>
-            <div class="alert alert-info"><%= el.msg %></div>
-          <% }) %>    
-        <% } %>
-
-        <form action="/signup" enctype="multipart/form-data" method="POST">
-          <div class="text-center mb-3">
-            <img id="imagePreview" src="https://upload.wikimedia.org/wikipedia/commons/2/2c/Default_pfp.svg" alt="Profile Preview" class="rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
+  <div class="container-fluid p-3 py-lg-3 p-lg-5 pt-0">
+    <section class="hero d-flex">
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col-md-4 col-lg-6 d-none d-md-block">
+            <div
+              class="bg-holder h-100"
+              style="background-image: url(/img/allCardsOnDeck.png)"
+            ></div>
           </div>
-          <div class="input-group mb-3">
-            <label class="input-group-text" for="image">Profile</label>
-            <input type="file" class="form-control" id="image" name="image" accept="image/jpeg, image/png, image/gif" required>
+          <div class="col-md-8 col-lg-6 py-5">
+            <div class="row align-items-center h-100 px-xl-5">
+              <div class="col-12">
+                <div class="card hero-form-card">
+                  <div class="card-body p-md-5">
+                    <h2 class="text-center mb-3">Create Account | <span class="text-jasper">PaySplit</span></h2>
+                    <form action="/signup" enctype="multipart/form-data" method="POST"></form>
+                      <div class="text-center mb-3">
+                        <img id="imagePreview" src="https://upload.wikimedia.org/wikipedia/commons/2/2c/Default_pfp.svg" alt="Profile Preview" class="rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
+                      </div>
+                      <div class="input-group mb-3">
+                        <label class="input-group-text" for="image">Profile</label>
+                        <input type="file" class="form-control" id="image" name="image" accept="image/jpeg, image/png, image/gif" required>
+                      </div>
+                      <div class="input-group mb-3">
+                        <label class="input-group-text" id="firstName">First Name</label>
+                        <input type="text" class="form-control" placeholder="Enter your First Name" name="firstName" aria-label="First Name" aria-describedby="firstName" required />
+                      </div>
+                      <div class="input-group mb-3">
+                        <label class="input-group-text" id="lastName">Last Name</label>
+                        <input type="text" class="form-control" placeholder="Enter your Last Name" name="lastName" aria-label="Last Name" aria-describedby="lastName" required />
+                      </div>
+                      <div class="input-group mb-3">
+                        <label class="input-group-text" id="email">Email</label>
+                        <input type="email" class="form-control" placeholder="Enter your email" name="email" aria-label="Email" aria-describedby="email" required>
+                      </div>
+                      <div class="input-group mb-3">
+                        <label class="input-group-text" id="password">Password</label>
+                        <input type="password" class="form-control" placeholder="At least 8 characters" name="password" aria-label="Password" aria-describedby="password" required>
+                      </div>
+                      <div class="input-group mb-3">
+                        <label class="input-group-text" id="confirmPassword">Confirm Password</label>
+                        <input type="password" class="form-control" placeholder="********" name="confirmPassword" aria-label="Confirm Password" aria-describedby="confirmPassword" required>
+                      </div>
+                      <button type="submit" class="btn btn-jasper btn-md rounded-4 shadow-sm w-100"><i class="fa fa-user-plus"></i> Sign up</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="input-group mb-3">
-            <label class="input-group-text" id="firstName">First Name</label>
-            <input type="text" class="form-control" placeholder="Enter your First Name" name="firstName" aria-label="First Name" aria-describedby="firstName" required />
-          </div>
-          <div class="input-group mb-3">
-            <label class="input-group-text" id="lastName">Last Name</label>
-            <input type="text" class="form-control" placeholder="Enter your Last Name" name="lastName" aria-label="Last Name" aria-describedby="lastName" required />
-          </div>
-          <div class="input-group mb-3">
-            <label class="input-group-text" id="email">Email</label>
-            <input type="email" class="form-control" placeholder="Enter your email" name="email" aria-label="Email" aria-describedby="email" required>
-          </div>
-          <div class="input-group mb-3">
-            <label class="input-group-text" id="password">Password</label>
-            <input type="password" class="form-control" placeholder="At least 8 characters" name="password" aria-label="Password" aria-describedby="password" required>
-          </div>
-          <div class="input-group mb-3">
-            <label class="input-group-text" id="confirmPassword">Confirm Password</label>
-            <input type="password" class="form-control" placeholder="********" name="confirmPassword" aria-label="Confirm Password" aria-describedby="confirmPassword" required>
-          </div>
-          <button type="submit" class="btn btn-jasper btn-md rounded-4 shadow-sm"><i class="fa fa-user-plus"></i> Signup</button>
-        </form>
-
-        <hr />
-
-        <p>Already have an account? <a href="/login">Login</a></p>
-        <p>Or go <a href="/">home</a>.</p>
+        </div>
       </div>
-    </div>
+    </section>
+
+    <style>
+    .hero {
+      overflow: hidden;
+    }
+
+    .hero .container {
+      max-height: 100vh;
+    }
+
+    .bg-holder {
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      min-height: 150px;
+      width: 100%;
+      border-radius: 30px;
+    }
+
+    @media (min-width: 768px) {
+      .bg-holder {
+        width: 200%;
+      }
+    }
+
+    @media (min-width: 992px) {
+      .bg-holder {
+        width: 150%;
+      }
+    }
+
+    .hero-form-card {
+      background-color: #fff;
+      border: none;
+      border-radius: 15px;
+    }
+
+    .hero-or-separator {
+      position: relative;
+    }
+
+    .hero-or-separator hr {
+      border-color: #333b7b;
+      opacity: 0.15;
+    }
+
+    .hero-or-separator span {
+      background-color: #fff;
+      color: #333b7b;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate3d(-50%, -50%, 0);
+      opacity: 0.8;
+    }
+    </style>
   </div>
+
 
   <div class="position-fixed top-0 end-0 p-3" style="z-index: 11">
     <div id="fileSizeToast" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">

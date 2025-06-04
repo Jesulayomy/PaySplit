@@ -4,40 +4,107 @@
 <body>
   <%- include('chunks/navbar') -%>
 
-  <div class="container-fluid p-5">
-    <div class="row justify-content-center">
-      <div class="col-sm-8 col-lg-6 col-sm-offset-3">
-        <h1><span class="fa fa-sign-in"></span> Login</h1>
-        <% if (locals.messages.errors) { %>
-          <% messages.errors.forEach(el => { %>
-            <div class="alert alert-danger"><%= el.msg %></div>
-          <% }) %>
-        <% } %>
-        <% if (locals.messages.info) { %> 
-          <% messages.info.forEach(el => { %>
-            <div class="alert alert-info"><%= el.msg %></div>
-          <% }) %>
-        <% } %>
-
-        <form action="/login" method="POST">
-          <div class="input-group mb-3">
-            <label class="input-group-text" id="email">Email</label>
-            <input type="email" class="form-control" placeholder="Enter your email" name="email" aria-label="Email" aria-describedby="email" required>
+  <div class="container-fluid p-3 py-lg-3 p-lg-5 pt-0">
+    <section class="hero d-flex">
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col-md-4 col-lg-6 d-none d-md-block">
+            <div
+              class="bg-holder h-100"
+              style="background-image: url(/img/allCardsOnDeck.png)"
+            ></div>
           </div>
-          <div class="input-group mb-3">
-            <label class="input-group-text" id="password">Password</label>
-            <input type="password" class="form-control" placeholder="Enter your password" name="password" aria-label="Password" aria-describedby="password" required>
+          <div class="col-md-8 col-lg-6 py-5">
+            <div class="row align-items-center h-100 px-xl-5">
+              <div class="col-12">
+                <div class="card hero-form-card">
+                  <div class="card-body p-md-5">
+                    <h2 class="mb-3">Login to <span class="text-jasper">PaySplit</span></h2>
+                    <p class="mb-4 mb-md-5">
+                      <span class="opacity-90 me-2">Don't have an account?</span>
+                      <a href="/signup" class="btn btn-link p-0 m-0 border-none text-dark text-decoration-none">Create account</a>
+                    </p>
+
+                    <form action="/login" method="POST">
+                      <div class="input-group mb-3">
+                        <input type="email" class="form-control" placeholder="Enter your email" name="email" aria-label="Email" aria-describedby="email" required>
+                      </div>
+                      <div class="input-group mb-3">
+                        <input type="password" class="form-control" placeholder="Enter your password" name="password" aria-label="Password" aria-describedby="password" required>
+                      </div>
+                      <button type="submit" class="btn btn-jasper btn-md rounded-4 shadow-sm w-100">Log In</button>
+
+                      <div class="position-relative hero-or-separator">
+                        <hr class="my-4 my-md-5" />
+                        <span class="px-2">Or</span>
+                      </div>
+
+                      <button class="sampleUser btn btn-corn btn-md rounded-4 shadow-sm w-100" role="button">Autofill Test Credentials</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <button type="submit" class="btn btn-jasper btn-md rounded-4 shadow-sm"><i class="fa fa-sign-in"></i> Login</button>
-        </form>
-
-        <hr />
-
-        <p>Need an account? <a href="/signup">Signup</a></p>
-        <button class="sampleUser btn btn-corn btn-md rounded-4 shadow-sm" role="button">Autofill Test Credentials</button>
-        <p>Or go <a href="/">home</a>.</p>
+        </div>
       </div>
-    </div>
+    </section>
+
+    <style>
+    .hero {
+      overflow: hidden;
+    }
+
+    .hero .container {
+      max-height: 100vh;
+    }
+
+    .bg-holder {
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      min-height: 150px;
+      width: 100%;
+      border-radius: 30px;
+    }
+
+    @media (min-width: 768px) {
+      .bg-holder {
+        width: 200%;
+      }
+    }
+
+    @media (min-width: 992px) {
+      .bg-holder {
+        width: 150%;
+      }
+    }
+
+    .hero-form-card {
+      background-color: #fff;
+      border: none;
+      border-radius: 15px;
+    }
+
+    .hero-or-separator {
+      position: relative;
+    }
+
+    .hero-or-separator hr {
+      border-color: #333b7b;
+      opacity: 0.15;
+    }
+
+    .hero-or-separator span {
+      background-color: #fff;
+      color: #333b7b;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate3d(-50%, -50%, 0);
+      opacity: 0.8;
+    }
+    </style>
   </div>
 	<%- include('chunks/foot') -%>
 
