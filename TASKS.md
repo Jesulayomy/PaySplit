@@ -1,8 +1,9 @@
 # Status `Working on:`
 
-### Tasks
-- [ ] Populate DB
+## Tasks
 
+- [x] Update Login and Sign up pages
+- [x] Populate DB
 - [x] Robust Headers & Footer
 - [x] Collect emails by subscription
 - [x] Create a landing page /index
@@ -29,20 +30,20 @@
 - [x] Optimize Repository details
 - [x] add about
 - [x] description
-- [x] website 
+- [x] Website
 - [x] Community docs
 
 - [x] /profile page update form
 - [x] Implement item picker for payment
 - [x] Improve page layouts (Responsiveness)
 - [x] Implement sorting to order different Objects by relevant fields
-- [x] Add contribution.ejs updates to myContribution.ejs >> Deprecated myContribution.ejs instead and merged functionality into 
+- [x] Add contribution.ejs updates to myContribution.ejs >> Deprecated myContribution.ejs instead and merged functionality into contribution.ejs
 
 - [x] Implement edit page
 - [x] Add profile images
 - [x] Use _method for new `PUT/DELETE` requests
 - [x] Implement Border responsivenes
-- [x] Implement notFound.ejs for all points of failure 
+- [x] Implement notFound.ejs for all points of failure
 - [x] Add frontend check for positive `$inc`
 - [x] Add backend check for positive `$inc`
 - [x] Remove Payment object creation to skip `contribution.contributors[i].payment...` line
@@ -70,3 +71,6 @@
 - [x] /:contributionID/invite
 - [x] /:contributionID/accept
 - [x] /:contributionID/complete
+
+- [ ] Notifications
+- [ ] Google Authentication
